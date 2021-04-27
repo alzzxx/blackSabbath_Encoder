@@ -4,11 +4,11 @@ Global variables for encoder program
 */
 
 // globVar for webServer and UDP
-uint16_t remotePort; // remote port to transmit on
+
 #ifdef WEBSERVER_ON
 String webGetString;      // Will be used for storing the HTTP requests from the client
-byte plcEnable = 0x00;    // ??
-byte deviceStatus = 0xFF; // ??
+byte plcEnable = 0x00;    // byte to indicate if the device is in SPI mode or encoder mode
+byte deviceStatus = 0xFF; // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
 String deviceParamNames[NUMBER_OF_PARAMETERS] = {"encDist", "camRes", "patRes", "inFilter", "outFilter", "tSample",
                                                  "patCurr"}; // to be shown on debug and webServer
 
@@ -49,7 +49,9 @@ typedef struct flagSystems
     bool eFlag;      // flag for ethernet control
     bool sysOK;      // flag for systems check
     bool extMemFlag; // flag for EEPROM check
-    bool imuFlag;    // flah for imu check
+    bool imuFlag;    // flag for imu check
+    bool patFlag;    // flag for pixart sensor
+    bool stFlag;     // flag for st mcu
 };
 
 // default values for flag variables
@@ -59,6 +61,8 @@ flagSystems flagEnc = {
     .sysOK = false,
     .extMemFlag = false,
     .imuFlag = false,
+    .patFlag = false,
+    .stFlag = false,
 };
 
 flagSystems *flagPoint = &flagEnc;
@@ -76,11 +80,11 @@ flagPoint->tFlag = true;
 // for tempSensor and encoder reading
 typedef struct secSystems
 {
-    float tC;   // temperature value
-    float hP;   // humidity value
-    float bPre; // pressure value
-    double mPul;
-    double encFreq;
+    float tC;       // temperature value
+    float hP;       // humidity value
+    float bPre;     // pressure value
+    double mPul;    // pulse read from encoder
+    double encFreq; // calculated pulse frequency
 };
 
 secSystems secVar = {
@@ -99,6 +103,7 @@ typedef struct struct_encoderSettings
     uint8_t deviceIndex; // Index of the device. This will affect its IP address and the port used for UDP transmission
     uint8_t mac[6];      // Mac address of device
     uint16_t localPort;  // local port to listen on
+    uint16_t remotePort; // remote port to transmit on
     uint16_t deviceParameters[NUMBER_OF_PARAMETERS];
 };
 
@@ -112,6 +117,7 @@ struct_encoderSettings encSettings = {
     encSettings.mac[4] = 0xFC,
     encSettings.mac[5] = 0xDA,
     encSettings.localPort = 3000,
+    encSettings.remotePort = 3000,
     encSettings.deviceParameters[0] = 25,
     encSettings.deviceParameters[1] = 42,
     encSettings.deviceParameters[2] = 2006,
@@ -370,8 +376,9 @@ sensors_event_t humidity, temp;
 #endif
 
 #ifdef WEBSERVER_ON
-IPAddress ip(192, 168, 1, 20); // Local IP address
-EthernetServer server(80);     // Server is configured in default port 80
+IPAddress ip(192, 168, 1, 20);      // Local IP address
+IPAddress remote(192, 168, 1, 10);  // remote IP address
+EthernetServer server(SERVER_PORT); // Server is configured in default port 80
 #endif
 
 #if defined(ARDUINO_NANO) && defined(SSD1306_SPI) && defined(SCREEN_ON)
@@ -382,7 +389,7 @@ Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, &Wire, ST_RESET, I2C_CLKFQ
 Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, ST_RESET, OLED_NSS);
 #endif
 
-BestEncoder myEncoder; // internal class for screen, extEEPROM and IMU
+BestEncoder myEncoder; // internal class for screen, extEEPROM, IMU, UDP
 
 #ifdef UDP_ON
 EthernetUDP Udp; // An EthernetUDP instance to let us send and receive packets over UDP

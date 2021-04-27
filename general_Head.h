@@ -10,11 +10,11 @@
 #define WEBSERVER_ON
 #define EXTMEMORY_ON
 #define ACCELEROMETER_ON
-//#define ERASE_EEPROM
-//#define UDP_ON
+#define UDP_ON
 //#define SD_ON
 #define SENSOR_BME280
 //#define SENSOR_AHT10
+//#define ERASE_EEPROM
 
 // Libraries
 #ifdef SENSOR_BME280
@@ -125,6 +125,12 @@
 #define ET_NSS_HI digitalWrite(ET_PIN_NSS, HIGH)
 #define ST_RESET_LO digitalWrite(ST_RESET, LOW)
 #define ST_RESET_HI digitalWrite(ST_RESET, HIGH)
+#ifdef SSD1306_SPI
+#define OLED_NSS_LO digitalWrite(OLED_NSS, LOW)
+#define OLED_NSS_HI digitalWrite(OLED_NSS, HIGH)
+#endif
+
+// Sensors operation macro
 #if defined(SENSOR_BME280)
 #define READ_TEMPERATURE bme.readTemperature()
 #define READ_HUMIDITY bme.readHumidity()
@@ -133,10 +139,6 @@
 #define UPDATE_AHT aht.getEvent(&humidity, &temp)
 #define READ_TEMPERATURE temp.temperature
 #define READ_HUMIDITY temp.relative_himidity
-#endif
-#ifdef SSD1306_SPI
-#define OLED_NSS_LO digitalWrite(OLED_NSS, LOW)
-#define OLED_NSS_HI digitalWrite(OLED_NSS, HIGH)
 #endif
 #ifdef SHIELD_ON
 #define ETHERNET_STATUS Ethernet.linkStatus()
@@ -155,6 +157,7 @@
 #ifdef SENSOR_AHT10
 #define AHT_ADDRESS 0x38
 #endif
+#define SERVER_PORT 80
 #define NUMBER_OF_PARAMETERS 7 // number of parameters exchanged with ST
 #define SHORTDELAY 20          // short delay for spi communication
 #define SHORTDELAY_I2C 5       // short delay for i2c communication

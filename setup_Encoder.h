@@ -9,7 +9,7 @@ void setup()
 
   // set pins
   DEBUG_BOOTLN(F("Starting pins"));
-  delay(1000);
+  delay(500);
   pinMode(TOGGLE_BUTTON, INPUT_PULLUP);
   pinMode(ST_RESET, OUTPUT);
   pinMode(SENSOR_PIN_STATUS, INPUT_PULLUP);
@@ -19,7 +19,7 @@ void setup()
   // start screen functions
 #ifdef SCREEN_ON
   DEBUG_BOOTLN(F("Starting screen now"));
-  delay(1000);
+  delay(500);
   myEncoder.startScreen();              // start oled screen
   myEncoder.splashScreen();             // show initial message
   myEncoder.initialCheck();             // check all systems
@@ -46,6 +46,13 @@ void setup()
 #endif
   delay(500);
 
+  // set interrupt function for toggle button
+#ifdef SCREEN_ON
+  DEBUG_BOOTLN(F("Setting toggle interrupt"));
+  delay(500);
+  attachInterrupt(digitalPinToInterrupt(TOGGLE_BUTTON), pushScreen, FALLING); // pushbutton interrupt for screen toggling
+#endif
+
   // set intervals for repeating functions
   DEBUG_BOOTLN(F("Setting tasker intervals"));
   delay(500);
@@ -69,19 +76,11 @@ void setup()
   tasker.setInterval(imuUpdate, 3600000UL, 3); // check if IMU is ok
 #endif
 
-  // set interrupt function for toggle button
-#ifdef SCREEN_ON
-  DEBUG_BOOTLN(F("Setting toggle interrupt"));
-  delay(1000);
-  attachInterrupt(digitalPinToInterrupt(TOGGLE_BUTTON), pushScreen, FALLING); // pushbutton interrupt for screen toggling
-#endif
-
   // finish the setup
-  DEBUG_BOOTLN(F("Setup finished"));
-  delay(1000);
 #ifdef SCREEN_ON
   display.clearDisplay();
   display.display();
   mTimerCounter = millis();
 #endif
+  DEBUG_BOOTLN(F("Setup finished"));
 }

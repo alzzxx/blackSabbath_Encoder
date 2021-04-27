@@ -9,7 +9,7 @@
 #include "imu_Fcns.h"
 #include "screen_Fcns.h"
 #include "webServer_Fcns.h"
-//#include "udp_Fcns.h"
+#include "udp_Fcns.h"
 #include "boot_Fcns.h"
 #include "freq_Fcns.h"
 #include "task_Fcns.h"

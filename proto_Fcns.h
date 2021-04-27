@@ -31,13 +31,6 @@ void webServerArdST(void);
 void serverStatus(void);
 #endif
 
-#ifdef UDP_ON
-// udp functions to speak with the PLC
-int listenUDP(void *Buffer, int Size);
-void writeUDP(void *Buffer, int Size, IPAddress targetIP, unsigned int targetPort);
-int bytesToInt(byte byte1, byte byte2);
-#endif
-
 // boot Functions
 int16_t readParam(void);
 #ifdef SHIELD_ON

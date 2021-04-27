@@ -211,7 +211,7 @@ void BestEncoder::displayInitial(void)
     BestEncoder::showText(5, 20, oledMessage_table, 12, false);
     BestEncoder::showText(5, 33, oledMessage_table, 13, false);
     BestEncoder::showText(5, 46, oledMessage_table, 14, false);
-    if (SENSOR_STATUS == HIGH)
+    if (flagPoint->patFlag)
     {
         BestEncoder::setDisp(1, true, 0, 0, false);
         BestEncoder::showText(80, 20, oledMessage_table, 16, false);
@@ -223,7 +223,7 @@ void BestEncoder::displayInitial(void)
         BestEncoder::showText(80, 20, oledMessage_table, 15, false);
         DEBUG_SCREENLN(F("Pixart OK"));
     }
-    if (ST_STATUS == HIGH)
+    if (flagPoint->stFlag)
     {
         BestEncoder::setDisp(1, true, 0, 0, false);
         BestEncoder::showText(80, 33, oledMessage_table, 16, false);

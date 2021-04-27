@@ -16,7 +16,7 @@ int16_t readParam(void)
     if (flagPoint->extMemFlag)
     {
         loadEncSettings();
-        remotePort = encPoint->localPort + encPoint->deviceIndex;
+        encPoint->remotePort = encPoint->localPort + encPoint->deviceIndex;
 #ifdef WEBSERVER_ON
         ip = IPAddress(192, 168, 1, 20 + encPoint->deviceIndex);
 #endif
@@ -47,7 +47,7 @@ int16_t readParam(void)
         DEBUG_BOOTLN(encPoint->localPort);
 
         DEBUG_BOOT("remotePort: ");
-        DEBUG_BOOTLN(remotePort);
+        DEBUG_BOOTLN(encPoint->remotePort);
 
         for (uint8_t i = 0; i < NUMBER_OF_PARAMETERS; i++)
         {
@@ -80,7 +80,7 @@ int16_t readParam(void)
     encPoint->deviceParameters[4] = 10;
     encPoint->deviceParameters[5] = 400;
     encPoint->deviceParameters[6] = 6;
-    remotePort = encPoint->localPort + encPoint->deviceIndex;
+    encPoint->remotePort = encPoint->localPort + encPoint->deviceIndex;
 #ifdef WEBSERVER_ON
     ip = IPAddress(192, 168, 1, 20 + encPoint->deviceIndex);
 #else
@@ -222,7 +222,7 @@ bool bootShield(void)
     uint8_t z = 0;
     while (z < 10)
     {
-        if (!Udp.begin(localPort))
+        if (!Udp.begin(encPoint->localPort))
         {
             z++;
             DEBUG_BOOTLN(F("Error connecting device. UDP socket not available"));
@@ -241,7 +241,7 @@ bool bootShield(void)
                     DEBUG_BOOT(".");
             }
             DEBUG_BOOT(F(", port: "));
-            DEBUG_BOOT(localPort);
+            DEBUG_BOOT(encPoint->localPort);
             DEBUG_BOOTLN(".");
 #endif
             isUdpOK = true;

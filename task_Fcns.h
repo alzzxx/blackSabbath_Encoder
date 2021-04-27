@@ -1,4 +1,38 @@
 
+void stCheck(void)
+{
+  /*
+  Function to control st and pixart status
+  */
+  DEBUG_TASKSLN(F("checking pixart and ST"));
+  if (SENSOR_STATUS == HIGH)
+  {
+    flagPoint->patFlag = true;
+    DEBUG_TASKS(F("Pixart error"));
+  }
+  else
+  {
+    flagPoint->patFlag = false;
+    DEBUG_TASKS(F("Pixart OK"));
+  }
+  if (ST_STATUS == LOW)
+  {
+    flagPoint->stFlag = false;
+    DEBUG_TASKS(F("ST ok"));
+  }
+  else
+  {
+    DEBUG_TASKS(F("ST error"));
+    flagPoint->stFlag = true;
+    diagBuffer[0] = deviceStatus;
+#ifdef UDP_ON
+    myEncoder.writeUDP(diagBuffer, sizeof(diagBuffer), remote, encPoint->remotePort);
+#endif
+    DEBUG_TASKS(F("deviceStatus is: "));
+    DEBUG_TASKSLN(diagBuffer[0]);
+  }
+}
+
 #if defined(SENSOR_BME280) || defined(SENSOR_AHT10)
 void tempUpdate(void)
 {
