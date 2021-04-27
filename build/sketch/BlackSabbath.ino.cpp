@@ -17,6 +17,9 @@
 #include "task_Fcns.h"
 #include "setup_Encoder.h"
 
+#line 18 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino"
+void loop();
+#line 18 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino"
 void loop()
 {
   tasker.loop();
