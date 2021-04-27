@@ -23,7 +23,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
             // if the data read is different from the parameter try to write again
             // for a fixed number of times
             w++;
-            DEBUG_I2CLN(F("Failed to write"));
+            DEBUG_I2CLN(F("Failed to Write"));
             DEBUG_I2C(body);
             DEBUG_I2C(F(" != "));
             DEBUG_I2CLN(buffer);
