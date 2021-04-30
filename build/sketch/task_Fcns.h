@@ -26,6 +26,7 @@ void stCheck(void)
     flagPoint->stFlag = true;
     diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
+    delay(10);
     myEncoder.writeUDP(diagBuffer, sizeof(diagBuffer), remote, encPoint->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));

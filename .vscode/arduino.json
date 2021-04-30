@@ -2,6 +2,6 @@
     "board": "arduino:mbed:nano33ble",
     "programmer": "AVR ISP",
     "sketch": "BlackSabbath.ino",
-    "port": "COM22",
+    "port": "COM31",
     "output": "../blackSabbath_Encoder/build"
 }

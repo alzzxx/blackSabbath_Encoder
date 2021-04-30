@@ -85,6 +85,14 @@ void BestEncoder::imuRead(void)
 
     //  calculate inclination angle on x and y axis using trigonometry
     imuPoint->angX = atan(avgX / sqrt(pow(avgY, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
+    /*
+    float aY = atan(avgY / sqrt(pow(avgX, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
+    if (aY < 0)
+    {
+        imuPoint->angY = aY + 90.0;
+    }
+    else if (aY > 0 )
+*/
     imuPoint->angY = atan(avgY / sqrt(pow(avgX, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
 
     DEBUG_IMU(F("xAngle: "));
