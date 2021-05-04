@@ -10,19 +10,19 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
     tries a number of times, if suceed returns true, otherwise false
     */
 
-    bool isByteOK = false; // return variable
-    uint8_t w = 0;
+    bool isByteOK = false;
+    uint8_t i = 0;
     uint8_t buffer = 0; // buffer to compare the data written
     do
     {
-        myEEPROM.put(addr, body); // save the paramters on the desired address
+        myEEPROM.put(addr, body);
         delayMicroseconds(SHORTDELAY_I2C);
-        myEEPROM.get(addr, buffer); // read back the parameter just saved
+        myEEPROM.get(addr, buffer);
         if (buffer != body)
         {
             // if the data read is different from the parameter try to write again
             // for a fixed number of times
-            w++;
+            i++;
             DEBUG_I2CLN(F("Failed to Write"));
             DEBUG_I2C(body);
             DEBUG_I2C(F(" != "));
@@ -40,7 +40,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
             isByteOK = true;
             break;
         }
-    } while (w < ERROR_I2C_LIMIT);
+    } while (i < ERROR_I2C_LIMIT);
     return isByteOK; // return true if process was successful, otherwise false
 }
 
@@ -51,19 +51,19 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
     tries a number of times, if suceed returns true, otherwise false
     */
 
-    bool isWordOK = false; // return variable
-    uint8_t w = 0;
-    uint16_t buffer = 0; // buffer to compare the data written
+    bool isWordOK = false;
+    uint8_t i = 0;
+    uint16_t buffer = 0;
     do
     {
-        myEEPROM.put(addr, body); // save the paramters on the desired address
+        myEEPROM.put(addr, body);
         delayMicroseconds(SHORTDELAY_I2C);
-        myEEPROM.get(addr, buffer); // read back the parameter just saved
+        myEEPROM.get(addr, buffer);
         if (buffer != body)
         {
             // if the data read is different from the parameter try to write again
             // for a fixed number of times
-            w++;
+            i++;
             DEBUG_I2CLN(F("Failed to write"));
             DEBUG_I2C(body);
             DEBUG_I2C(F(" != "));
@@ -81,7 +81,7 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
             isWordOK = true;
             break;
         }
-    } while (w < ERROR_I2C_LIMIT);
+    } while (i < ERROR_I2C_LIMIT);
     return isWordOK; // return true if process was successful, otherwise false
 }
 
