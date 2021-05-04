@@ -187,13 +187,17 @@
 #define I2C_CLKFQY_AFTER 100000UL // i2c clock frequency after ssd1306 function calls when extEEPROM is not present
 #endif
 #ifdef ACCELEROMETER_ON
-#define OUTPUT_START_X 64
-#define OUTPUT_END_X 128
-#define OUTPUT_START_Y 17
-#define OUTPUT_END_Y 55
+#define OUTPUT_START_X 128.0
+#define OUTPUT_END_X 64.0
+#define OUTPUT_START_Y 17.0
+#define OUTPUT_END_Y 36.0
+#define OUTPUT_Y_START 55.0
+#define OUTPUT_Y_END 36.0
 #define INPUT_START_X -1
 #define INPUT_END_X 1
-#define INPUT_START_Y -1
-#define INPUT_END_Y 1
+#define INPUT_START_Y 0
+#define INPUT_END_Y -1
+#define INPUT_Y_START 0
+#define INPUT_Y_END 1
 #define MEAN_SAMPLE_NUMBER 40
 #endif

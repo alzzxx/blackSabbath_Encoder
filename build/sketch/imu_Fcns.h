@@ -14,6 +14,7 @@ void BestEncoder::slopeCalc(void)
     */
     imuPoint->slopeX = 1.0 * (OUTPUT_END_X - OUTPUT_START_X) / (INPUT_END_X - INPUT_START_X);
     imuPoint->slopeY = 1.0 * (OUTPUT_END_Y - OUTPUT_START_Y) / (INPUT_END_Y - INPUT_START_Y);
+    imuPoint->ySlope = 1.0 * (OUTPUT_Y_END - OUTPUT_Y_START) / (INPUT_Y_END - INPUT_Y_START);
 }
 
 bool BestEncoder::startIMU(void)
@@ -22,13 +23,13 @@ bool BestEncoder::startIMU(void)
     Function to start the imu, if initialization is ok returns true, otherwise false
     */
     bool isIMUok = false;
-    uint8_t w = 0;
+    uint8_t i = 0;
     do
     {
         if (IMU.begin() == false)
         {
             DEBUG_IMULN(F("Failed to initialize IMU"));
-            w++;
+            i++;
             isIMUok = false;
             delayMicroseconds(10);
         }
@@ -40,7 +41,7 @@ bool BestEncoder::startIMU(void)
             BestEncoder::slopeCalc();
             break;
         }
-    } while (w < 10);
+    } while (i < 10);
     delay(5);
     return isIMUok;
 }
@@ -81,18 +82,20 @@ void BestEncoder::imuRead(void)
 
     // calculate (x,y) coordinates of the digital level dot shown on the screen/webServer
     imuPoint->outputX = OUTPUT_START_X + BestEncoder::roundFunction(imuPoint->slopeX * (avgX - INPUT_START_X));
-    imuPoint->outputY = OUTPUT_START_Y + BestEncoder::roundFunction(imuPoint->slopeY * (avgY - INPUT_START_Y));
+    if (avgZ >= 0)
+    {
+        imuPoint->outputY = OUTPUT_START_Y + BestEncoder::roundFunction(imuPoint->slopeY * (avgY - INPUT_START_Y));
+    }
+    else
+    {
+        imuPoint->outputY = OUTPUT_Y_START + BestEncoder::roundFunction(imuPoint->ySlope * (-avgY - INPUT_Y_START));
+    }
 
     //  calculate inclination angle on x and y axis using trigonometry
     imuPoint->angX = atan(avgX / sqrt(pow(avgY, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
-    /*
-    float aY = atan(avgY / sqrt(pow(avgX, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
-    if (aY < 0)
-    {
-        imuPoint->angY = aY + 90.0;
-    }
-    else if (aY > 0 )
-*/
+
+    //float aY = atan(avgY / sqrt(pow(avgX, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
+
     imuPoint->angY = atan(avgY / sqrt(pow(avgX, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
 
     DEBUG_IMU(F("xAngle: "));
