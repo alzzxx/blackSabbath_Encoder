@@ -134,7 +134,6 @@ typedef struct struct_accgyroValues
 {
     int16_t slopeX;
     int16_t slopeY;
-    int16_t ySlope;
     int16_t outputX;
     int16_t outputY;
     float angX;
@@ -149,7 +148,6 @@ typedef struct struct_accgyroValues
 struct_accgyroValues imuValues = {
     imuValues.slopeX,
     imuValues.slopeY,
-    imuValues.ySlope,
     imuValues.outputX,
     imuValues.outputY,
     imuValues.angX,

@@ -322,8 +322,8 @@ void BestEncoder::displayDigitalLevel(void)
     display.write(167);
     display.setCursor(4, 46);
     display.write(233);
-    display.print("y:");
-    display.print(imuPoint->angY, 1);
+    display.print("z:");
+    display.print(imuPoint->angZ, 1);
     display.setCursor(55, 46);
     display.write(167);
 #else
