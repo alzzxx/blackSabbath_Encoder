@@ -4,7 +4,6 @@ void setup()
   bool tempSens, tempShield, tempEEPROM, tempIMU;
   int16_t parStatus;
 
-  //serial for debug
   DEBUG_SERIALBEGIN(115200);
 
   // set pins
