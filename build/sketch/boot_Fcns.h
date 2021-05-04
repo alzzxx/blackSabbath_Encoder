@@ -35,10 +35,10 @@ int16_t readParam(void)
         }
         DEBUG_BOOTLN("");
         DEBUG_BOOT("MAC address: ");
-        for (uint8_t xx = 0; xx < 6; xx++)
+        for (uint8_t w = 0; w < 6; w++)
         {
-            DEBUG_BOOTFLO(encPoint->mac[xx], HEX);
-            if (xx < 5)
+            DEBUG_BOOTFLO(encPoint->mac[w], HEX);
+            if (w < 5)
                 DEBUG_BOOT(":");
         }
         DEBUG_BOOTLN("");
@@ -49,11 +49,11 @@ int16_t readParam(void)
         DEBUG_BOOT("remotePort: ");
         DEBUG_BOOTLN(encPoint->remotePort);
 
-        for (uint8_t i = 0; i < NUMBER_OF_PARAMETERS; i++)
+        for (uint8_t w = 0; w < NUMBER_OF_PARAMETERS; w++)
         {
-            DEBUG_BOOT(deviceParamNames[i]);
+            DEBUG_BOOT(deviceParamNames[w]);
             DEBUG_BOOT(" is: ");
-            DEBUG_BOOTLN(encPoint->deviceParameters[i]);
+            DEBUG_BOOTLN(encPoint->deviceParameters[w]);
         }
 #endif
         return errCount;
@@ -101,14 +101,14 @@ void startEEPROM(void)
     Wire.begin();
     Wire.setClock(I2C_CLKFQY_AFTER);
 
-    uint8_t aa = 0;
-    while (aa < ERROR_I2C_LIMIT)
+    uint8_t w = 0;
+    while (w < ERROR_I2C_LIMIT)
     {
         if (myEEPROM.begin(EEPROM_ADDRESS) == false)
         {
             DEBUG_BOOTLN(F("EEPROM Error. No memory detected"));
             flagPoint->extMemFlag = false;
-            aa++;
+            w++;
             delay(SHORTDELAY_I2C);
         }
         else
@@ -132,8 +132,8 @@ void loadEncSettings(void)
     the first four places, if those are zeroes it can be assumed that memory is empty
     */
 #ifdef ERASE_EEPROM
-    DEBUG_BOOTLN(F("Erasing EEPROM")); // to erase the memory uncomment this line
-    myEEPROM.erase();                  // to erase the memory uncomment this line
+    DEBUG_BOOTLN(F("Erasing EEPROM"));
+    myEEPROM.erase();
 #endif
 
     uint32_t testRead = 0;
@@ -174,9 +174,9 @@ bool bootShield(void)
     delay(200);
 
     // ETHERNET COMMUNICATION
-    Ethernet.init(ET_PIN_NSS);         // Configure the built-in SS pin for the ethernet shield
-    Ethernet.begin(encPoint->mac, ip); // Start the Ethernet
-    ET_NSS_HI;                         // Bring the SS pin high again (bug of Ethernet library causes it to turn Low after Ethernet.begin())
+    Ethernet.init(ET_PIN_NSS);
+    Ethernet.begin(encPoint->mac, ip);
+    ET_NSS_HI; // Bring the SS pin high again (bug of Ethernet library causes it to turn Low after Ethernet.begin())
     DEBUG_BOOTLN(F("Ethernet activated."));
 
     // Check for Ethernet hardware present
@@ -199,12 +199,12 @@ bool bootShield(void)
     }
 
     // Check for ethernet cable connected
-    uint8_t j = 0;
-    while (j < 10)
+    i = 0;
+    while (i < 10)
     {
         if (Ethernet.linkStatus() == LinkOFF)
         {
-            j++;
+            i++;
             DEBUG_BOOTLN(F("Ethernet cable is not connected"));
             isLinkOK = false;
             delay(10);
@@ -219,12 +219,12 @@ bool bootShield(void)
 
 #ifdef UPD_ON
     // Start Udp server
-    uint8_t z = 0;
-    while (z < 10)
+    i = 0;
+    while (i < 10)
     {
         if (!Udp.begin(encPoint->localPort))
         {
-            z++;
+            i++;
             DEBUG_BOOTLN(F("Error connecting device. UDP socket not available"));
             isUdpOK = false;
             delay(10);
@@ -234,10 +234,10 @@ bool bootShield(void)
 #ifdef DEBUG_BOOT
             DEBUG_BOOTLN(F("Connection Udp OK"));
             DEBUG_BOOT(F("Local IP address: "));
-            for (uint8_t y = 0; y < 4; y++)
+            for (uint8_t w = 0; w < 4; w++)
             {
-                DEBUG_BOOT(ip[y]);
-                if (y < 3)
+                DEBUG_BOOT(ip[w]);
+                if (w < 3)
                     DEBUG_BOOT(".");
             }
             DEBUG_BOOT(F(", port: "));
@@ -294,12 +294,12 @@ void BestEncoder::bmeStart(void)
     /*
     start temperature sensor, returns true is started properly, otherwise false
     */
-    uint8_t j = 0;
-    while (j < 10)
+    uint8_t i = 0;
+    while (i < 10)
     {
         if (!bme.begin(BME280_ADDRESS))
         {
-            j++;
+            i++;
             DEBUG_BOOTLN(F("BME not started. Check wiring."));
             flagPoint->tFlag = false;
             delay(100);
@@ -320,12 +320,12 @@ void BestEncoder::bmeStart(void)
 #ifdef SENSOR_AHT10
 void BestEncoder::ahtStart(void)
 {
-    uint8_t j = 0;
-    while (j < 10)
+    uint8_t i = 0;
+    while (i < 10)
     {
         if (!aht.begin())
         {
-            j++;
+            i++;
             DEBUG_BOOTLN(F("AHT not started. Check wiring."));
             flagPoint->tFlag = false;
             delay(100);
