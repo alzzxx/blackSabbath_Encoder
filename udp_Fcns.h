@@ -58,7 +58,7 @@ void BestEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, u
     */
 
     Udp.beginPacket(targetIP, targetPort);
-    Udp.write(buffer, size); // Packet must be defined between "Udp.beginPacket()" and "Udp.endPacket()"
+    Udp.write(buffer, size);
     Udp.endPacket();
 
 #ifdef DEBUG // Print some info on the monitor
