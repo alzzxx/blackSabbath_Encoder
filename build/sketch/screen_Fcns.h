@@ -20,26 +20,14 @@ void BestEncoder::startScreen(void)
     if the screen don't start, the program remains blocked
     */
 
-    // start the screen according to the hardware
-#ifdef defined(ARDUINO_NANO) && defined(SSD1306_SPI)
-    while (!display.begin(SSD1306_SWITCHCAPVCC))
-    {
-        DEBUG_BOOTLN(F("SSD1306 allocation failed"));
-        fAllarmeSchermo = true;
-    }
-#elif defined(ARDUINO_NANO) && defined(SSD1306_I2C)
+#if defined(ARDUINO_NANO) && defined(SSD1306_I2C)
     while (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
     {
         DEBUG_BOOTLN(F("SSD1306 allocation failed"));
         fAllarmeSchermo = true;
     }
-#elif defined(ARDUINO_MEGA) && defined(SSD1306_SPI)
-    while (!display.begin(SSD1306_SWITCHCAPVCC))
-    {
-        DEBUG_BOOTLN(F("SSD1306 allocation failed"));
-        fAllarmeSchermo = true;
-    }
 #endif
+
     // if the screen starts show debug info and move on
     fAllarmeSchermo = false;
     onScreen = true;
@@ -49,7 +37,7 @@ void BestEncoder::startScreen(void)
     display.display();
 }
 
-void BestEncoder::frameHeader(uint8_t cursorX, uint8_t cursorY, uint8_t sizeText, bool invIS, const char *const buffer[], uint8_t num, bool isAcc)
+void BestEncoder::frameHeader(uint8_t cursorX, uint8_t cursorY, uint8_t sizeText, bool varInverted, const char *const buffer[], uint8_t num, bool isAccelerometer)
 {
     /*
     Function that creates the frame and header for each page on the oled screen
@@ -57,17 +45,17 @@ void BestEncoder::frameHeader(uint8_t cursorX, uint8_t cursorY, uint8_t sizeText
     display.drawRect(0, 0, 128, 16, WHITE);  // draw upper frame
     display.drawRect(0, 17, 128, 47, WHITE); // draw lower frame
 
-    if (isAcc == true)
+    if (isAccelerometer == true)
     {
         display.drawFastVLine(64, 17, 40, WHITE);
         display.drawFastHLine(0, 55, 128, WHITE);
     }
 
-    BestEncoder::setDisp(sizeText, invIS, 0, 0, false);         // set text settings
+    BestEncoder::setDisp(sizeText, varInverted, 0, 0, false);   // set text settings
     BestEncoder::showText(cursorX, cursorY, buffer, num, true); // display header message
 }
 
-void BestEncoder::showText(uint16_t cx1, uint16_t cy1, const char *const bufferText[], uint8_t numB, bool isCentered)
+void BestEncoder::showText(uint16_t xCursor, uint16_t yCursor, const char *const bufferText[], uint8_t bufferNumber, bool isCentered)
 {
     /*
     Show the desired message on the screen, message must be choosen from the oledMessage_table
@@ -76,34 +64,34 @@ void BestEncoder::showText(uint16_t cx1, uint16_t cy1, const char *const bufferT
     {
         // if the text should be centered, calculate string lenght
         int16_t x1, y1;
-        uint16_t w, h;
-        display.getTextBounds(bufferText[numB], cx1, cy1, &x1, &y1, &w, &h); // string lenght calculation
-        uint16_t xPos = (SCREEN_WIDHT - w) / 2;                              // calculate xposition of the string using its width
-        display.setCursor(xPos, cy1);                                        // set cursor with the calculated coordinates
+        uint16_t stringWidth, stringHeight;
+        display.getTextBounds(bufferText[bufferNumber], xCursor, yCursor, &x1, &y1, &stringWidth, &stringHeight); // string lenght calculation
+        uint16_t xPosition = (SCREEN_WIDHT - stringWidth) / 2;                                                    // calculate xposition of the string using its width
+        display.setCursor(xPosition, yCursor);                                                                    // set cursor with the calculated coordinates
     }
     else
     {
-        display.setCursor(cx1, cy1); // if text is not centered set cursor with the input parameters
+        display.setCursor(xCursor, yCursor); // if text is not centered set cursor with the input parameters
     }
-    display.print(bufferText[numB]); // show message
+    display.print(bufferText[bufferNumber]); // show message
 }
 
-void BestEncoder::setDisp(uint8_t tSize, bool isInverted, uint8_t xC, uint8_t xY, bool isCursor)
+void BestEncoder::setDisp(uint8_t textSize, bool isInverted, uint8_t xCursor, uint8_t yCursor, bool isCursor)
 {
     /*
     TODO: Write description and comments
     */
 
-    display.setTextSize(tSize);
+    display.setTextSize(textSize);
     if (isInverted)
         display.setTextColor(BLACK, WHITE);
     else
         display.setTextColor(WHITE);
     if (isCursor)
-        display.setCursor(xC, xY);
+        display.setCursor(xCursor, yCursor);
 }
 
-void BestEncoder::dispWarning(uint8_t xx, uint8_t yy)
+void BestEncoder::dispWarning(uint8_t xCursor, uint8_t yCursor)
 {
     /*
     TODO: Write description and comments
@@ -112,7 +100,7 @@ void BestEncoder::dispWarning(uint8_t xx, uint8_t yy)
     if (!flagPoint->sysOK)
     {
         display.cp437(true);
-        display.setCursor(xx, yy);
+        display.setCursor(xCursor, yCursor);
         display.write(40);
         display.write(33);
         display.write(41);
@@ -384,10 +372,10 @@ void BestEncoder::displayIPMAC(void)
     }
     BestEncoder::showText(5, 39, oledMessage_table, 25, false);
     display.setCursor(5, 48);
-    for (uint8_t j = 0; j < 6; j++)
+    for (uint8_t i = 0; i < 6; i++)
     {
-        display.print(encPoint->mac[j], HEX);
-        if (j < 5)
+        display.print(encPoint->mac[i], HEX);
+        if (i < 5)
         {
             display.write(58);
         }

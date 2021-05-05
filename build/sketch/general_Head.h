@@ -1,10 +1,8 @@
 
-// For macros
+// preprocessing define
 #define ARDUINO_NANO
-//#define ARDUINO_MEGA
-//#define SSD1306_SPI
 #define SSD1306_I2C
-//#define SH1107_I2C
+#define SENSOR_BME280
 #define SHIELD_ON
 #define SCREEN_ON
 #define WEBSERVER_ON
@@ -12,28 +10,21 @@
 #define ACCELEROMETER_ON
 #define UDP_ON
 //#define SD_ON
-#define SENSOR_BME280
-//#define SENSOR_AHT10
 //#define ERASE_EEPROM
 
 // Libraries
-#ifdef SENSOR_BME280
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-#endif
-#ifdef SENSOR_AHT10
-#include <Adafruit_Sensor.h>
-#include <Adafruit_AHT10.h>
-#endif
 #define TASKER_MAX_TASKS 9
 #include <Tasker.h>
 #include <SPI.h>
 #include <Wire.h>
-#if (defined(SSD1306_SPI) || defined(SSD1306_I2C)) && defined(SCREEN_ON)
+#include <QEI.h>
+#include <Average.h>
+#ifdef SENSOR_BME280
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#endif
+#if defined(SSD1306_I2C)) && defined(SCREEN_ON)
 #include <Adafruit_SSD1306.h>
-#include <Adafruit_GFX.h>
-#elif defined(SH1107_I2C) && defined(SCREEN_ON)
-#include <Adafruit_SH110X.h>
 #include <Adafruit_GFX.h>
 #endif
 #ifdef WEBSERVER_ON
@@ -49,49 +40,8 @@
 #include <Nano33BLEAccelerometer.h>
 #include <Arduino_LSM9DS1.h>
 #endif
-#include <QEI.h>
-#include <Average.h>
 
 //  GPIO PINS macro
-#if defined(ARDUINO_NANO) && defined(SSD1306_SPI)
-#define SENSOR_PIN_STATUS 6 // input pin from STM, means "PIXART OK"
-#define TOGGLE_BUTTON 2     // toggle screen button
-#define ST_PIN_STATUS 3     // bit allarme ST
-#define ST_PIN_NSS 9        // slave select for F031K6
-#define SD_PIN_NSS 4        // slave select for sd card from ethernet shield
-#define ET_PIN_NSS 10       // slave select for ethernet shield
-#define PLCEN_PIN_STATUS 5  // enable bit from PLC
-#define OLED_MOSI 11        // D1 OLED
-#define OLED_CLK 13         // D0 OLED
-#define OLED_DC A1          // DC OLED
-#define OLED_NSS 7          // CS OLED
-#define OLED_RESET 8        // RESET OLED
-#define ST_RESET A0         // reset signal to F031K6
-#endif
-
-#if defined(ARDUINO_MEGA) && defined(SSD1306_SPI)
-#define SENSOR_PIN_STATUS 6 // input pin from STM, means "PIXART OK"
-#define TOGGLE_BUTTON 18    // toggle screen button
-#define ST_PIN_STATUS 3     // bit allarme ST
-#define ST_PIN_NSS 9        // slave select for F031K6
-#define SD_PIN_NSS 8        // slave select for sd card from ethernet shield
-#define ET_PIN_NSS 10       // slave select for ethernet shield
-#define PLCEN_PIN_STATUS 2  // enable bit from PLC
-#define OLED_MOSI 51        // D1 OLED
-#define OLED_CLK 52         // D0 OLED
-#define OLED_DC 30          // DC OLED
-#define OLED_NSS 31         // CS OLED
-#define OLED_RESET 32       // RESET OLED
-#define ST_RESET A0         // reset signal to F031K6
-#endif
-
-#ifdef ARDUINO_MEGA
-#define PIN_MEGA 53
-#define PIN_MEGA_MODE pinMode(PIN_MEGA, OUTPUT)
-#else
-#define PIN_MEGA_MODE
-#endif
-
 #if defined(ARDUINO_NANO) && defined(SSD1306_I2C)
 #define PLCEN_PIN_STATUS 2  // enable bit from PLC
 #define ST_PIN_STATUS 3     // bit allarme ST
@@ -125,20 +75,12 @@
 #define ET_NSS_HI digitalWrite(ET_PIN_NSS, HIGH)
 #define ST_RESET_LO digitalWrite(ST_RESET, LOW)
 #define ST_RESET_HI digitalWrite(ST_RESET, HIGH)
-#ifdef SSD1306_SPI
-#define OLED_NSS_LO digitalWrite(OLED_NSS, LOW)
-#define OLED_NSS_HI digitalWrite(OLED_NSS, HIGH)
-#endif
 
 // Sensors operation macro
 #if defined(SENSOR_BME280)
 #define READ_TEMPERATURE bme.readTemperature()
 #define READ_HUMIDITY bme.readHumidity()
 #define READ_PRESSURE bme.readPressure() / 100.0F
-#elif defined(SENSOR_AHT10)
-#define UPDATE_AHT aht.getEvent(&humidity, &temp)
-#define READ_TEMPERATURE temp.temperature
-#define READ_HUMIDITY temp.relative_himidity
 #endif
 #ifdef SHIELD_ON
 #define ETHERNET_STATUS Ethernet.linkStatus()
@@ -153,9 +95,6 @@
 #define PULSE_PER_REV 32000UL
 #ifdef SENSOR_BME280
 #define BME280_ADDRESS 0x76 // i2c address of BME280
-#endif
-#ifdef SENSOR_AHT10
-#define AHT_ADDRESS 0x38
 #endif
 #define SERVER_PORT 80
 #define NUMBER_OF_PARAMETERS 7 // number of parameters exchanged with ST

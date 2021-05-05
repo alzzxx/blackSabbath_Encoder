@@ -27,18 +27,18 @@ int16_t readParam(void)
         DEBUG_BOOT("devIndex: ");
         DEBUG_BOOTLN(encPoint->deviceIndex);
         DEBUG_BOOT(F("Local IP: "));
-        for (uint8_t w = 0; w < 4; w++)
+        for (uint8_t i = 0; i < 4; i++)
         {
-            DEBUG_BOOT(ip[w]);
-            if (w < 3)
+            DEBUG_BOOT(ip[i]);
+            if (i < 3)
                 DEBUG_BOOT(F(":"));
         }
         DEBUG_BOOTLN("");
         DEBUG_BOOT("MAC address: ");
-        for (uint8_t w = 0; w < 6; w++)
+        for (uint8_t i = 0; i < 6; i++)
         {
-            DEBUG_BOOTFLO(encPoint->mac[w], HEX);
-            if (w < 5)
+            DEBUG_BOOTFLO(encPoint->mac[i], HEX);
+            if (i < 5)
                 DEBUG_BOOT(":");
         }
         DEBUG_BOOTLN("");
@@ -49,11 +49,11 @@ int16_t readParam(void)
         DEBUG_BOOT("remotePort: ");
         DEBUG_BOOTLN(encPoint->remotePort);
 
-        for (uint8_t w = 0; w < NUMBER_OF_PARAMETERS; w++)
+        for (uint8_t i = 0; i < NUMBER_OF_PARAMETERS; i++)
         {
-            DEBUG_BOOT(deviceParamNames[w]);
+            DEBUG_BOOT(deviceParamNames[i]);
             DEBUG_BOOT(" is: ");
-            DEBUG_BOOTLN(encPoint->deviceParameters[w]);
+            DEBUG_BOOTLN(encPoint->deviceParameters[i]);
         }
 #endif
         return errCount;
@@ -101,14 +101,14 @@ void startEEPROM(void)
     Wire.begin();
     Wire.setClock(I2C_CLKFQY_AFTER);
 
-    uint8_t w = 0;
-    while (w < ERROR_I2C_LIMIT)
+    uint8_t i = 0;
+    while (i < ERROR_I2C_LIMIT)
     {
         if (myEEPROM.begin(EEPROM_ADDRESS) == false)
         {
             DEBUG_BOOTLN(F("EEPROM Error. No memory detected"));
             flagPoint->extMemFlag = false;
-            w++;
+            i++;
             delay(SHORTDELAY_I2C);
         }
         else
@@ -311,32 +311,6 @@ void BestEncoder::bmeStart(void)
             secPoint->tC = READ_TEMPERATURE;
             secPoint->hP = READ_HUMIDITY;
             secPoint->bPre = READ_PRESSURE;
-            break;
-        }
-    }
-}
-#endif
-
-#ifdef SENSOR_AHT10
-void BestEncoder::ahtStart(void)
-{
-    uint8_t i = 0;
-    while (i < 10)
-    {
-        if (!aht.begin())
-        {
-            i++;
-            DEBUG_BOOTLN(F("AHT not started. Check wiring."));
-            flagPoint->tFlag = false;
-            delay(100);
-        }
-        else
-        {
-            DEBUG_BOOTLN(F("AHT started"));
-            flagPoint->tFlag = true;
-            UPDATE_AHT;
-            secPoint->tC = READ_TEMPERATURE;
-            secPoint->hP = READ_HUMIDITY;
             break;
         }
     }

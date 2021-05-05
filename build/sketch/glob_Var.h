@@ -19,16 +19,7 @@ int debug1 = 0;          // TODO check with RS
 int cnt_debug = 0;
 bool statusReadFlag = false;
 #else
-uint8_t ip[4] = {192, 168, 1, 25};                                                                        // fixed ip address to show on screen, only if webserver is not active
-#endif
-
-// globVar used for Udp communication with PLC
-#ifdef UDP_ON
-const uint16_t bufferSize = 40;                                        // size of buffer
-uint8_t packetBuffer[bufferSize];                                      // buffer to hold incoming packet
-uint8_t diagBuffer[] = {0};                                            // a byte to send back device diagnostic
-const uint16_t parameterSize = bufferSize / sizeof(uint16_t);          // TODO maybe modify to adapt new structure???
-uint16_t parameters[parameterSize]; /*= {18, 5461, 2238, 2463, 121};*/ //Array of devices parameters to be received by PLC
+uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
 
 // globvar for screen
@@ -80,11 +71,12 @@ flagPoint->tFlag = true;
 // for tempSensor and encoder reading
 typedef struct secSystems
 {
-    float tC;       // temperature value
-    float hP;       // humidity value
-    float bPre;     // pressure value
-    double mPul;    // pulse read from encoder
-    double encFreq; // calculated pulse frequency
+    float tC;           // temperature value
+    float hP;           // humidity value
+    float bPre;         // pressure value
+    double mPul;        // pulse read from encoder
+    double encFreq;     // calculated pulse frequency
+    byte diagBuffer[1]; // buffer to send to PLC
 };
 
 secSystems secVar = {
@@ -93,6 +85,7 @@ secSystems secVar = {
     secVar.bPre = 0.00,
     secVar.mPul = 0.00,
     secVar.encFreq = 0.00,
+    secVar.diagBuffer[0] = 0,
 };
 
 secSystems *secPoint = &secVar;
@@ -370,23 +363,14 @@ Average<double> mediaPuls(MEAN_PUL_SAMPLES);              // to calculate mean p
 Adafruit_BME280 bme; // object for temperature sensor
 #endif
 
-#ifdef SENSOR_AHT10
-Adafruit_AHT10 aht;
-sensors_event_t humidity, temp;
-#endif
-
 #ifdef WEBSERVER_ON
 IPAddress ip(192, 168, 1, 20);      // Local IP address
 IPAddress remote(192, 168, 1, 10);  // remote IP address
 EthernetServer server(SERVER_PORT); // Server is configured in default port 80
 #endif
 
-#if defined(ARDUINO_NANO) && defined(SSD1306_SPI) && defined(SCREEN_ON)
-Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, ST_RESET, OLED_NSS); // define OLED screen
-#elif defined(ARDUINO_NANO) && defined(SSD1306_I2C) && defined(SCREEN_ON)
+#if defined(ARDUINO_NANO) && defined(SSD1306_I2C) && defined(SCREEN_ON)
 Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, &Wire, ST_RESET, I2C_CLKFQY_DUR, I2C_CLKFQY_AFTER); // define OLED screen
-#elif defined(ARDUINO_MEGA) && defined(SSD1306_SPI) && defined(SCREEN_ON)
-Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, ST_RESET, OLED_NSS);
 #endif
 
 BestEncoder myEncoder; // internal class for screen, extEEPROM, IMU, UDP

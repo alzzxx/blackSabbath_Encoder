@@ -24,30 +24,29 @@ void stCheck(void)
   {
     DEBUG_TASKS(F("ST error"));
     flagPoint->stFlag = true;
-    diagBuffer[0] = deviceStatus;
+    secPoint->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
     delay(10);
-    myEncoder.writeUDP(diagBuffer, sizeof(diagBuffer), remote, encPoint->remotePort);
+    myEncoder.writeUDP(secPoint->diagBuffer, sizeof(secPoint->diagBuffer), remote, encPoint->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
-    DEBUG_TASKSLN(diagBuffer[0]);
+    DEBUG_TASKSLN(secPoint->diagBuffer[0]);
   }
 }
 
-#if defined(SENSOR_BME280) || defined(SENSOR_AHT10)
+#if defined(SENSOR_BME280)
 void tempUpdate(void)
 {
   /*
   Function to update temperature/humidity values from BME280
   */
-#ifdef SENSOR_AHT10
-  UPDATE_AHT;
-#endif
+
+#ifdef SENSOR_BME280
   secPoint->tC = READ_TEMPERATURE;
   secPoint->hP = READ_HUMIDITY;
-#ifdef SENSOR_BME280
   secPoint->bPre = READ_PRESSURE;
 #endif
+
   if (secPoint->tC > 0 && secPoint->hP > 0)
   {
     flagPoint->tFlag = true;

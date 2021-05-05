@@ -39,8 +39,6 @@ void setup()
 #endif
 #if defined(SENSOR_BME280)
   myEncoder.bmeStart();
-#elif defined(SENSOR_AHT10)
-  myEncoder.ahtStart();
 #endif
 #endif
   delay(500);
@@ -64,7 +62,7 @@ void setup()
 #ifdef SCREEN_ON
   tasker.setInterval(updateScreen, 50, 1); // update page to shown on oled screen
 #endif
-#if defined(SENSOR_BME280) || defined(SENSOR_AHT10)
+#ifdef SENSOR_BME280
   tasker.setInterval(tempUpdate, 5000UL, 3); // check if tempSensor is OK
 #endif
   tasker.setInterval(checkSystems, 60000UL, 3); /// general check of all systems

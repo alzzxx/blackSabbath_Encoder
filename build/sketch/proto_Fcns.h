@@ -1,11 +1,6 @@
 
 #ifdef WEBSERVER_ON
-
-#ifdef ARDUINO_NANO
 void resetFunc(void); // Declaration of the Arduino reset function. It is needed for rebooting from software
-#elif defined(ARDUINO_MEGA)
-void (*resetFunc)(void);
-#endif
 
 // spi functions to communicate with F031K6
 static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE);
@@ -31,32 +26,29 @@ void webServerArdST(void);
 void serverStatus(void);
 #endif
 
-// boot Functions
-int16_t readParam(void);
+int16_t readParam(void); // initial parameters reading
+void checkSystems(void); // periodic functions to control systems
+
 #ifdef SHIELD_ON
 bool bootShield(void);
 #endif
 
-// periodic functions to control systems
-void checkSystems(void);
-
-#if defined(SENSOR_BME280) || defined(SENSOR_AHT10)
-// to update temperature sensor values
-void tempUpdate(void);
+#ifdef SENSOR_BME280
+void tempUpdate(void); // to update temperature sensor values
 #endif
 
 #ifdef SCREEN_ON
 void updateScreen(void); // oled screen functions
 #endif
 
-#ifdef EXTMEMORY_ON
 // to start and update extEEPROM
+#ifdef EXTMEMORY_ON
 void extEEPROMupdate(void);
 void startEEPROM(void);
 void loadEncSettings(void);
 #endif
 
-#ifdef ACCELEROMETER_ON
 // to update imu status
+#ifdef ACCELEROMETER_ON
 void imuUpdate(void);
 #endif
