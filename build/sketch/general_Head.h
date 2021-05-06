@@ -23,7 +23,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #endif
-#if defined(SSD1306_I2C)) && defined(SCREEN_ON)
+#if defined(SSD1306_I2C) && defined(SCREEN_ON)
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
 #endif

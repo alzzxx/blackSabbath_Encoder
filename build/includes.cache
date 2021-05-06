@@ -11,13 +11,8 @@
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "Adafruit_Sensor.h",
-    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor"
-  },
-  {
-    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "Adafruit_BME280.h",
-    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_BME280_Library"
+    "Include": "Tasker.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Tasker"
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
@@ -31,8 +26,23 @@
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "Tasker.h",
-    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Tasker"
+    "Include": "QEI.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\QEI"
+  },
+  {
+    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
+    "Include": "Average.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Average\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
+    "Include": "Adafruit_Sensor.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor"
+  },
+  {
+    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
+    "Include": "Adafruit_BME280.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_BME280_Library"
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
@@ -66,26 +76,6 @@
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "QEI.h",
-    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\QEI"
-  },
-  {
-    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "Average.h",
-    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Average\\src"
-  },
-  {
-    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor\\Adafruit_Sensor.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_BME280_Library\\Adafruit_BME280.cpp",
     "Include": "",
     "Includepath": null
   },
@@ -96,6 +86,21 @@
   },
   {
     "Sourcefile": "C:\\Users\\a.rondon\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\mbed\\1.3.2\\libraries\\Wire\\Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\QEI\\QEI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor\\Adafruit_Sensor.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_BME280_Library\\Adafruit_BME280.cpp",
     "Include": "",
     "Includepath": null
   },
@@ -241,11 +246,6 @@
   },
   {
     "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Arduino_LSM9DS1\\src\\LSM9DS1.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\QEI\\QEI.cpp",
     "Include": "",
     "Includepath": null
   },

@@ -347,18 +347,21 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/rtos/rtos.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/overloads.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\general_Head.h \
- C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_Unified_Sensor/Adafruit_Sensor.h \
- C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/api/deprecated/Print.h \
- C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_BME280_Library/Adafruit_BME280.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\Tasker/Tasker.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\libraries\SPI/SPI.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/api/HardwareSPI.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/drivers/SPIMaster.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\libraries\Wire/Wire.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/api/HardwareI2C.h \
+ C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/api/deprecated/Print.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/drivers/I2C.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/drivers/I2CSlave.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/rtos/rtos.h \
- C:\Users\a.rondon\Documents\Arduino\libraries\Tasker/Tasker.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\QEI/QEI.h \
+ C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\Average\src/Average.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_Unified_Sensor/Adafruit_Sensor.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_BME280_Library/Adafruit_BME280.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_SSD1306/Adafruit_SSD1306.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_GFX_Library/Adafruit_GFX.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_GFX_Library/gfxfont.h \
@@ -379,9 +382,6 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/platform/CircularBuffer.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Arduino_LSM9DS1\src/Arduino_LSM9DS1.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Arduino_LSM9DS1\src/LSM9DS1.h \
- C:\Users\a.rondon\Documents\Arduino\libraries\QEI/QEI.h \
- C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed.h \
- C:\Users\a.rondon\Documents\Arduino\libraries\Average\src/Average.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\debug_Macro.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\class_File.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\glob_Var.h \

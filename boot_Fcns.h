@@ -164,7 +164,6 @@ bool bootShield(void)
     bool isShieldOK, isHardOK, isLinkOK, isUdpOK, isServerOK;
 
     // disable all SPI peripherals by keeping high ther SS pins
-    PIN_MEGA_MODE; // only when using Arduino Mega
     pinMode(ST_PIN_NSS, OUTPUT);
     ST_NSS_HI;
     pinMode(SD_PIN_NSS, OUTPUT);
