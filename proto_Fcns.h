@@ -1,7 +1,11 @@
 
-#ifdef WEBSERVER_ON
-void resetFunc(void); // Declaration of the Arduino reset function. It is needed for rebooting from software
+void resetFunc(void);       // for encoder reset, from HW/SW
+void btnToggleScreen(void); // for screen toggling
+void updateButton(void);    // to update button pressing
+void checkSystems(void);    // periodic functions to control systems
+int16_t readParam(void);    // initial parameters reading
 
+#ifdef WEBSERVER_ON
 // spi functions to communicate with F031K6
 static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE);
 bool SpiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect);
@@ -25,9 +29,6 @@ bool displayWebServer(void);
 void webServerArdST(void);
 void serverStatus(void);
 #endif
-
-int16_t readParam(void); // initial parameters reading
-void checkSystems(void); // periodic functions to control systems
 
 #ifdef SHIELD_ON
 bool bootShield(void);

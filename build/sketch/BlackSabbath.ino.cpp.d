@@ -360,6 +360,9 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  C:\Users\a.rondon\Documents\Arduino\libraries\QEI/QEI.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Average\src/Average.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\EasyButton\src/EasyButton.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\EasyButton\src/EasyButtonBase.h \
+ C:\Users\a.rondon\Documents\Arduino\libraries\EasyButton\src/Sequence.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_Unified_Sensor/Adafruit_Sensor.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_BME280_Library/Adafruit_BME280.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Adafruit_SSD1306/Adafruit_SSD1306.h \
@@ -386,13 +389,10 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\class_File.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\glob_Var.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\proto_Fcns.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\spi_Fcns.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\i2c_Fcns.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\imu_Fcns.h \
+ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\coms_File.h \
+ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\secFcn_File.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\screen_Fcns.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\webServer_Fcns.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\udp_Fcns.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\boot_Fcns.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\freq_Fcns.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\task_Fcns.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\setup_Encoder.h

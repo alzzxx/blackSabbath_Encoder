@@ -25,24 +25,24 @@ uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only i
 // globvar for screen
 #ifdef SCREEN_ON
 const uint16_t mDebTime = 300;       // debounce time for toggle screen button
-bool fAllarmeSchermo = false;        // flag to inform that there is a problem with the oled screen
+const uint16_t encResetTime = 5000;  // time to reset encoder
 bool prevTogScr = false;             // to control screen change
 bool onScreen = false;               // to control autoOFF wakeON of oled screen
 uint8_t displayScreenNum = 0;        // current display
-volatile bool toggleScreen = false;  // flag to change screen number
 volatile uint32_t mTimerCounter = 0; // to hold elapsed time on debouncing function inside ISR
 #endif
 
 // globVar secondary systems
 typedef struct flagSystems
 {
-    bool tFlag;      // flag for temperature sensor control
-    bool eFlag;      // flag for ethernet control
-    bool sysOK;      // flag for systems check
-    bool extMemFlag; // flag for EEPROM check
-    bool imuFlag;    // flag for imu check
-    bool patFlag;    // flag for pixart sensor
-    bool stFlag;     // flag for st mcu
+    bool tFlag;                 // flag for temperature sensor control
+    bool eFlag;                 // flag for ethernet control
+    bool sysOK;                 // flag for systems check
+    bool extMemFlag;            // flag for EEPROM check
+    bool imuFlag;               // flag for imu check
+    bool patFlag;               // flag for pixart sensor
+    bool stFlag;                // flag for st mcu
+    volatile bool toggleScreen; // flag to change screen
 };
 
 // default values for flag variables
@@ -54,6 +54,7 @@ flagSystems flagEnc = {
     .imuFlag = false,
     .patFlag = false,
     .stFlag = false,
+    .toggleScreen = false,
 };
 
 flagSystems *flagPoint = &flagEnc;
@@ -160,7 +161,7 @@ imuPoint->angY = 0.00;
 
 #ifdef SCREEN_ON
 static const char oledMessage_0[] PROGMEM = "BESTduino";
-static const char oledMessage_1[] PROGMEM = "V 1.3.0";
+static const char oledMessage_1[] PROGMEM = "V 1.8.0";
 static const char oledMessage_2[] PROGMEM = "Shield not present";
 static const char oledMessage_3[] PROGMEM = "Checking encoder";
 static const char oledMessage_4[] PROGMEM = "Encoder error";
@@ -203,7 +204,7 @@ static const char oledMessage_40[] PROGMEM = "Check EEPROM";
 static const char oledMessage_41[] PROGMEM = "IMU error";
 static const char oledMessage_42[] PROGMEM = "IMU disabled";
 static const char oledMessage_43[] PROGMEM = "Encoder frequency";
-static const char oledMessage_44[] PROGMEM = "";
+static const char oledMessage_44[] PROGMEM = "Finishing setup";
 static const char oledMessage_45[] PROGMEM = "Encoder disabled";
 static const char oledMessage_46[] PROGMEM = "";
 static const char oledMessage_47[] PROGMEM = "";
@@ -355,9 +356,12 @@ static const unsigned char oledIcon_6[] PROGMEM = {
 #endif
 
 // Objects and instances
+
+BestEncoder myEncoder;                                    // internal class for screen, extEEPROM, IMU, UDP
 Tasker tasker(true);                                      // object for tasking
 QEI myPulse(PIN_SQWA, PIN_SQWB, PIN_ZERO, PULSE_PER_REV); // to read encPulses
 Average<double> mediaPuls(MEAN_PUL_SAMPLES);              // to calculate mean pulse value
+EasyButton button(TOGGLE_BUTTON);                         // to toggle screen and reset encoder
 
 #ifdef SENSOR_BME280
 Adafruit_BME280 bme; // object for temperature sensor
@@ -372,8 +376,6 @@ EthernetServer server(SERVER_PORT); // Server is configured in default port 80
 #if defined(ARDUINO_NANO) && defined(SSD1306_I2C) && defined(SCREEN_ON)
 Adafruit_SSD1306 display(SCREEN_WIDHT, SCREEN_HEIGHT, &Wire, ST_RESET, I2C_CLKFQY_DUR, I2C_CLKFQY_AFTER); // define OLED screen
 #endif
-
-BestEncoder myEncoder; // internal class for screen, extEEPROM, IMU, UDP
 
 #ifdef UDP_ON
 EthernetUDP Udp; // An EthernetUDP instance to let us send and receive packets over UDP

@@ -19,6 +19,7 @@
 #include <Wire.h>
 #include <QEI.h>
 #include <Average.h>
+#include <EasyButton.h>
 #ifdef SENSOR_BME280
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>

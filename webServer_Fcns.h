@@ -1300,13 +1300,3 @@ bool displayWebServer()
     return transmissionNeeded;
 }
 
-#ifdef ARDUINO_NANO
-void resetFunc()
-{
-    /*
-        Function for software reset using nano_33_BLE
-    */
-
-    NVIC_SystemReset();
-}
-#endif

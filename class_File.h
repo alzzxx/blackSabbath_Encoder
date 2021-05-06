@@ -20,6 +20,9 @@ private:
 #endif
 
 public:
+    inline void readEncoder(void) __attribute__((always_inline));
+    void buttonSetup(void);
+
 #ifdef SCREEN_ON
     inline void updateScreenNum(void) __attribute__((always_inline));
     inline void startScreen(void) __attribute__((always_inline));
@@ -36,6 +39,7 @@ public:
     bool initParam(void);
     bool sensorStart(void);
     bool shieldStart(void);
+    void finishSetup(void);
 #endif
 
 #ifdef UDP_ON
@@ -58,6 +62,4 @@ public:
     void putEncParameters(uint32_t addr);
     void writeEncParameter(uint32_t addr, uint8_t byteToSave);
 #endif
-
-    inline void readEncoder(void) __attribute__((always_inline));
 };

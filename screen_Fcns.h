@@ -1,18 +1,4 @@
 
-
-void pushScreen(void)
-{
-    /*
-    TODO: Write description and comments
-    */
-
-    if (millis() > (mTimerCounter + mDebTime))
-    {
-        mTimerCounter = millis();
-        toggleScreen = !toggleScreen;
-    }
-}
-
 void BestEncoder::startScreen(void)
 {
     /*
@@ -24,12 +10,10 @@ void BestEncoder::startScreen(void)
     while (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
     {
         DEBUG_BOOTLN(F("SSD1306 allocation failed"));
-        fAllarmeSchermo = true;
     }
 #endif
 
     // if the screen starts show debug info and move on
-    fAllarmeSchermo = false;
     onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
     DEBUG_DELAY(1000);
@@ -137,7 +121,7 @@ void BestEncoder::updateScreenNum(void)
     const uint32_t waitScreen = 300000;
     static bool offFlag;
 
-    if (toggleScreen == prevTogScr && onScreen == true)
+    if (flagPoint->toggleScreen == prevTogScr && onScreen == true)
     {
         DEBUG_SCREENLN(F("Button not pressed, time is running"));
         if (offFlag == true)
@@ -159,14 +143,14 @@ void BestEncoder::updateScreenNum(void)
 #endif
     }
 #ifdef DEBUG_SCREEN
-    else if (toggleScreen == prevTogScr && onScreen == false)
+    else if (flagPoint->toggleScreen == prevTogScr && onScreen == false)
     {
         DEBUG_SCREENLN(F("Screen is off, waiting for restart"));
     }
 #endif
-    else if (toggleScreen != prevTogScr)
+    else if (flagPoint->toggleScreen != prevTogScr)
     {
-        prevTogScr = toggleScreen;
+        prevTogScr = flagPoint->toggleScreen;
         if (onScreen == true)
         {
             if (displayScreenNum < displayScreenNumMax)
@@ -652,5 +636,16 @@ bool BestEncoder::shieldStart(void)
     shieldOK = true;
 #endif
     display.display();
+    delay(DELAY_SCREEN);
+    display.clearDisplay();
+    display.display();
     return shieldOK;
+}
+
+void BestEncoder::finishSetup(void)
+{
+    BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
+    BestEncoder::showText(17, 36, oledMessage_table, 44, true);
+    display.display();
+    delay(DELAY_SCREEN);
 }

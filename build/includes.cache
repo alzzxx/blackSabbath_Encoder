@@ -36,6 +36,11 @@
   },
   {
     "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
+    "Include": "EasyButton.h",
+    "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\build\\sketch\\BlackSabbath.ino.cpp",
     "Include": "Adafruit_Sensor.h",
     "Includepath": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor"
   },
@@ -91,6 +96,31 @@
   },
   {
     "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\QEI\\QEI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src\\EasyButton.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src\\EasyButtonBase.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src\\EasyButtonTouch.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src\\EasyButtonVirtual.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\a.rondon\\Documents\\Arduino\\libraries\\EasyButton\\src\\Sequence.cpp",
     "Include": "",
     "Includepath": null
   },

@@ -3,8 +3,8 @@
 #define DEBUG_WEBSERVER
 #define DEBUG_ETHERNET
 //#define DEBUG_IMU
-#define DEBUG_SPI_ONE
-#define DEBUG_SPI_TWO
+//#define DEBUG_SPI_ONE
+//#define DEBUG_SPI_TWO
 //#define DEBUG_I2C
 #define DEBUG_BOOT
 //#define DEBUG_UDP

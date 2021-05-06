@@ -12,9 +12,6 @@
 # 12 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
 # 13 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
 # 14 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
-# 15 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
-# 16 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
-# 17 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\BlackSabbath.ino" 2
 
 void loop()
 {
