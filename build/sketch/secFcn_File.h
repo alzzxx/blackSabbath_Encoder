@@ -157,6 +157,10 @@ void resetFunc(void)
     Function for software reset using nano_33_BLE
     */
     DEBUG_BOOTLN("I'm reseting");
+    ST_RESET_LO;
+    delayMicroseconds(500);
+    ST_RESET_HI;
+    delay(1);
     NVIC_SystemReset();
 }
 

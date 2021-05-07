@@ -1290,13 +1290,8 @@ bool displayWebServer()
             restartNeeded = false;
             DEBUG_SERVERLN(F("At least one critical parameter has been changed. The device will restart"));
             //delay (20);
-            ST_RESET_LO;
-            delayMicroseconds(500);
-            ST_RESET_HI;
-            delay(1);
             resetFunc();
         }
     }
     return transmissionNeeded;
 }
-
