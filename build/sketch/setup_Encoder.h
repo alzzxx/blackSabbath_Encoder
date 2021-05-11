@@ -12,7 +12,7 @@ void setup()
   pinMode(SENSOR_PIN_STATUS, INPUT_PULLUP);
   ST_RESET_HI;
 
-  // start screen functions
+// start screen functions
 #ifdef SCREEN_ON
   DEBUG_BOOTLN(F("Starting screen now"));
   delay(500);
@@ -39,37 +39,44 @@ void setup()
 #endif
 #endif
 
-  // set interrupt function for toggle button
+// set interrupt function for toggle button
 #ifdef SCREEN_ON
   myEncoder.finishSetup();
   myEncoder.buttonSetup();
 #endif
 
+// activate debug function measuring
+#ifdef DEBUG_FCN_TIME
+  pinConfig(DEBUG_PIN);
+#endif
+
   // set intervals for repeating functions
   DEBUG_BOOTLN(F("Setting tasker intervals"));
+
   delay(500);
 #ifdef WEBSERVER_ON
-  tasker.setInterval(spiSTM, 10, 0);              // SPI between ST and arduino
-  tasker.setInterval(webServerArdST, 20, 1);      // handling of webServer functions
+  tasker.setInterval(spiSTM, 20, 0);              // SPI between ST and arduino *10
+  tasker.setInterval(webServerArdST, 100, 1);     // handling of webServer functions *20
   tasker.setInterval(statusRead, 2000UL, 2);      // to check if spi coms between arduino and ST is OK
   tasker.setInterval(serverStatus, 3600000UL, 3); // to check if webServer is OK
 #endif
+  //TODO test it  tasker.setInterval(stCheck, 2000UL, 2);
 #ifdef SCREEN_ON
-  tasker.setInterval(updateScreen, 50, 1); // update page to shown on oled screen
-  tasker.setInterval(updateButton, 50, 1); // update button reading
+  tasker.setInterval(updateScreen, 100, 1); // update page to shown on oled screen *50
+  tasker.setInterval(updateButton, 50, 1);  // update button reading
 #endif
 #ifdef SENSOR_BME280
   tasker.setInterval(tempUpdate, 5000UL, 3); // check if tempSensor is OK
 #endif
   tasker.setInterval(checkSystems, 60000UL, 3); /// general check of all systems
 #ifdef EXTMEMORY_ON
-  tasker.setInterval(extEEPROMupdate, 3600000UL, 3); // check if extEEPROm is ok
+  tasker.setInterval(extEEPROMupdate, 5000UL, 3); // check if extEEPROm is ok  3600000UL
 #endif
 #ifdef ACCELEROMETER_ON
   tasker.setInterval(imuUpdate, 3600000UL, 3); // check if IMU is ok
 #endif
 
-  // finish the setup
+// finish the setup
 #ifdef SCREEN_ON
   display.clearDisplay();
   display.display();

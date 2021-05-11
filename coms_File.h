@@ -24,23 +24,23 @@ bool SpiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
     /* this fcn send to address the body. */
     debug1++;
     uint8_t rx[4] = {0, 0, 0, 0};
-    delayMicroseconds(4 * SHORTDELAY);
+    delayMicroseconds(4 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
     digitalWrite(slaveSelect, LOW); // Starts communication with Slave connected to master. SS lowered
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
 
     rx[0] = SPI.transfer(0xAA);           //Send 0xAA aka "write"
-    delayMicroseconds(SHORTDELAY);        // delay very important: let STM to manage the FIFO hardware stack
+    delayMicroseconds(shortDelay);        // delay very important: let STM to manage the FIFO hardware stack
     rx[1] = SPI.transfer(address);        //Send address of the target variable
-    delayMicroseconds(SHORTDELAY);        // delay very important: let STM to manage the FIFO hardware stack
+    delayMicroseconds(shortDelay);        // delay very important: let STM to manage the FIFO hardware stack
     rx[2] = SPI.transfer(highByte(body)); //Send first 8 bits of body
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[3] = SPI.transfer(lowByte(body));
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
 
     digitalWrite(slaveSelect, HIGH); //  restore SS as "slave not communicating"
     SPI.endTransaction();
-    delayMicroseconds(4 * SHORTDELAY);
+    delayMicroseconds(4 * shortDelay);
     if (checkIflistened(&rx[0], 4) == 0)
         return 0; // first check: if STM sent [24, 24, 24, 24] every frame was received correctly.
 
@@ -71,19 +71,19 @@ bool SpiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
   */
     int flag = 0;
     uint8_t rx[4] = {0, 0, 0, 0};
-    delayMicroseconds(4 * SHORTDELAY);
+    delayMicroseconds(4 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
     digitalWrite(slaveSelect, LOW); // Starts communication with Slave connected to master. SS, or NCSS lowered
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
 
     rx[0] = SPI.transfer(0x0F); //Send 0x0F aka "read"
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[1] = SPI.transfer(address); //Send address of the target variable
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[2] = SPI.transfer(0); // send  dummy
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[3] = SPI.transfer(0); // send  dummy
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     // delayMicroseconds(100);    // this is because of the loop in the STM takes time
     if (checkIflistened(&rx[0], 4) == 0)
         flag = 1;
@@ -100,19 +100,19 @@ bool SpiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
     DEBUG_SPIONE(" , ");
     DEBUG_SPIONELN(rx[3]);
 
-    delayMicroseconds(4 * SHORTDELAY);
+    delayMicroseconds(4 * shortDelay);
     rx[0] = SPI.transfer(24); //Send 0x18 aka "I'm listening"
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[1] = SPI.transfer(25); //Send 0x18 aka "I'm listening"
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[2] = SPI.transfer(26); //Send 0x18 aka "I'm listening"
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
     rx[3] = SPI.transfer(27); //Send 0x18 aka "I'm listening"
-    delayMicroseconds(SHORTDELAY);
+    delayMicroseconds(shortDelay);
 
     digitalWrite(slaveSelect, HIGH); // Starts communication with Slave connected to master. SS, or NCSS lowered
     SPI.endTransaction();
-    delayMicroseconds(4 * SHORTDELAY);
+    delayMicroseconds(4 * shortDelay);
 
     DEBUG_SPIONELN("Read2 : Sent: 24, 25, 26, 27");
     DEBUG_SPIONE("        rec :  ");
@@ -142,7 +142,7 @@ int SendParameters()
     uint16_t readTemp = 0;
     uint8_t i = 0;
 
-    for (int i = 0; i < NUMBER_OF_PARAMETERS; i++)
+    for (int i = 0; i < numberParameters; i++)
     {
         /* for every parameter do the following:
         1. write until success
@@ -184,7 +184,7 @@ int SendParameters()
                 DEBUG_SPITWOLN(" ___________OK");
                 break;
             }
-        } while (errorCnt < ERROR_SPI_LIMIT); // repeat the write-Read-compare operation for a limited amount of times
+        } while (errorCnt < spiErrorLimit); // repeat the write-Read-compare operation for a limited amount of times
     }
 
     return errorCnt; // 0 if everything was OK
@@ -206,9 +206,9 @@ int writeReg(uint8_t address, uint16_t body, int slaveSelect)
     while (!SpiWriteArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
-        if (errorCnt > ERROR_SPI_LIMIT)
+        if (errorCnt > spiErrorLimit)
         {
-            return (ERROR_SPI_LIMIT + 100 + address);
+            return (spiErrorLimit + 100 + address);
         }
     }
 }
@@ -223,10 +223,10 @@ int readReg(uint8_t address, uint16_t *body, int slaveSelect)
     while (!SpiReadArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
-        if (errorCnt > ERROR_SPI_LIMIT)
+        if (errorCnt > spiErrorLimit)
         {
 
-            return (ERROR_SPI_LIMIT + 200 + address);
+            return (spiErrorLimit + 200 + address);
         }
     }
 }
@@ -246,7 +246,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
     do
     {
         myEEPROM.put(addr, body);
-        delayMicroseconds(SHORTDELAY_I2C);
+        delayMicroseconds(delayI2C);
         myEEPROM.get(addr, buffer);
         if (buffer != body)
         {
@@ -257,7 +257,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
             DEBUG_I2C(body);
             DEBUG_I2C(F(" != "));
             DEBUG_I2CLN(buffer);
-            delayMicroseconds(SHORTDELAY_I2C);
+            delayMicroseconds(delayI2C);
             isByteOK = false;
         }
         else
@@ -270,7 +270,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
             isByteOK = true;
             break;
         }
-    } while (i < ERROR_I2C_LIMIT);
+    } while (i < i2cErrorLimit);
     return isByteOK; // return true if process was successful, otherwise false
 }
 
@@ -286,8 +286,10 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
     uint16_t buffer = 0;
     do
     {
+        DEBUG_I2C(F("Writing address: "));
+        DEBUG_I2CLN(addr);
         myEEPROM.put(addr, body);
-        delayMicroseconds(SHORTDELAY_I2C);
+        delayMicroseconds(delayI2C);
         myEEPROM.get(addr, buffer);
         if (buffer != body)
         {
@@ -299,7 +301,7 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
             DEBUG_I2C(F(" != "));
             DEBUG_I2CLN(buffer);
             isWordOK = false;
-            delayMicroseconds(SHORTDELAY_I2C);
+            delayMicroseconds(delayI2C);
         }
         else
         {
@@ -311,7 +313,8 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
             isWordOK = true;
             break;
         }
-    } while (i < ERROR_I2C_LIMIT);
+    } while (i < i2cErrorLimit);
+    DEBUG_I2CLN(F("Writing to EEPROM finished"));
     return isWordOK; // return true if process was successful, otherwise false
 }
 
@@ -322,7 +325,7 @@ void BestEncoder::putEncParameters(uint32_t addr)
     */
 
     myEEPROM.put(addr, encSettings);
-    delayMicroseconds(SHORTDELAY_I2C);
+    delayMicroseconds(delayI2C);
     DEBUG_I2CLN(F("New parameters saved"));
 }
 
@@ -333,7 +336,7 @@ void BestEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
     */
 
     myEEPROM.write(addr, byteToSave);
-    delayMicroseconds(SHORTDELAY_I2C);
+    delayMicroseconds(delayI2C);
     DEBUG_I2CLN(F("New parameter saved"));
 }
 
@@ -362,29 +365,29 @@ uint16_t BestEncoder::listenUDP(byte *buffer, uint8_t size)
         IPAddress remote = Udp.remoteIP();
         Udp.read(buffer, size); // read the packet into packetBufffer
 #ifdef DEBUG
-        DEBUG_PRINT(F("Received packet of size: "));
-        DEBUG_PRINTLN(packetSize);
-        DEBUG_PRINT(F("From "));
+        DEBUG_UDP(F("Received packet of size: "));
+        DEBUG_UDPLN(packetSize);
+        DEBUG_UDP(F("From "));
         for (i = 0; i < 4; i++)
         {
-            DEBUG_PRINTFLO(remote[i], DEC);
+            DEBUG_UDPFLO(remote[i], DEC);
             if (i < 3)
             {
-                DEBUG_PRINT(F("."));
+                DEBUG_UDP(F("."));
             }
         }
-        DEBUG_PRINT(F(", port "));
-        DEBUG_PRINTLN(Udp.remotePort());
+        DEBUG_UDP(F(", port "));
+        DEBUG_UDPLN(Udp.remotePort());
         if (packetSize > size)
         {
-            DEBUG_PRINT(F("Incoming packet exceeds the number of parameters accepted. Ignoring last "));
-            DEBUG_PRINT(packetSize - size);
-            DEBUG_PRINTLN(F(" byte(s)."));
+            DEBUG_UDP(F("Incoming packet exceeds the number of parameters accepted. Ignoring last "));
+            DEBUG_UDP(packetSize - size);
+            DEBUG_UDPLN(F(" byte(s)."));
         }
-        DEBUG_PRINTLN(F("Contents:"));
+        DEBUG_UDPLN(F("Contents:"));
         for (i = 0; i < size; i++)
         {
-            DEBUG_PRINTLNFLO(buffer[i], HEX);
+            DEBUG_UDPLNFLO(buffer[i], HEX);
         }
 #endif
     }
@@ -397,25 +400,28 @@ void BestEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, u
     Builds a UDP packet containing the elements of the byte array Buffer and sends it to 
     the device identified by targetIP and targetPort input parameters
     */
-
+    DEBUG_UDPLN(F("Preparing UDP packet"));
     Udp.beginPacket(targetIP, targetPort);
+    DEBUG_UDPLN(F("Sending packet"));
     Udp.write(buffer, size);
+    DEBUG_UDPLN(F("Closing packet"));
     Udp.endPacket();
+    DEBUG_UDPLN(F("DONE udp"));
 
 #ifdef DEBUG // Print some info on the monitor
-    DEBUG_PRINT(F("Sent packet of size "));
-    DEBUG_PRINTLN(size);
-    DEBUG_PRINT(F("To "));
+    DEBUG_UDP(F("Sent packet of size: "));
+    DEBUG_UDPLN(size);
+    DEBUG_UDP(F("To "));
     for (uint8_t i = 0; i < 4; i++)
     {
-        DEBUG_PRINTFLO(targetIP[i], DEC);
+        DEBUG_UDPFLO(targetIP[i], DEC);
         if (i < 3)
         {
-            DEBUG_PRINT(F("."));
+            DEBUG_UDP(F("."));
         }
     }
-    DEBUG_PRINT(F(", port "));
-    DEBUG_PRINTLN(targetPort);
+    DEBUG_UDP(F(", port "));
+    DEBUG_UDPLN(targetPort);
 #endif
 }
 

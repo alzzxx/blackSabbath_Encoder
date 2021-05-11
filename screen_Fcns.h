@@ -6,7 +6,7 @@ void BestEncoder::startScreen(void)
     if the screen don't start, the program remains blocked
     */
 
-#if defined(ARDUINO_NANO) && defined(SSD1306_I2C)
+#if defined(ARDUINO_NANO)
     while (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
     {
         DEBUG_BOOTLN(F("SSD1306 allocation failed"));
@@ -14,7 +14,7 @@ void BestEncoder::startScreen(void)
 #endif
 
     // if the screen starts show debug info and move on
-    onScreen = true;
+    flagPoint->onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
     DEBUG_DELAY(1000);
     display.clearDisplay();
@@ -50,7 +50,7 @@ void BestEncoder::showText(uint16_t xCursor, uint16_t yCursor, const char *const
         int16_t x1, y1;
         uint16_t stringWidth, stringHeight;
         display.getTextBounds(bufferText[bufferNumber], xCursor, yCursor, &x1, &y1, &stringWidth, &stringHeight); // string lenght calculation
-        uint16_t xPosition = (SCREEN_WIDHT - stringWidth) / 2;                                                    // calculate xposition of the string using its width
+        uint16_t xPosition = (screenW - stringWidth) / 2;                                                         // calculate xposition of the string using its width
         display.setCursor(xPosition, yCursor);                                                                    // set cursor with the calculated coordinates
     }
     else
@@ -121,13 +121,13 @@ void BestEncoder::updateScreenNum(void)
     const uint32_t waitScreen = 300000;
     static bool offFlag;
 
-    if (flagPoint->toggleScreen == prevTogScr && onScreen == true)
+    if (flagPoint->toggleScreen == flagPoint->prevTogScr && flagPoint->onScreen == true)
     {
         DEBUG_SCREENLN(F("Button not pressed, time is running"));
         if (offFlag == true)
         {
             DEBUG_SCREENLN(F("offFlag is true, shutting down screen"));
-            displayScreenNum = 6;
+            secPoint->displayScreenNum = 6;
             offFlag = false;
         }
         else if (millis() > mTimerCounter + waitScreen)
@@ -143,29 +143,29 @@ void BestEncoder::updateScreenNum(void)
 #endif
     }
 #ifdef DEBUG_SCREEN
-    else if (flagPoint->toggleScreen == prevTogScr && onScreen == false)
+    else if (flagPoint->toggleScreen == flagPoint->prevTogScr && flagPoint->onScreen == false)
     {
         DEBUG_SCREENLN(F("Screen is off, waiting for restart"));
     }
 #endif
-    else if (flagPoint->toggleScreen != prevTogScr)
+    else if (flagPoint->toggleScreen != flagPoint->prevTogScr)
     {
-        prevTogScr = flagPoint->toggleScreen;
-        if (onScreen == true)
+        flagPoint->prevTogScr = flagPoint->toggleScreen;
+        if (flagPoint->onScreen == true)
         {
-            if (displayScreenNum < displayScreenNumMax)
+            if (secPoint->displayScreenNum < displayScreenNumMax)
             {
-                displayScreenNum++;
+                secPoint->displayScreenNum++;
             }
             else
             {
-                displayScreenNum = 0;
+                secPoint->displayScreenNum = 0;
             }
         }
         else
         {
             DEBUG_SCREENLN(F("Screen was off, i'm waking it on"));
-            displayScreenNum = 7;
+            secPoint->displayScreenNum = 7;
         }
     }
 }
@@ -177,7 +177,7 @@ void BestEncoder::displayInitial(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 7, false);
     BestEncoder::dispWarning(108, 5);
     BestEncoder::showText(5, 20, oledMessage_table, 12, false);
@@ -225,7 +225,7 @@ void BestEncoder::displayInitial(void)
 void BestEncoder::displayTempHum(void)
 {
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(5, 5, 1, false, oledMessage_table, 8, false);
     if (flagPoint->tFlag)
     {
@@ -264,7 +264,7 @@ void BestEncoder::displayDigitalLevel(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(35, 5, 1, false, oledMessage_table, 9, true);
 #ifdef ACCELEROMETER_ON
     int16_t cursorX, cursorY;
@@ -272,6 +272,7 @@ void BestEncoder::displayDigitalLevel(void)
     display.drawBitmap(24, 19, oledIcon_5, 17, 17, WHITE);
     BestEncoder::imuRead();
     display.drawCircle(96, 36, 6, WHITE);
+    /*
     if (imuPoint->outputX < 69)
         cursorX = 69;
     else if (imuPoint->outputX > 122)
@@ -284,7 +285,8 @@ void BestEncoder::displayDigitalLevel(void)
         cursorY = 50;
     else
         cursorY = imuPoint->outputY;
-    display.fillCircle(cursorX, cursorY, 4, WHITE);
+        */
+    display.fillCircle(imuPoint->outputX, imuPoint->outputY, 4, WHITE);
     display.setCursor(4, 36);
     display.write(233);
     display.print("x:");
@@ -311,7 +313,7 @@ void BestEncoder::displayIPMAC(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(22, 5, 1, false, oledMessage_table, 10, false);
 #ifdef SHIELD_ON
     if (flagPoint->eFlag)
@@ -375,7 +377,7 @@ void BestEncoder::displayPixVal(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 11, false);
     if (ST_STATUS == LOW && SENSOR_STATUS == LOW)
     {
@@ -429,7 +431,7 @@ void BestEncoder::displayFreqSpeed(void)
     TODO: Write description and comments
     */
     display.clearDisplay();
-    BestEncoder::displayIndicator(displayScreenNum);
+    BestEncoder::displayIndicator(secPoint->displayScreenNum);
     BestEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 43, false);
     if (PLC_STATUS == HIGH)
     {
@@ -453,13 +455,13 @@ void BestEncoder::displayFreqSpeed(void)
 void BestEncoder::displaySleep(void)
 {
     display.ssd1306_command(SSD1306_DISPLAYOFF);
-    onScreen = false;
+    flagPoint->onScreen = false;
 }
 
 void BestEncoder::displayWake(void)
 {
     display.ssd1306_command(SSD1306_DISPLAYON);
-    onScreen = true;
+    flagPoint->onScreen = true;
 }
 
 void BestEncoder::splashScreen(void)
@@ -470,7 +472,7 @@ void BestEncoder::splashScreen(void)
 
     display.drawBitmap(0, 5, oledIcon_2, 128, 64, WHITE);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::setDisp(1, false, 0, 0, false);
@@ -479,7 +481,7 @@ void BestEncoder::splashScreen(void)
     display.display();
     DEBUG_BOOTLN(F("Encoder BS"));
     DEBUG_BOOTLN(F("V 1.0.0"));
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     display.display();
 }
@@ -493,7 +495,7 @@ void BestEncoder::initialCheck(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(17, 36, oledMessage_table, 3, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     while (!(SENSOR_STATUS == LOW && ST_STATUS == LOW))
     {
         DEBUG_BOOTLN(F("Pixart sensor error"));
@@ -509,7 +511,7 @@ void BestEncoder::initialCheck(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(20, 43, oledMessage_table, 5, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     display.display();
 }
@@ -524,7 +526,7 @@ bool BestEncoder::initParam(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(17, 36, oledMessage_table, 37, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
 #ifdef EXTMEMORY_ON
@@ -549,7 +551,7 @@ bool BestEncoder::initParam(void)
     eepromOK = true;
 #endif
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     display.display();
     return eepromOK;
@@ -565,7 +567,7 @@ bool BestEncoder::sensorStart(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(17, 36, oledMessage_table, 19, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
 #if defined(SENSOR_BME280)
     BestEncoder::bmeStart();
 #elif defined(SENSOR_AHT10)
@@ -593,7 +595,7 @@ bool BestEncoder::sensorStart(void)
         sensorOK = false;
     }
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     display.display();
     return sensorOK;
@@ -609,7 +611,7 @@ bool BestEncoder::shieldStart(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(17, 36, oledMessage_table, 27, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
 #ifdef SHIELD_ON
@@ -636,7 +638,7 @@ bool BestEncoder::shieldStart(void)
     shieldOK = true;
 #endif
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
     display.clearDisplay();
     display.display();
     return shieldOK;
@@ -647,5 +649,5 @@ void BestEncoder::finishSetup(void)
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
     BestEncoder::showText(17, 36, oledMessage_table, 44, true);
     display.display();
-    delay(DELAY_SCREEN);
+    delay(delayScreen);
 }

@@ -898,8 +898,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->deviceIndex);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_DEV_INDX, encPoint->deviceIndex); // save parameters on EEPROM
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationDevIndex, encPoint->deviceIndex); // save parameters on EEPROM
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("devIndex not saved"));
             else
@@ -920,8 +920,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[0]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_ZERO, encPoint->mac[0]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacZero, encPoint->mac[0]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[0] not saved"));
             else
@@ -942,8 +942,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[1]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_ONE, encPoint->mac[1]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacOne, encPoint->mac[1]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[1] not saved"));
             else
@@ -964,8 +964,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[2]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_TWO, encPoint->mac[2]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacTwo, encPoint->mac[2]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[2] not saved"));
             else
@@ -986,8 +986,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[3]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_THREE, encPoint->mac[3]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacThree, encPoint->mac[3]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[3] not saved"));
             else
@@ -1008,8 +1008,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[4]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_FOUR, encPoint->mac[4]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacFour, encPoint->mac[4]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[4] not saved"));
             else
@@ -1031,8 +1031,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->mac[5]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(LOCATION_MAC_FIVE, encPoint->mac[5]);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadBI2C(locationMacFive, encPoint->mac[5]);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[5] not saved"));
             else
@@ -1053,8 +1053,8 @@ int parseResponse()
             DEBUG_SERVERLN(encPoint->localPort);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadWI2C(LOCATION_LOCAL_PORT, encPoint->localPort);
-            delayMicroseconds(SHORTDELAY_I2C);
+            tempFlag = myEncoder.writeReadWI2C(locationLocalPort, encPoint->localPort);
+            delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("localPort not saved"));
             else
@@ -1063,7 +1063,7 @@ int parseResponse()
             restartNeeded = true;
         }
     }
-    for (int i = 0; i < NUMBER_OF_PARAMETERS; i++)
+    for (int i = 0; i < numberParameters; i++)
     {
         tempIndex = webGetString.indexOf(deviceParamNames[i]);
         if (tempIndex >= 0)
@@ -1078,8 +1078,8 @@ int parseResponse()
                 DEBUG_SERVERLN(encPoint->deviceParameters[i]);
 #ifdef EXTMEMORY_ON
                 bool tempFlag;
-                tempFlag = myEncoder.writeReadWI2C(LOCATION_DEV_PARAM + 2 * i, encPoint->deviceParameters[i]);
-                delayMicroseconds(SHORTDELAY_I2C);
+                tempFlag = myEncoder.writeReadWI2C(locationDevParam + 2 * i, encPoint->deviceParameters[i]);
+                delayMicroseconds(delayI2C);
                 if (!tempFlag)
                 {
                     DEBUG_SERVER(deviceParamNames[i]);
@@ -1123,12 +1123,12 @@ void ajaxInitialize(EthernetClient client)
             client.print(F(":"));
     }
     client.print(F("&"));
-    for (int i = 0; i < NUMBER_OF_PARAMETERS; i++)
+    for (int i = 0; i < numberParameters; i++)
     {
         client.print(deviceParamNames[i]);
         client.print(F("="));
         client.print(encPoint->deviceParameters[i]);
-        if (i < NUMBER_OF_PARAMETERS - 1)
+        if (i < numberParameters - 1)
             client.print(F("&"));
     }
 
@@ -1148,12 +1148,12 @@ void ajaxInitialize(EthernetClient client)
             DEBUG_SERVER(F(": "));
     }
     DEBUG_SERVER(F("&"));
-    for (int i = 0; i < NUMBER_OF_PARAMETERS; i++)
+    for (int i = 0; i < numberParameters; i++)
     {
         DEBUG_SERVER(deviceParamNames[i]);
         DEBUG_SERVER(F(" = "));
         DEBUG_SERVER(encPoint->deviceParameters[i]);
-        if (i < NUMBER_OF_PARAMETERS - 1)
+        if (i < numberParameters - 1)
             DEBUG_SERVER(F("&"));
     }
 #endif
@@ -1177,7 +1177,7 @@ void ajaxUpdateDiag(EthernetClient client)
     client.print(F("&hP = "));
     client.print(secPoint->hP, DEC);
 #if defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
-    if (displayScreenNum != 4)
+    if (secPoint->displayScreenNum != 4)
         myEncoder.imuRead();
 #elif !defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
     myEncoder.imuRead();

@@ -14,8 +14,8 @@ void BestEncoder::slopeCalc(void)
     /*
     slope calculation to transform values from the imu into values shown on the digital level
     */
-    imuPoint->slopeX = 1.0 * (OUTPUT_END_X - OUTPUT_START_X) / (INPUT_END_X - INPUT_START_X);
-    imuPoint->slopeY = 1.0 * (OUTPUT_END_Y - OUTPUT_START_Y) / (INPUT_END_Y - INPUT_START_Y);
+    imuPoint->slopeX = 1.0 * (outputEndX - outputStartX) / (inputEndX - inputStartX);
+    imuPoint->slopeY = 1.0 * (outputEndY - outputStartY) / (inputEndY - inputStartY);
 }
 
 bool BestEncoder::startIMU(void)
@@ -53,7 +53,7 @@ void BestEncoder::imuRead(void)
      Read values from IMU and calculate inclination angles to show on the screen/webServer
     */
 
-    for (uint8_t i = 0; i < MEAN_SAMPLE_NUMBER; i++)
+    for (uint8_t i = 0; i < meanSampleNumber; i++)
     {
         // store reading from accelerometer on a buffer to calculate mean value
         DEBUG_IMU("i is: ");
@@ -82,8 +82,8 @@ void BestEncoder::imuRead(void)
     DEBUG_IMULNFLO(avgZ, 2);
 
     // calculate (x,y) coordinates of the digital level dot shown on the screen/webServer
-    imuPoint->outputX = OUTPUT_START_X + BestEncoder::roundFunction(imuPoint->slopeX * (avgX - INPUT_START_X));
-    imuPoint->outputY = OUTPUT_START_Y + BestEncoder::roundFunction(imuPoint->slopeY * (avgZ - INPUT_START_Y));
+    imuPoint->outputX = outputStartX + BestEncoder::roundFunction(imuPoint->slopeX * (avgX - inputStartX));
+    imuPoint->outputY = outputStartY + BestEncoder::roundFunction(imuPoint->slopeY * (avgZ - inputStartY));
 
     //  calculate inclination angle on x and y axis using trigonometry
     imuPoint->angX = atan(avgX / sqrt(pow(avgY, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
@@ -102,7 +102,7 @@ void BestEncoder::readEncoder(void)
     const uint8_t readInterval = 20;
     uint8_t i = 0;
     static uint32_t lastPulses, justBefore, rightNow, actualPulses;
-    static uint32_t deltaPulses[MEAN_PUL_SAMPLES];
+    static uint32_t deltaPulses[meanPulSamples];
 
     do
     {
@@ -120,12 +120,12 @@ void BestEncoder::readEncoder(void)
             DEBUG_FREQLN(deltaPulses[i]);
             i++;
         }
-    } while (i < MEAN_PUL_SAMPLES);
+    } while (i < meanPulSamples);
     DEBUG_FREQ(F("Exit the loop, now mean calculation"));
     secPoint->mPul = mediaPuls.mean();
     DEBUG_FREQ(F("Mean pulse is: "));
     DEBUG_FREQLN(secPoint->mPul);
-    secPoint->encFreq = secPoint->mPul / readInterval / ENCODING_TYPE;
+    secPoint->encFreq = secPoint->mPul / readInterval / encodingType;
     DEBUG_FREQ(F("Frequency is: "));
     DEBUG_FREQLN(secPoint->encFreq);
 }
@@ -172,3 +172,14 @@ void updateButton(void)
 
     button.read();
 }
+
+#ifdef DEBUG_FCN_TIME
+void pinConfig(int pin)
+{
+    NRF_GPIO->PIN_CNF[pin] = (GPIO_PIN_CNF_DIR_Output << GPIO_PIN_CNF_DIR_Pos) |
+                             (GPIO_PIN_CNF_DRIVE_S0S1 << GPIO_PIN_CNF_DRIVE_Pos) |
+                             (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos) |
+                             (GPIO_PIN_CNF_PULL_Disabled << GPIO_PIN_CNF_PULL_Pos) |
+                             (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
+}
+#endif

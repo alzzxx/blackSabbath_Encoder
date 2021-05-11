@@ -4,7 +4,8 @@ void stCheck(void)
   /*
   Function to control st and pixart status
   */
-  DEBUG_TASKSLN(F("checking pixart and ST"));
+  PIN_UP;
+  DEBUG_TASKSLN(F("Checking pixart and ST"));
   if (SENSOR_STATUS == HIGH)
   {
     flagPoint->patFlag = true;
@@ -13,12 +14,12 @@ void stCheck(void)
   else
   {
     flagPoint->patFlag = false;
-    DEBUG_TASKS(F("Pixart OK"));
+    DEBUG_TASKSLN(F("Pixart OK"));
   }
   if (ST_STATUS == LOW)
   {
     flagPoint->stFlag = false;
-    DEBUG_TASKS(F("ST ok"));
+    DEBUG_TASKSLN(F("ST ok"));
   }
   else
   {
@@ -32,6 +33,7 @@ void stCheck(void)
     DEBUG_TASKS(F("deviceStatus is: "));
     DEBUG_TASKSLN(secPoint->diagBuffer[0]);
   }
+  PIN_DOWN;
 }
 
 #if defined(SENSOR_BME280)
@@ -40,7 +42,7 @@ void tempUpdate(void)
   /*
   Function to update temperature/humidity values from BME280
   */
-
+  PIN_UP;
 #ifdef SENSOR_BME280
   secPoint->tC = READ_TEMPERATURE;
   secPoint->hP = READ_HUMIDITY;
@@ -57,17 +59,19 @@ void tempUpdate(void)
     flagPoint->tFlag = false;
     DEBUG_TASKSLN(F("Problem with tempSensor, check wiring"));
   }
+  PIN_DOWN;
 }
 #endif
 
 #ifdef EXTMEMORY_ON
 void extEEPROMupdate(void)
 {
+
   /*
   Function to check if extEEPROM is alive
   */
-
-  if (!myEEPROM.isConnected(EEPROM_ADDRESS))
+  PIN_UP;
+  if (!myEEPROM.isConnected(eepromAddress))
   {
     DEBUG_TASKSLN(F("Problem with extEEPROM, check wiring"));
     flagPoint->extMemFlag = false;
@@ -77,6 +81,7 @@ void extEEPROMupdate(void)
     DEBUG_TASKSLN(F("extEEPROM ok"));
     flagPoint->extMemFlag = true;
   }
+  PIN_DOWN;
 }
 #endif
 
@@ -87,6 +92,7 @@ void imuUpdate(void)
   Function to check if the imu is alive
   */
 
+  PIN_UP;
   if (IMU.begin() == false)
   {
     DEBUG_TASKSLN(F("Problem with IMU"));
@@ -97,6 +103,7 @@ void imuUpdate(void)
     DEBUG_TASKSLN(F("IMU ok"));
     flagPoint->imuFlag = true;
   }
+  PIN_DOWN;
 }
 #endif
 
@@ -105,6 +112,8 @@ void checkSystems(void)
   /*
   Function to check secondary systems
   */
+
+  PIN_UP;
 #ifdef SHIELD_ON
   if (flagPoint->tFlag && flagPoint->eFlag && flagPoint->extMemFlag && flagPoint->imuFlag)
   {
@@ -128,21 +137,27 @@ void checkSystems(void)
     DEBUG_TASKSLN(F("Systems not OK :("));
   }
 #endif
+  PIN_DOWN;
 }
 
 #ifdef WEBSERVER_ON
 void statusRead(void)
 {
+  PIN_UP;
   statusReadFlag = true;
+  PIN_DOWN;
 }
 
 void webServerArdST()
 {
+  PIN_UP;
   saveParameters = displayWebServer() || saveParameters;
+  PIN_DOWN;
 }
 
 void serverStatus(void)
 {
+  PIN_UP;
   if (ETHERNET_STATUS == LinkON && server)
   {
     flagPoint->eFlag = true;
@@ -177,13 +192,15 @@ void serverStatus(void)
       DEBUG_SCREENLN("Server false");
 #endif
   }
+  PIN_DOWN;
 }
 
 void spiSTM(void)
 {
+  PIN_UP;
   if (saveParameters)
   {
-    //   statusRead();
+    // statusRead();
     DEBUG_SERVERLN(F("sending parameters"));
     SPIerrorIndex = SendParameters();
     // TODO here start the thing for saying to webserver "hey param transmitted OK"
@@ -198,16 +215,16 @@ void spiSTM(void)
     { // do this only if STM is in SPI mode, and not running as encoder
       while (1)
       { //Try 200 times to read the variable
-        if (SpiReadArd2STM(SPI_STATUS_ADDRESS, &readTemp, ST_PIN_NSS))
+        if (SpiReadArd2STM(spiStatusAddress, &readTemp, ST_PIN_NSS))
         {
           break;
         }
         else
         {
           errorCnt++;
-          if (errorCnt >= ERROR_SPI_LIMIT)
+          if (errorCnt >= spiErrorLimit)
           {
-            readTemp = SPI_ERROR << 8;
+            readTemp = spiError << 8;
             break;
           }
         }
@@ -217,15 +234,16 @@ void spiSTM(void)
     statusReadFlag = 0;
   }
   saveParameters = 0;
+  PIN_DOWN;
 }
 #endif
 
 #ifdef SCREEN_ON
 void updateScreen(void)
 {
-  // TODO : write description
+  PIN_UP;
   myEncoder.updateScreenNum();
-  switch (displayScreenNum)
+  switch (secPoint->displayScreenNum)
   {
   case 0:
     myEncoder.displayInitial();
@@ -253,12 +271,12 @@ void updateScreen(void)
 
   case 6:
     myEncoder.displaySleep();
-    displayScreenNum = 8;
+    secPoint->displayScreenNum = 8;
     break;
 
   case 7:
     myEncoder.displayWake();
-    displayScreenNum = 0;
+    secPoint->displayScreenNum = 0;
     break;
 
   default:
@@ -266,5 +284,6 @@ void updateScreen(void)
     delayMicroseconds(1);
     break;
   }
+  PIN_DOWN;
 }
 #endif

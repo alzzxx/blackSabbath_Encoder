@@ -346,7 +346,7 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/platform/FileLike.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/mbed/rtos/rtos.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/overloads.h \
- c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\general_Head.h \
+ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\general_Header.h \
  C:\Users\a.rondon\Documents\Arduino\libraries\Tasker/Tasker.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\libraries\SPI/SPI.h \
  C:\Users\a.rondon\AppData\Local\Arduino15\packages\arduino\hardware\mbed\1.3.2\cores\arduino/api/HardwareSPI.h \
@@ -387,6 +387,7 @@ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\BlackSabbat
  C:\Users\a.rondon\Documents\Arduino\libraries\Arduino_LSM9DS1\src/LSM9DS1.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\debug_Macro.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\class_File.h \
+ c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\constants_File.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\glob_Var.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\proto_Fcns.h \
  c:\Users\a.rondon\Documents\GitHub\blackSabbath_Encoder\build\sketch\coms_File.h \

@@ -1,7 +1,8 @@
 
-#include "general_Head.h"
+#include "general_Header.h"
 #include "debug_Macro.h"
 #include "class_File.h"
+#include "constants_File.h"
 #include "glob_Var.h"
 #include "proto_Fcns.h"
 #include "coms_File.h"

@@ -1,5 +1,4 @@
 
-
 int16_t readParam(void)
 {
     /*
@@ -49,7 +48,7 @@ int16_t readParam(void)
         DEBUG_BOOT("remotePort: ");
         DEBUG_BOOTLN(encPoint->remotePort);
 
-        for (uint8_t i = 0; i < NUMBER_OF_PARAMETERS; i++)
+        for (uint8_t i = 0; i < numberParameters; i++)
         {
             DEBUG_BOOT(deviceParamNames[i]);
             DEBUG_BOOT(" is: ");
@@ -99,25 +98,25 @@ void startEEPROM(void)
     the user will see it on the screen
     */
     Wire.begin();
-    Wire.setClock(I2C_CLKFQY_AFTER);
+    Wire.setClock(i2cAftClk);
 
     uint8_t i = 0;
-    while (i < ERROR_I2C_LIMIT)
+    while (i < i2cErrorLimit)
     {
-        if (myEEPROM.begin(EEPROM_ADDRESS) == false)
+        if (myEEPROM.begin(eepromAddress) == false)
         {
             DEBUG_BOOTLN(F("EEPROM Error. No memory detected"));
             flagPoint->extMemFlag = false;
             i++;
-            delay(SHORTDELAY_I2C);
+            delay(delayI2C);
         }
         else
         {
             DEBUG_BOOTLN(F("EEPROM present"));
             flagPoint->extMemFlag = true;
-            myEEPROM.setMemorySize(EEPROM_MEM_SIZE);
-            myEEPROM.setPageSize(EEPROM_PAGE_SIZE);
-            myEEPROM.setPageWriteTime(EEPROM_PAG_WRITETIME);
+            myEEPROM.setMemorySize(eepromMemSize);
+            myEEPROM.setPageSize(eepromPageSize);
+            myEEPROM.setPageWriteTime(eepromPageWriteTime);
             DEBUG_BOOT(F("Mem size in bytes: "));
             DEBUG_BOOTLN(myEEPROM.length());
             break;
@@ -139,17 +138,21 @@ void loadEncSettings(void)
     uint32_t testRead = 0;
 
     // if the first four bytes are zeroes means that memory is empty
-    if (myEEPROM.get(LOCATION_SETTINGS, testRead) == 0)
+    if (myEEPROM.get(eepromStartAddress, testRead) == 0)
     {
-        myEncoder.putEncParameters(LOCATION_SETTINGS); // if memory is empty save on EEPROM the default parameters
-        delayMicroseconds(SHORTDELAY_I2C);
+        myEncoder.putEncParameters(eepromStartAddress); // if memory is empty save on EEPROM the default parameters
+        delayMicroseconds(delayI2C);
         DEBUG_BOOTLN(F("Default settings applied"));
     }
     else
     {
         //if memory is not empty then read the actual paramters stored on EEPROM
-        myEEPROM.get(LOCATION_SETTINGS, encSettings);
-        delayMicroseconds(SHORTDELAY_I2C);
+        DEBUG_TASKSLN("Now i read from memory and save it to globVar");
+        DEBUG_DELAY(1000);
+        DEBUG_TASKS("Starting EEPROM position: ");
+        DEBUG_TASKSLN(eepromStartAddress);
+        myEEPROM.get(eepromStartAddress, encSettings);
+        delayMicroseconds(delayI2C);
         DEBUG_BOOTLN(F("Loaded saved encoder settings"));
     }
 }
@@ -296,7 +299,7 @@ void BestEncoder::bmeStart(void)
     uint8_t i = 0;
     while (i < 10)
     {
-        if (!bme.begin(BME280_ADDRESS))
+        if (!bme.begin(bmeAddress))
         {
             i++;
             DEBUG_BOOTLN(F("BME not started. Check wiring."));
