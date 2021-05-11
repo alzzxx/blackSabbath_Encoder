@@ -36,6 +36,39 @@ void stCheck(void)
   PIN_DOWN;
 }
 
+void checkSystems(void)
+{
+  /*
+  Function to check secondary systems
+  */
+
+  PIN_UP;
+#ifdef SHIELD_ON
+  if (flagPoint->tFlag && flagPoint->eFlag && flagPoint->extMemFlag && flagPoint->imuFlag)
+  {
+    flagPoint->sysOK = true;
+    DEBUG_TASKSLN(F("Systems ok!"));
+  }
+  else
+  {
+    flagPoint->sysOK = false;
+    DEBUG_TASKSLN(F("Systems not OK :("));
+  }
+#else
+  if (flagPoint->tFlag && ETHERNET_STATUS && IS_SERVER_ON && flagPoint->extMemFlag && flagPoint->imuFlag)
+  {
+    flagPoint->sysOK = true;
+    DEBUG_TASKSLN(F("Systems ok!"));
+  }
+  else
+  {
+    flagPoint->sysOK = false;
+    DEBUG_TASKSLN(F("Systems not OK :("));
+  }
+#endif
+  PIN_DOWN;
+}
+
 #if defined(SENSOR_BME280)
 void tempUpdate(void)
 {
@@ -107,39 +140,6 @@ void imuUpdate(void)
 }
 #endif
 
-void checkSystems(void)
-{
-  /*
-  Function to check secondary systems
-  */
-
-  PIN_UP;
-#ifdef SHIELD_ON
-  if (flagPoint->tFlag && flagPoint->eFlag && flagPoint->extMemFlag && flagPoint->imuFlag)
-  {
-    flagPoint->sysOK = true;
-    DEBUG_TASKSLN(F("Systems ok!"));
-  }
-  else
-  {
-    flagPoint->sysOK = false;
-    DEBUG_TASKSLN(F("Systems not OK :("));
-  }
-#else
-  if (flagPoint->tFlag && ETHERNET_STATUS && IS_SERVER_ON && flagPoint->extMemFlag && flagPoint->imuFlag)
-  {
-    flagPoint->sysOK = true;
-    DEBUG_TASKSLN(F("Systems ok!"));
-  }
-  else
-  {
-    flagPoint->sysOK = false;
-    DEBUG_TASKSLN(F("Systems not OK :("));
-  }
-#endif
-  PIN_DOWN;
-}
-
 #ifdef WEBSERVER_ON
 void statusRead(void)
 {
@@ -202,7 +202,7 @@ void spiSTM(void)
   {
     // statusRead();
     DEBUG_SERVERLN(F("sending parameters"));
-    SPIerrorIndex = SendParameters();
+    SPIerrorIndex = myEncoder.sendParameters();
     // TODO here start the thing for saying to webserver "hey param transmitted OK"
     DEBUG_SERVER(F(" SPI return: "));
     DEBUG_SERVERLN(SPIerrorIndex);
@@ -215,7 +215,7 @@ void spiSTM(void)
     { // do this only if STM is in SPI mode, and not running as encoder
       while (1)
       { //Try 200 times to read the variable
-        if (SpiReadArd2STM(spiStatusAddress, &readTemp, ST_PIN_NSS))
+        if (myEncoder.spiReadArd2STM(spiStatusAddress, &readTemp, ST_PIN_NSS))
         {
           break;
         }
@@ -229,7 +229,7 @@ void spiSTM(void)
           }
         }
       }
-      updateDeviceStatus(readTemp);
+      myEncoder.updateDeviceStatus(readTemp);
     }
     statusReadFlag = 0;
   }

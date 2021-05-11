@@ -1,6 +1,6 @@
 // * SPI COMMUNICATION
 
-static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
+bool BestEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
 {
     bool flag = 1;
 
@@ -19,7 +19,7 @@ static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
     return flag;
 }
 
-bool SpiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
+bool BestEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
 {
     /* this fcn send to address the body. */
     debug1++;
@@ -41,7 +41,7 @@ bool SpiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
     digitalWrite(slaveSelect, HIGH); //  restore SS as "slave not communicating"
     SPI.endTransaction();
     delayMicroseconds(4 * shortDelay);
-    if (checkIflistened(&rx[0], 4) == 0)
+    if (BestEncoder::checkIflistened(&rx[0], 4) == 0)
         return 0; // first check: if STM sent [24, 24, 24, 24] every frame was received correctly.
 
     // for debug
@@ -63,7 +63,7 @@ bool SpiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
     return 1;
 }
 
-bool SpiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
+bool BestEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
 {
     /*  this fcn read in address.
     1. Write "hey I want to read this variable
@@ -85,7 +85,7 @@ bool SpiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
     rx[3] = SPI.transfer(0); // send  dummy
     delayMicroseconds(shortDelay);
     // delayMicroseconds(100);    // this is because of the loop in the STM takes time
-    if (checkIflistened(&rx[0], 4) == 0)
+    if (BestEncoder::checkIflistened(&rx[0], 4) == 0)
         flag = 1;
 
     DEBUG_SPIONE("Read1 : Sent: 0x0F, ");
@@ -135,7 +135,7 @@ bool SpiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
     return 1;
 }
 
-int SendParameters()
+int BestEncoder::sendParameters(void)
 { // 100+i : write; 200+i : read; 300+i comparison
 
     int errorCnt = 0;
@@ -149,11 +149,9 @@ int SendParameters()
         2. read back until success
         3. compare: if read == write then :) otherwise  start again from 1. But restart from 1 only a limited amount of times
     */
-
         do
         {
-
-            if (!writeReg(i, encPoint->deviceParameters[i], ST_PIN_NSS))
+            if (!BestEncoder::writeReg(i, encPoint->deviceParameters[i], ST_PIN_NSS))
                 break;
 
             DEBUG_SPITWO(" written parameter i = ");
@@ -161,7 +159,7 @@ int SendParameters()
             DEBUG_SPITWO(" value: ");
             DEBUG_SPITWOLN(encPoint->deviceParameters[i]);
 
-            if (!readReg(i, &readTemp, ST_PIN_NSS))
+            if (!BestEncoder::readReg(i, &readTemp, ST_PIN_NSS))
             {
                 break;
             }
@@ -186,24 +184,23 @@ int SendParameters()
             }
         } while (errorCnt < spiErrorLimit); // repeat the write-Read-compare operation for a limited amount of times
     }
-
     return errorCnt; // 0 if everything was OK
 }
 
-static void updateDeviceStatus(uint16_t code16)
+void BestEncoder::updateDeviceStatus(uint16_t code16)
 {
     deviceStatus = (code16 & 0xFF00) >> 8;
     DEBUG_SERVERLN(deviceStatus);
 }
 
-int writeReg(uint8_t address, uint16_t body, int slaveSelect)
+int BestEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
 {
     /* write in register until the writing operation is successful.
    *  but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
-    while (!SpiWriteArd2STM(address, body, slaveSelect))
+    while (!BestEncoder::spiWriteArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
         if (errorCnt > spiErrorLimit)
@@ -213,14 +210,14 @@ int writeReg(uint8_t address, uint16_t body, int slaveSelect)
     }
 }
 
-int readReg(uint8_t address, uint16_t *body, int slaveSelect)
+int BestEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
 {
     /* read in register until the reading operation is successful.
    *  but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
-    while (!SpiReadArd2STM(address, body, slaveSelect))
+    while (!BestEncoder::spiReadArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
         if (errorCnt > spiErrorLimit)

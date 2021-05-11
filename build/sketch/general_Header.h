@@ -54,7 +54,6 @@
 #define ET_PIN_NSS 10       // slave select for ethernet shield
 #define ST_RESET A0         // reset signal to F031K6
 #define PIN_ZERO NC
-#define OLED_ADDRESS 0x3D // oled screen I2C address
 #endif
 
 //  PIN operation macro

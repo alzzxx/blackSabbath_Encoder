@@ -7,7 +7,7 @@ void BestEncoder::startScreen(void)
     */
 
 #if defined(ARDUINO_NANO)
-    while (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
+    while (!display.begin(SSD1306_SWITCHCAPVCC, oledAddress))
     {
         DEBUG_BOOTLN(F("SSD1306 allocation failed"));
     }

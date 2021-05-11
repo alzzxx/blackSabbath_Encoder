@@ -36,6 +36,7 @@ const uint32_t i2cAftClk = 400000;     // i2c clock frequency after function cal
 const uint32_t i2cAftClk = 100000; // i2c clock frequency after ssd1306 function calls when extEEPROM is not present
 #endif
 #ifdef SCREEN_ON
+const uint8_t oledAddress = 0x3D; // oled screen I2C address
 const uint8_t screenW = 128;
 const uint8_t screenH = 64;
 const uint16_t mDebTime = 300;      // debounce time for toggle screen button

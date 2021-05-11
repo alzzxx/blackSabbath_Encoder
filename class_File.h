@@ -9,12 +9,16 @@ private:
     void frameHeader(uint8_t cursorX, uint8_t cursorY, uint8_t sizeText, bool invIS, const char *const buffer[], uint8_t num, bool isAcc);
     void showText(uint16_t cx1, uint16_t cy1, const char *const bufferText[], uint8_t numB, bool isCentered);
 #endif
-
+#ifdef WEBSERVER_ON
+    inline static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE) __attribute__((always_inline));
+    inline bool spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
+    inline int writeReg(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
+    inline int readReg(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
+#endif
 #ifdef ACCELEROMETER_ON
     inline int16_t roundFunction(int16_t d) __attribute__((always_inline));
     inline void slopeCalc(void) __attribute__((always_inline));
 #endif
-
 #ifdef UDP_ON
     int16_t bytesToInt(byte byte1, byte byte2);
 #endif
@@ -22,7 +26,6 @@ private:
 public:
     inline void readEncoder(void) __attribute__((always_inline));
     void buttonSetup(void);
-
 #ifdef SCREEN_ON
     inline void updateScreenNum(void) __attribute__((always_inline));
     inline void startScreen(void) __attribute__((always_inline));
@@ -41,24 +44,25 @@ public:
     bool shieldStart(void);
     void finishSetup(void);
 #endif
-
+#ifdef WEBSERVER_ON
+    inline int sendParameters(void) __attribute__((always_inline));
+    inline bool spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
+    static void updateDeviceStatus(uint16_t code16);
+#endif
 #ifdef UDP_ON
     uint16_t listenUDP(byte *buffer, uint8_t size);
-    void writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort);
+    inline void writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort) __attribute__((always_inline));
 #endif
-
-#if defined(SENSOR_BME280)
+#ifdef SENSOR_BME280
     void bmeStart(void);
 #endif
-
 #ifdef ACCELEROMETER_ON
     bool startIMU(void);
-    void imuRead(void);
+    inline void imuRead(void) __attribute__((always_inline));
 #endif
-
 #ifdef EXTMEMORY_ON
-    bool writeReadBI2C(uint32_t addr, uint8_t body);
-    bool writeReadWI2C(uint32_t addr, uint16_t body);
+    inline bool writeReadBI2C(uint32_t addr, uint8_t body) __attribute__((always_inline));
+    inline bool writeReadWI2C(uint32_t addr, uint16_t body) __attribute__((always_inline));
     void putEncParameters(uint32_t addr);
     void writeEncParameter(uint32_t addr, uint8_t byteToSave);
 #endif
