@@ -1,4 +1,8 @@
 
+/*
+* General header file
+*/
+
 // preprocessing define
 #define ARDUINO_NANO
 #define SENSOR_BME280
@@ -56,7 +60,7 @@
 #define PIN_ZERO NC
 #endif
 
-//  PIN operation macro
+//  PIN operations macro
 #define PLC_STATUS digitalRead(PLCEN_PIN_STATUS)
 #define SENSOR_STATUS digitalRead(SENSOR_PIN_STATUS)
 #define ST_STATUS digitalRead(ST_PIN_STATUS)
@@ -69,7 +73,7 @@
 #define ST_RESET_LO digitalWrite(ST_RESET, LOW)
 #define ST_RESET_HI digitalWrite(ST_RESET, HIGH)
 
-// Sensors operation macro
+// Sensors operations macro
 #if defined(SENSOR_BME280)
 #define READ_TEMPERATURE bme.readTemperature()
 #define READ_HUMIDITY bme.readHumidity()

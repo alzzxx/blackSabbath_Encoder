@@ -14,7 +14,7 @@ void BestEncoder::startScreen(void)
 #endif
 
     // if the screen starts show debug info and move on
-    flagPoint->onScreen = true;
+    fP->onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
     DEBUG_DELAY(1000);
     display.clearDisplay();
@@ -63,7 +63,7 @@ void BestEncoder::showText(uint16_t xCursor, uint16_t yCursor, const char *const
 void BestEncoder::setDisp(uint8_t textSize, bool isInverted, uint8_t xCursor, uint8_t yCursor, bool isCursor)
 {
     /*
-    TODO: Write description and comments
+    - Set text parameters like textsSize, color and cusor position
     */
 
     display.setTextSize(textSize);
@@ -78,10 +78,12 @@ void BestEncoder::setDisp(uint8_t textSize, bool isInverted, uint8_t xCursor, ui
 void BestEncoder::dispWarning(uint8_t xCursor, uint8_t yCursor)
 {
     /*
-    TODO: Write description and comments
+    - Function that displays a warning sign (!) on main screen
+    - sysOK flag is not true, to let the user knows that there is a problem
+    - with the encoder
     */
 
-    if (!flagPoint->sysOK)
+    if (!fP->sysOK)
     {
         display.cp437(true);
         display.setCursor(xCursor, yCursor);
@@ -94,7 +96,7 @@ void BestEncoder::dispWarning(uint8_t xCursor, uint8_t yCursor)
 void BestEncoder::displayIndicator(uint8_t displayNumber)
 {
     /*
-    TODO: Write description and comments
+    - Function that displays the small indicator circles of the screen bottom
     */
 
     uint8_t xCoordinates[6] = {39, 49, 59, 69, 79, 89};
@@ -121,16 +123,16 @@ void BestEncoder::updateScreenNum(void)
     const uint32_t waitScreen = 300000;
     static bool offFlag;
 
-    if (flagPoint->toggleScreen == flagPoint->prevTogScr && flagPoint->onScreen == true)
+    if (fP->toggleScreen == fP->prevTogScr && fP->onScreen == true)
     {
         DEBUG_SCREENLN(F("Button not pressed, time is running"));
         if (offFlag == true)
         {
             DEBUG_SCREENLN(F("offFlag is true, shutting down screen"));
-            secPoint->displayScreenNum = 6;
+            sP->displayScreenNum = 6;
             offFlag = false;
         }
-        else if (millis() > mTimerCounter + waitScreen)
+        else if (millis() > sP->mTimerCounter + waitScreen)
         {
             DEBUG_SCREENLN(F("Time has passed, setting offFlag true"));
             offFlag = true;
@@ -143,29 +145,29 @@ void BestEncoder::updateScreenNum(void)
 #endif
     }
 #ifdef DEBUG_SCREEN
-    else if (flagPoint->toggleScreen == flagPoint->prevTogScr && flagPoint->onScreen == false)
+    else if (fP->toggleScreen == fP->prevTogScr && fP->onScreen == false)
     {
         DEBUG_SCREENLN(F("Screen is off, waiting for restart"));
     }
 #endif
-    else if (flagPoint->toggleScreen != flagPoint->prevTogScr)
+    else if (fP->toggleScreen != fP->prevTogScr)
     {
-        flagPoint->prevTogScr = flagPoint->toggleScreen;
-        if (flagPoint->onScreen == true)
+        fP->prevTogScr = fP->toggleScreen;
+        if (fP->onScreen == true)
         {
-            if (secPoint->displayScreenNum < displayScreenNumMax)
+            if (sP->displayScreenNum < displayScreenNumMax)
             {
-                secPoint->displayScreenNum++;
+                sP->displayScreenNum++;
             }
             else
             {
-                secPoint->displayScreenNum = 0;
+                sP->displayScreenNum = 0;
             }
         }
         else
         {
             DEBUG_SCREENLN(F("Screen was off, i'm waking it on"));
-            secPoint->displayScreenNum = 7;
+            sP->displayScreenNum = 7;
         }
     }
 }
@@ -177,13 +179,13 @@ void BestEncoder::displayInitial(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 7, false);
     BestEncoder::dispWarning(108, 5);
     BestEncoder::showText(5, 20, oledMessage_table, 12, false);
     BestEncoder::showText(5, 33, oledMessage_table, 13, false);
     BestEncoder::showText(5, 46, oledMessage_table, 14, false);
-    if (flagPoint->patFlag)
+    if (fP->patFlag)
     {
         BestEncoder::setDisp(1, true, 0, 0, false);
         BestEncoder::showText(80, 20, oledMessage_table, 16, false);
@@ -195,7 +197,7 @@ void BestEncoder::displayInitial(void)
         BestEncoder::showText(80, 20, oledMessage_table, 15, false);
         DEBUG_SCREENLN(F("Pixart OK"));
     }
-    if (flagPoint->stFlag)
+    if (fP->stFlag)
     {
         BestEncoder::setDisp(1, true, 0, 0, false);
         BestEncoder::showText(80, 33, oledMessage_table, 16, false);
@@ -225,20 +227,20 @@ void BestEncoder::displayInitial(void)
 void BestEncoder::displayTempHum(void)
 {
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(5, 5, 1, false, oledMessage_table, 8, false);
-    if (flagPoint->tFlag)
+    if (fP->tFlag)
     {
         DEBUG_SCREEN(F("bmeTemp: "));
-        DEBUG_SCREENLN(secPoint->tC);
+        DEBUG_SCREENLN(sP->tC);
         DEBUG_SCREEN(F("bmeHum: "));
-        DEBUG_SCREENLN(secPoint->hP);
+        DEBUG_SCREENLN(sP->hP);
         display.drawBitmap(10, 22, oledIcon_3, 16, 16, WHITE);
         display.drawBitmap(10, 39, oledIcon_4, 16, 16, WHITE);
         BestEncoder::setDisp(2, false, 35, 22, true);
-        display.print(secPoint->tC);
+        display.print(sP->tC);
         display.setCursor(35, 39);
-        display.print(secPoint->hP);
+        display.print(sP->hP);
         display.cp437(true);
         BestEncoder::setDisp(1, false, 97, 22, true);
         display.write(167);
@@ -264,7 +266,7 @@ void BestEncoder::displayDigitalLevel(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(35, 5, 1, false, oledMessage_table, 9, true);
 #ifdef ACCELEROMETER_ON
     int16_t cursorX, cursorY;
@@ -272,32 +274,18 @@ void BestEncoder::displayDigitalLevel(void)
     display.drawBitmap(24, 19, oledIcon_5, 17, 17, WHITE);
     BestEncoder::imuRead();
     display.drawCircle(96, 36, 6, WHITE);
-    /*
-    if (imuPoint->outputX < 69)
-        cursorX = 69;
-    else if (imuPoint->outputX > 122)
-        cursorX = 122;
-    else
-        cursorX = imuPoint->outputX;
-    if (imuPoint->outputY < 22)
-        cursorY = 22;
-    else if (imuPoint->outputY > 50)
-        cursorY = 50;
-    else
-        cursorY = imuPoint->outputY;
-        */
-    display.fillCircle(imuPoint->outputX, imuPoint->outputY, 4, WHITE);
+    display.fillCircle(iP->outputX, iP->outputY, 4, WHITE);
     display.setCursor(4, 36);
     display.write(233);
     display.print("x:");
     display.setCursor(22, 36);
-    display.print(imuPoint->angX, 1);
+    display.print(iP->angX, 1);
     display.setCursor(55, 36);
     display.write(167);
     display.setCursor(4, 46);
     display.write(233);
     display.print("z:");
-    display.print(imuPoint->angZ, 1);
+    display.print(iP->angZ, 1);
     display.setCursor(55, 46);
     display.write(167);
 #else
@@ -313,24 +301,24 @@ void BestEncoder::displayIPMAC(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(22, 5, 1, false, oledMessage_table, 10, false);
 #ifdef SHIELD_ON
-    if (flagPoint->eFlag)
+    if (fP->eFlag)
     {
         BestEncoder::showText(5, 20, oledMessage_table, 23, false);
         display.setCursor(50, 20);
-        display.print(encPoint->deviceIndex);
+        display.print(eP->deviceIndex);
         BestEncoder::showText(5, 30, oledMessage_table, 24, false);
         display.setCursor(50, 30);
-        String myIP = "192.168.1." + String(20 + encPoint->deviceIndex);
+        String myIP = "192.168.1." + String(20 + eP->deviceIndex);
         display.print(myIP);
         DEBUG_SCREEN(F("Local IP: "));
         DEBUG_SCREENLN(ip);
         BestEncoder::showText(5, 39, oledMessage_table, 25, false);
         display.setCursor(5, 48);
-        String myMac = String(encPoint->mac[0], HEX) + ":" + String(encPoint->mac[1], HEX) + ":" + String(encPoint->mac[2], HEX) +
-                       ":" + String(encPoint->mac[3], HEX) + ":" + String(encPoint->mac[4], HEX) + ":" + String(encPoint->mac[5], HEX);
+        String myMac = String(eP->mac[0], HEX) + ":" + String(eP->mac[1], HEX) + ":" + String(eP->mac[2], HEX) +
+                       ":" + String(eP->mac[3], HEX) + ":" + String(eP->mac[4], HEX) + ":" + String(eP->mac[5], HEX);
         display.print(myMac);
         DEBUG_SCREEN(F("MAC Address: "));
         DEBUG_SCREEN(myMac)
@@ -346,7 +334,7 @@ void BestEncoder::displayIPMAC(void)
 #ifndef SHIELD_ON
     BestEncoder::showText(5, 20, oledMessage_table, 23, false);
     display.setCursor(47, 20);
-    display.print(encPoint->deviceIndex);
+    display.print(eP->deviceIndex);
     BestEncoder::showText(5, 30, oledMessage_table, 24, false);
     display.setCursor(47, 30);
     display.cp437(true);
@@ -360,7 +348,7 @@ void BestEncoder::displayIPMAC(void)
     display.setCursor(5, 48);
     for (uint8_t i = 0; i < 6; i++)
     {
-        display.print(encPoint->mac[i], HEX);
+        display.print(eP->mac[i], HEX);
         if (i < 5)
         {
             display.write(58);
@@ -377,45 +365,45 @@ void BestEncoder::displayPixVal(void)
     */
 
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 11, false);
     if (ST_STATUS == LOW && SENSOR_STATUS == LOW)
     {
         BestEncoder::showText(3, 19, oledMessage_table, 30, false);
         display.setCursor(45, 19);
-        display.print(encPoint->deviceParameters[0]);
+        display.print(eP->deviceParameters[0]);
         DEBUG_SCREEN(F("encDist: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[0]);
+        DEBUG_SCREENLN(eP->deviceParameters[0]);
         BestEncoder::showText(64, 19, oledMessage_table, 31, false);
         display.setCursor(108, 19);
-        display.print(encPoint->deviceParameters[1]);
+        display.print(eP->deviceParameters[1]);
         DEBUG_SCREEN(F("camRes: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[1]);
+        DEBUG_SCREENLN(eP->deviceParameters[1]);
         BestEncoder::showText(3, 29, oledMessage_table, 36, false);
         display.setCursor(45, 29);
-        display.print(encPoint->deviceParameters[6]);
+        display.print(eP->deviceParameters[6]);
         DEBUG_SCREEN(F("patCurr: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[6]);
+        DEBUG_SCREENLN(eP->deviceParameters[6]);
         BestEncoder::showText(64, 29, oledMessage_table, 35, false);
         display.setCursor(102, 29);
-        display.print(encPoint->deviceParameters[5]);
+        display.print(eP->deviceParameters[5]);
         DEBUG_SCREEN(F("tSample: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[5]);
+        DEBUG_SCREENLN(eP->deviceParameters[5]);
         BestEncoder::showText(3, 39, oledMessage_table, 34, false);
         display.setCursor(45, 39);
-        display.print(encPoint->deviceParameters[4]);
+        display.print(eP->deviceParameters[4]);
         DEBUG_SCREEN(F("outFilter: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[4]);
+        DEBUG_SCREENLN(eP->deviceParameters[4]);
         BestEncoder::showText(64, 39, oledMessage_table, 33, false);
         display.setCursor(108, 39);
-        display.print(encPoint->deviceParameters[3]);
+        display.print(eP->deviceParameters[3]);
         DEBUG_SCREEN(F("inFilter: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[3]);
+        DEBUG_SCREENLN(eP->deviceParameters[3]);
         BestEncoder::showText(3, 49, oledMessage_table, 32, false);
         display.setCursor(45, 49);
-        display.print(encPoint->deviceParameters[2]);
+        display.print(eP->deviceParameters[2]);
         DEBUG_SCREEN(F("patRes: "));
-        DEBUG_SCREENLN(encPoint->deviceParameters[2]);
+        DEBUG_SCREENLN(eP->deviceParameters[2]);
     }
     else
     {
@@ -431,7 +419,7 @@ void BestEncoder::displayFreqSpeed(void)
     TODO: Write description and comments
     */
     display.clearDisplay();
-    BestEncoder::displayIndicator(secPoint->displayScreenNum);
+    BestEncoder::displayIndicator(sP->displayScreenNum);
     BestEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 43, false);
     if (PLC_STATUS == HIGH)
     {
@@ -439,7 +427,7 @@ void BestEncoder::displayFreqSpeed(void)
         display.setTextSize(2);
         display.setCursor(30, 34);
         BestEncoder::readEncoder();
-        display.print(secPoint->encFreq);
+        display.print(sP->encFreq);
         display.setTextSize(2);
         display.setCursor(80, 34);
         display.print("kHz");
@@ -455,13 +443,13 @@ void BestEncoder::displayFreqSpeed(void)
 void BestEncoder::displaySleep(void)
 {
     display.ssd1306_command(SSD1306_DISPLAYOFF);
-    flagPoint->onScreen = false;
+    fP->onScreen = false;
 }
 
 void BestEncoder::displayWake(void)
 {
     display.ssd1306_command(SSD1306_DISPLAYON);
-    flagPoint->onScreen = true;
+    fP->onScreen = true;
 }
 
 void BestEncoder::splashScreen(void)
@@ -530,7 +518,7 @@ bool BestEncoder::initParam(void)
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
 #ifdef EXTMEMORY_ON
-    if (readParam() == 0)
+    if (BestEncoder::readParam() == 0)
     {
         display.drawBitmap(55, 23, oledIcon_0, 18, 17, WHITE);
         BestEncoder::setDisp(1, false, 0, 0, false);
@@ -574,11 +562,11 @@ bool BestEncoder::sensorStart(void)
     BestEncoder::ahtStart();
 #endif
 #ifdef ACCELEROMETER_ON
-    flagPoint->imuFlag = BestEncoder::startIMU();
+    fP->imuFlag = BestEncoder::startIMU();
 #endif
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
-    if (flagPoint->tFlag && flagPoint->imuFlag)
+    if (fP->tFlag && fP->imuFlag)
     {
         DEBUG_BOOTLN(F("All sensor started"));
         display.drawBitmap(55, 23, oledIcon_0, 18, 17, WHITE);
@@ -615,7 +603,7 @@ bool BestEncoder::shieldStart(void)
     display.clearDisplay();
     BestEncoder::frameHeader(23, 5, 1, false, oledMessage_table, 6, false);
 #ifdef SHIELD_ON
-    if (bootShield())
+    if (BestEncoder::bootShield())
     {
         DEBUG_BOOTLN(F("Ethernet shield started"));
         display.drawBitmap(55, 23, oledIcon_0, 18, 17, WHITE);

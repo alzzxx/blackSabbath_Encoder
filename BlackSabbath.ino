@@ -9,7 +9,6 @@
 #include "secFcn_File.h"
 #include "screen_Fcns.h"
 #include "webServer_Fcns.h"
-#include "boot_Fcns.h"
 #include "task_Fcns.h"
 #include "setup_Encoder.h"
 

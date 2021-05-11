@@ -1,31 +1,19 @@
 
 /*
-Global variables for encoder program
+* Global variables 
 */
 
-// globVar for webServer and UDP
-
+// globVar for webServer
 #ifdef WEBSERVER_ON
 String webGetString; // Will be used for storing the HTTP requests from the client
 String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inFilter", "outFilter", "tSample",
                                              "patCurr"}; // to be shown on debug and webServer
-byte plcEnable = 0x00;                                   // byte to indicate if the device is in SPI mode or encoder mode
-byte deviceStatus = 0xFF;                                // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
-
-//globVar for SPI com with F031K6
-int debug1 = 0; // TODO check with RS
-int cnt_debug = 0;
-int SPIerrorIndex = -1;  // do not delete this
-bool saveParameters = 1; // TODO check with RS keep initial value = 1
-bool statusReadFlag = false;
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
-
-// globvar for screen
-#ifdef SCREEN_ON
-volatile uint32_t mTimerCounter = 0; // to hold elapsed time on debouncing function inside ISR
-#endif
+int SPIerrorIndex = -1;   // do not delete this
+byte plcEnable = 0x00;    // byte to indicate if the device is in SPI mode or encoder mode
+byte deviceStatus = 0xFF; // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
 
 // globVar secondary systems
 typedef struct flagSystems
@@ -40,6 +28,8 @@ typedef struct flagSystems
     bool onScreen;              // to control autoOFF wakeON of oled screen
     volatile bool toggleScreen; // flag to change screen
     bool prevTogScr;            // to control screen change
+    bool saveParameters;        // keep initial value = 1
+    bool statusReadFlag;
 };
 
 // default values for flag variables
@@ -54,18 +44,20 @@ flagSystems flagEnc = {
     .onScreen = false,
     .toggleScreen = false,
     .prevTogScr = false,
+    .saveParameters = true,
+    .statusReadFlag = false,
 };
 
-flagSystems *flagPoint = &flagEnc;
+flagSystems *fP = &flagEnc;
 
 #ifndef EXTMEMORY_ON
-flagPoint->extMemFlag = true;
+fP->extMemFlag = true;
 #endif
 #ifndef ACCELEROMETER_ON
-flagPoint->imuFlag = true;
+fP->imuFlag = true;
 #endif
 #if !defined(SENSOR_BME280)
-flagPoint->tFlag = true;
+fP->tFlag = true;
 #endif
 
 // for tempSensor and encoder reading
@@ -78,6 +70,9 @@ typedef struct secSystems
     double encFreq;           // calculated pulse frequency
     byte diagBuffer[1];       // buffer to send to PLC
     uint8_t displayScreenNum; // current display
+    uint32_t mTimerCounter;   // to hold on screen time
+    uint16_t debug1;
+    uint16_t cntDebug;
 };
 
 secSystems secVar = {
@@ -88,10 +83,12 @@ secSystems secVar = {
     secVar.encFreq = 0.00,
     secVar.diagBuffer[0] = 0,
     secVar.displayScreenNum = 0,
+    secVar.mTimerCounter = 0,
+    secVar.debug1 = 0,
+    secVar.cntDebug = 0,
 };
 
-secSystems *secPoint = &secVar;
-
+secSystems *sP = &secVar; // pointer to struct to navigate the secVar variables
 // for encoder parameters
 typedef struct struct_encoderSettings
 {
@@ -102,7 +99,7 @@ typedef struct struct_encoderSettings
     uint16_t remotePort; // remote port to transmit on
 };
 
-// struct holding all encoder parameters, with the default parameters
+// default encoder parameters
 struct_encoderSettings encSettings = {
     encSettings.deviceIndex = 0,
     encSettings.mac[0] = 0xFD,
@@ -122,7 +119,7 @@ struct_encoderSettings encSettings = {
     encSettings.remotePort = 3000,
 };
 
-struct_encoderSettings *encPoint = &encSettings; // pointer to struct to navigate the encoder parameters
+struct_encoderSettings *eP = &encSettings; // pointer to struct to navigate the encoder parameters
 
 // for all acc/gyro values
 typedef struct struct_accgyroValues
@@ -139,7 +136,6 @@ typedef struct struct_accgyroValues
     float gyroZ;
 };
 
-// struct holding all imu values, with the default values
 struct_accgyroValues imuValues = {
     imuValues.slopeX,
     imuValues.slopeY,
@@ -153,15 +149,14 @@ struct_accgyroValues imuValues = {
     imuValues.gyroZ,
 };
 
-struct_accgyroValues *imuPoint = &imuValues; // pointer to navigate imuValues struct
+struct_accgyroValues *iP = &imuValues; // pointer to navigate imuValues struct
 
 #if !defined(ACCELEROMETER_ON)
-imuPoint->angX = 0.00;
-imuPoint->angY = 0.00;
+iP->angX = 0.00;
+iP->angY = 0.00;
 #endif
 
 // Objects and instances
-
 BestEncoder myEncoder;                                  // internal class for screen, extEEPROM, IMU, UDP
 Tasker tasker(true);                                    // object for tasking
 QEI myPulse(PIN_SQWA, PIN_SQWB, PIN_ZERO, pulsePerRev); // to read encPulses
@@ -191,8 +186,8 @@ ExternalEEPROM myEEPROM; // eeprom object that allow us to write and read from e
 #endif
 
 #ifdef ACCELEROMETER_ON
-Nano33BLEAccelerometerData accelerometerData;
-Average<float> mediaAccX(meanSampleNumber);
+Nano33BLEAccelerometerData accelerometerData; // to read imu sensor
+Average<float> mediaAccX(meanSampleNumber);   // for average calculation (same below)
 Average<float> mediaAccY(meanSampleNumber);
 Average<float> mediaAccZ(meanSampleNumber);
 #endif

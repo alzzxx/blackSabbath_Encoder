@@ -1,4 +1,8 @@
 
+/*
+* Main encoder class for encoder functions
+*/
+
 class BestEncoder
 {
 private:
@@ -21,6 +25,10 @@ private:
 #endif
 #ifdef UDP_ON
     int16_t bytesToInt(byte byte1, byte byte2);
+#endif
+#ifdef EXTMEMORY_ON
+    void startEEPROM(void);
+    void loadEncSettings(void);
 #endif
 
 public:
@@ -49,6 +57,9 @@ public:
     inline bool spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
     static void updateDeviceStatus(uint16_t code16);
 #endif
+#ifdef SHIELD_ON
+    bool bootShield(void);
+#endif
 #ifdef UDP_ON
     uint16_t listenUDP(byte *buffer, uint8_t size);
     inline void writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort) __attribute__((always_inline));
@@ -61,6 +72,7 @@ public:
     inline void imuRead(void) __attribute__((always_inline));
 #endif
 #ifdef EXTMEMORY_ON
+    int16_t readParam(void);
     inline bool writeReadBI2C(uint32_t addr, uint8_t body) __attribute__((always_inline));
     inline bool writeReadWI2C(uint32_t addr, uint16_t body) __attribute__((always_inline));
     void putEncParameters(uint32_t addr);

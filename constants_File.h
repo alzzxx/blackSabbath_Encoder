@@ -1,5 +1,8 @@
 
-//  Constants definition
+/*
+* Constants definition
+*/
+
 const uint8_t meanPulSamples = 20;  // samples ammount for frequency average calculation
 const uint16_t pulsePerRev = 32000; // encoder pulse per revolution
 const double encodingType = 4.00;
@@ -43,8 +46,8 @@ const uint16_t mDebTime = 300;      // debounce time for toggle screen button
 const uint16_t encResetTime = 5000; // time to reset encoder
 #endif
 #ifdef ACCELEROMETER_ON
-const uint8_t meanSampleNumber = 40;
-const float inputStartX = -1.00;
+const uint8_t meanSampleNumber = 40; // number of sample read from imu sensor before averaging
+const float inputStartX = -1.00;     // To map values from imu sensor to oled display (same for const below)
 const float inputEndX = 1.00;
 const float outputStartX = 122.00;
 const float outputEndX = 69;
@@ -54,6 +57,7 @@ const float outputStartY = 50.00;
 const float outputEndY = 22.00;
 #endif
 
+// const for messages and icons shown on oled display
 #ifdef SCREEN_ON
 static const char oledMessage_0[] PROGMEM = "BESTduino";
 static const char oledMessage_1[] PROGMEM = "V 1.8.0";

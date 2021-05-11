@@ -22,7 +22,7 @@ bool BestEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
 bool BestEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
 {
     /* this fcn send to address the body. */
-    debug1++;
+    sP->debug1++;
     uint8_t rx[4] = {0, 0, 0, 0};
     delayMicroseconds(4 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
@@ -151,13 +151,13 @@ int BestEncoder::sendParameters(void)
     */
         do
         {
-            if (!BestEncoder::writeReg(i, encPoint->deviceParameters[i], ST_PIN_NSS))
+            if (!BestEncoder::writeReg(i, eP->deviceParameters[i], ST_PIN_NSS))
                 break;
 
             DEBUG_SPITWO(" written parameter i = ");
             DEBUG_SPITWO(i);
             DEBUG_SPITWO(" value: ");
-            DEBUG_SPITWOLN(encPoint->deviceParameters[i]);
+            DEBUG_SPITWOLN(eP->deviceParameters[i]);
 
             if (!BestEncoder::readReg(i, &readTemp, ST_PIN_NSS))
             {
@@ -169,7 +169,7 @@ int BestEncoder::sendParameters(void)
             DEBUG_SPITWO(" value: ");
             DEBUG_SPITWO(readTemp);
 
-            if (readTemp != encPoint->deviceParameters[i])
+            if (readTemp != eP->deviceParameters[i])
             {
                 errorCnt++;
             }

@@ -1,4 +1,8 @@
 
+/*
+* Debug macro, to enable or disable Serial.print for debug purposes
+*/
+
 //#define DEBUG_OLED_SCREEN
 //#define DEBUG_WEBSERVER
 //#define DEBUG_ETHERNET

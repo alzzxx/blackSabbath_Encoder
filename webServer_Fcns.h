@@ -891,14 +891,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (tempData.toInt() != encPoint->deviceIndex)
+        if (tempData.toInt() != eP->deviceIndex)
         {
-            encPoint->deviceIndex = tempData.toInt();
+            eP->deviceIndex = tempData.toInt();
             DEBUG_SERVER(F("New Device ID is: "));
-            DEBUG_SERVERLN(encPoint->deviceIndex);
+            DEBUG_SERVERLN(eP->deviceIndex);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationDevIndex, encPoint->deviceIndex); // save parameters on EEPROM
+            tempFlag = myEncoder.writeReadBI2C(locationDevIndex, eP->deviceIndex); // save parameters on EEPROM
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("devIndex not saved"));
@@ -913,14 +913,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[0])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[0])
         {
-            encPoint->mac[0] = h2d(tempData[0], tempData[1]);
+            eP->mac[0] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [0] is: "));
-            DEBUG_SERVERLN(encPoint->mac[0]);
+            DEBUG_SERVERLN(eP->mac[0]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacZero, encPoint->mac[0]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacZero, eP->mac[0]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[0] not saved"));
@@ -935,14 +935,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[1])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[1])
         {
-            encPoint->mac[1] = h2d(tempData[0], tempData[1]);
+            eP->mac[1] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [1] is: "));
-            DEBUG_SERVERLN(encPoint->mac[1]);
+            DEBUG_SERVERLN(eP->mac[1]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacOne, encPoint->mac[1]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacOne, eP->mac[1]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[1] not saved"));
@@ -957,14 +957,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[2])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[2])
         {
-            encPoint->mac[2] = h2d(tempData[0], tempData[1]);
+            eP->mac[2] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [2] is: "));
-            DEBUG_SERVERLN(encPoint->mac[2]);
+            DEBUG_SERVERLN(eP->mac[2]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacTwo, encPoint->mac[2]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacTwo, eP->mac[2]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[2] not saved"));
@@ -979,14 +979,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[3])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[3])
         {
-            encPoint->mac[3] = h2d(tempData[0], tempData[1]);
+            eP->mac[3] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [3] is: "));
-            DEBUG_SERVERLN(encPoint->mac[3]);
+            DEBUG_SERVERLN(eP->mac[3]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacThree, encPoint->mac[3]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacThree, eP->mac[3]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[3] not saved"));
@@ -1001,14 +1001,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[4])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[4])
         {
-            encPoint->mac[4] = h2d(tempData[0], tempData[1]);
+            eP->mac[4] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [4] is: "));
-            DEBUG_SERVERLN(encPoint->mac[4]);
+            DEBUG_SERVERLN(eP->mac[4]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacFour, encPoint->mac[4]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacFour, eP->mac[4]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[4] not saved"));
@@ -1024,14 +1024,14 @@ int parseResponse()
     {
         tempData = findData(tempIndex);
 
-        if (h2d(tempData[0], tempData[1]) != encPoint->mac[5])
+        if (h2d(tempData[0], tempData[1]) != eP->mac[5])
         {
-            encPoint->mac[5] = h2d(tempData[0], tempData[1]);
+            eP->mac[5] = h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [5] is: "));
-            DEBUG_SERVERLN(encPoint->mac[5]);
+            DEBUG_SERVERLN(eP->mac[5]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacFive, encPoint->mac[5]);
+            tempFlag = myEncoder.writeReadBI2C(locationMacFive, eP->mac[5]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[5] not saved"));
@@ -1046,14 +1046,14 @@ int parseResponse()
     if (tempIndex >= 0)
     {
         tempData = findData(tempIndex);
-        if (tempData.toInt() != encPoint->localPort)
+        if (tempData.toInt() != eP->localPort)
         {
-            encPoint->localPort = tempData.toInt();
+            eP->localPort = tempData.toInt();
             DEBUG_SERVER(F("New Local Port is: "));
-            DEBUG_SERVERLN(encPoint->localPort);
+            DEBUG_SERVERLN(eP->localPort);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadWI2C(locationLocalPort, encPoint->localPort);
+            tempFlag = myEncoder.writeReadWI2C(locationLocalPort, eP->localPort);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("localPort not saved"));
@@ -1069,16 +1069,16 @@ int parseResponse()
         if (tempIndex >= 0)
         {
             tempData = findData(tempIndex);
-            if (tempData.toInt() != encPoint->deviceParameters[i])
+            if (tempData.toInt() != eP->deviceParameters[i])
             {
-                encPoint->deviceParameters[i] = tempData.toInt();
+                eP->deviceParameters[i] = tempData.toInt();
                 DEBUG_SERVER(F("New "));
                 DEBUG_SERVER(deviceParamNames[i]);
                 DEBUG_SERVER(F(" is: "));
-                DEBUG_SERVERLN(encPoint->deviceParameters[i]);
+                DEBUG_SERVERLN(eP->deviceParameters[i]);
 #ifdef EXTMEMORY_ON
                 bool tempFlag;
-                tempFlag = myEncoder.writeReadWI2C(locationDevParam + 2 * i, encPoint->deviceParameters[i]);
+                tempFlag = myEncoder.writeReadWI2C(locationDevParam + 2 * i, eP->deviceParameters[i]);
                 delayMicroseconds(delayI2C);
                 if (!tempFlag)
                 {
@@ -1110,15 +1110,15 @@ void ajaxInitialize(EthernetClient client)
     */
 
     client.print(F("ID ="));
-    client.print(encPoint->deviceIndex);
+    client.print(eP->deviceIndex);
     client.print(F("&"));
     client.print(F("lPort ="));
-    client.print(encPoint->localPort);
+    client.print(eP->localPort);
     client.print(F("&"));
     client.print(F("macAddr ="));
     for (int i = 0; i < 6; i++)
     {
-        client.print(encPoint->mac[i], HEX);
+        client.print(eP->mac[i], HEX);
         if (i < 5)
             client.print(F(":"));
     }
@@ -1127,7 +1127,7 @@ void ajaxInitialize(EthernetClient client)
     {
         client.print(deviceParamNames[i]);
         client.print(F("="));
-        client.print(encPoint->deviceParameters[i]);
+        client.print(eP->deviceParameters[i]);
         if (i < numberParameters - 1)
             client.print(F("&"));
     }
@@ -1135,15 +1135,15 @@ void ajaxInitialize(EthernetClient client)
 #ifdef DEBUG
     DEBUG_SERVERLN(F("Response sent: "));
     DEBUG_SERVER(F("ID = "));
-    DEBUG_SERVER(encPoint->deviceIndex);
+    DEBUG_SERVER(eP->deviceIndex);
     DEBUG_SERVER(F("&"));
     DEBUG_SERVER(F("lPort = "));
-    DEBUG_SERVER(encPoint->localPort);
+    DEBUG_SERVER(eP->localPort);
     DEBUG_SERVER(F("&"));
     DEBUG_SERVER(F("macAddr = "));
     for (int i = 0; i < 6; i++)
     {
-        DEBUG_SERVERFLO(encPoint->mac[i], HEX);
+        DEBUG_SERVERFLO(eP->mac[i], HEX);
         if (i < 5)
             DEBUG_SERVER(F(": "));
     }
@@ -1152,7 +1152,7 @@ void ajaxInitialize(EthernetClient client)
     {
         DEBUG_SERVER(deviceParamNames[i]);
         DEBUG_SERVER(F(" = "));
-        DEBUG_SERVER(encPoint->deviceParameters[i]);
+        DEBUG_SERVER(eP->deviceParameters[i]);
         if (i < numberParameters - 1)
             DEBUG_SERVER(F("&"));
     }
@@ -1164,7 +1164,7 @@ void ajaxUpdateDiag(EthernetClient client)
     /*
         This fcn updates the values showed in the webserver. Is a fcn called every 5 seconds.
     */
-    cnt_debug++;
+    sP->cntDebug++;
     client.print(F("working_mode = "));
     client.print(PLC_STATUS, DEC);
     client.print(F("&"));
@@ -1173,22 +1173,22 @@ void ajaxUpdateDiag(EthernetClient client)
     client.print(F("&SPIerrorIndex = "));
     client.print(SPIerrorIndex, DEC);
     client.print(F("&tC = "));
-    client.print(secPoint->tC, DEC);
+    client.print(sP->tC, DEC);
     client.print(F("&hP = "));
-    client.print(secPoint->hP, DEC);
+    client.print(sP->hP, DEC);
 #if defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
-    if (secPoint->displayScreenNum != 4)
+    if (sP->displayScreenNum != 4)
         myEncoder.imuRead();
 #elif !defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
     myEncoder.imuRead();
 #endif
     client.print(F("&axisX = "));
-    client.print(imuPoint->angX, DEC);
+    client.print(iP->angX, DEC);
     client.print(F("&"));
     client.print(F("axisY = "));
-    client.print(imuPoint->angY, DEC);
+    client.print(iP->angY, DEC);
     client.print(F("&bPre = "));
-    client.print(secPoint->bPre, DEC);
+    client.print(sP->bPre, DEC);
     DEBUG_SERVER(F("working_mode = "));
     DEBUG_SERVERFLO(PLC_STATUS, DEC);
     DEBUG_SERVER(F("&"));
@@ -1198,9 +1198,9 @@ void ajaxUpdateDiag(EthernetClient client)
     DEBUG_SERVERFLO(SPIerrorIndex, DEC);
     DEBUG_SERVER(F("&"));
     DEBUG_SERVER(F("tC = "));
-    DEBUG_SERVERFLO(secPoint->tC, DEC);
+    DEBUG_SERVERFLO(sP->tC, DEC);
     DEBUG_SERVER(F("&hP = "));
-    DEBUG_SERVERFLO(secPoint->hP, DEC);
+    DEBUG_SERVERFLO(sP->hP, DEC);
 }
 
 bool displayWebServer()

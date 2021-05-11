@@ -22,10 +22,10 @@ void setup()
   bool tempEEPROM = myEncoder.initParam();   // read parameters from eeprom
   bool tempSens = myEncoder.sensorStart();   // start secondary sensors
   bool tempShield = myEncoder.shieldStart(); // start ethernet shield
-  flagPoint->sysOK = tempSens && tempShield && tempEEPROM;
+  fP->sysOK = tempSens && tempShield && tempEEPROM;
 #else
-  bootShield();                    // start ethernet shield if screen is off
-  int16_t parStatus = readParam(); // read parameters if screen is off
+  myEncoder.bootShield();                    // start ethernet shield if screen is off
+  int16_t parStatus = myEncoder.readParam(); // read parameters if screen is off
   if (parStatus != 0)
     DEBUG_BOOTLN(F("EEPROM not started, check wiring"));
   else
@@ -80,7 +80,7 @@ void setup()
 #ifdef SCREEN_ON
   display.clearDisplay();
   display.display();
-  mTimerCounter = millis();
+  sP->mTimerCounter = millis();
 #endif
   DEBUG_BOOTLN(F("Setup finished"));
 }

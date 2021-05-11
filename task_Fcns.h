@@ -2,36 +2,38 @@
 void stCheck(void)
 {
   /*
-  Function to control st and pixart status
+  - Function to control st and pixart status, if the encoder if in error mode
+  - start UDP and send packet with deviceStatus byte to plc for diagnose
+
   */
   PIN_UP;
   DEBUG_TASKSLN(F("Checking pixart and ST"));
   if (SENSOR_STATUS == HIGH)
   {
-    flagPoint->patFlag = true;
+    fP->patFlag = true;
     DEBUG_TASKS(F("Pixart error"));
   }
   else
   {
-    flagPoint->patFlag = false;
+    fP->patFlag = false;
     DEBUG_TASKSLN(F("Pixart OK"));
   }
   if (ST_STATUS == LOW)
   {
-    flagPoint->stFlag = false;
+    fP->stFlag = false;
     DEBUG_TASKSLN(F("ST ok"));
   }
   else
   {
     DEBUG_TASKS(F("ST error"));
-    flagPoint->stFlag = true;
-    secPoint->diagBuffer[0] = deviceStatus;
+    fP->stFlag = true;
+    sP->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
     delay(10);
-    myEncoder.writeUDP(secPoint->diagBuffer, sizeof(secPoint->diagBuffer), remote, encPoint->remotePort);
+    myEncoder.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
-    DEBUG_TASKSLN(secPoint->diagBuffer[0]);
+    DEBUG_TASKSLN(sP->diagBuffer[0]);
   }
   PIN_DOWN;
 }
@@ -39,34 +41,44 @@ void stCheck(void)
 void checkSystems(void)
 {
   /*
-  Function to check secondary systems
+  - Function to check secondary systems, check all flags
+  - and set o clear sysOK flag
   */
 
   PIN_UP;
 #ifdef SHIELD_ON
-  if (flagPoint->tFlag && flagPoint->eFlag && flagPoint->extMemFlag && flagPoint->imuFlag)
+  if (fP->tFlag && fP->eFlag && fP->extMemFlag && fP->imuFlag)
   {
-    flagPoint->sysOK = true;
+    fP->sysOK = true;
     DEBUG_TASKSLN(F("Systems ok!"));
   }
   else
   {
-    flagPoint->sysOK = false;
+    fP->sysOK = false;
     DEBUG_TASKSLN(F("Systems not OK :("));
   }
 #else
-  if (flagPoint->tFlag && ETHERNET_STATUS && IS_SERVER_ON && flagPoint->extMemFlag && flagPoint->imuFlag)
+  if (fP->tFlag && ETHERNET_STATUS && IS_SERVER_ON && fP->extMemFlag && fP->imuFlag)
   {
-    flagPoint->sysOK = true;
+    fP->sysOK = true;
     DEBUG_TASKSLN(F("Systems ok!"));
   }
   else
   {
-    flagPoint->sysOK = false;
+    fP->sysOK = false;
     DEBUG_TASKSLN(F("Systems not OK :("));
   }
 #endif
   PIN_DOWN;
+}
+
+void updateButton(void)
+{
+  /*
+    Function that updates button reading
+    */
+
+  button.read();
 }
 
 #if defined(SENSOR_BME280)
@@ -75,21 +87,22 @@ void tempUpdate(void)
   /*
   Function to update temperature/humidity values from BME280
   */
+
   PIN_UP;
 #ifdef SENSOR_BME280
-  secPoint->tC = READ_TEMPERATURE;
-  secPoint->hP = READ_HUMIDITY;
-  secPoint->bPre = READ_PRESSURE;
+  sP->tC = READ_TEMPERATURE;
+  sP->hP = READ_HUMIDITY;
+  sP->bPre = READ_PRESSURE;
 #endif
 
-  if (secPoint->tC > 0 && secPoint->hP > 0)
+  if (sP->tC > 0 && sP->hP > 0)
   {
-    flagPoint->tFlag = true;
+    fP->tFlag = true;
     DEBUG_TASKSLN(F("tempSensor OK"));
   }
   else
   {
-    flagPoint->tFlag = false;
+    fP->tFlag = false;
     DEBUG_TASKSLN(F("Problem with tempSensor, check wiring"));
   }
   PIN_DOWN;
@@ -99,20 +112,20 @@ void tempUpdate(void)
 #ifdef EXTMEMORY_ON
 void extEEPROMupdate(void)
 {
-
   /*
   Function to check if extEEPROM is alive
   */
+
   PIN_UP;
   if (!myEEPROM.isConnected(eepromAddress))
   {
     DEBUG_TASKSLN(F("Problem with extEEPROM, check wiring"));
-    flagPoint->extMemFlag = false;
+    fP->extMemFlag = false;
   }
   else
   {
     DEBUG_TASKSLN(F("extEEPROM ok"));
-    flagPoint->extMemFlag = true;
+    fP->extMemFlag = true;
   }
   PIN_DOWN;
 }
@@ -129,12 +142,12 @@ void imuUpdate(void)
   if (IMU.begin() == false)
   {
     DEBUG_TASKSLN(F("Problem with IMU"));
-    flagPoint->imuFlag = false;
+    fP->imuFlag = false;
   }
   else
   {
     DEBUG_TASKSLN(F("IMU ok"));
-    flagPoint->imuFlag = true;
+    fP->imuFlag = true;
   }
   PIN_DOWN;
 }
@@ -144,23 +157,32 @@ void imuUpdate(void)
 void statusRead(void)
 {
   PIN_UP;
-  statusReadFlag = true;
+  fP->statusReadFlag = true;
   PIN_DOWN;
 }
 
 void webServerArdST()
 {
+  /*
+  - Function that shows the webServer
+  */
+
   PIN_UP;
-  saveParameters = displayWebServer() || saveParameters;
+  fP->saveParameters = displayWebServer() || fP->saveParameters;
   PIN_DOWN;
 }
 
 void serverStatus(void)
 {
+  /*
+  - Function to check is server if alive, if it not
+  - try to restart it
+  */
+
   PIN_UP;
   if (ETHERNET_STATUS == LinkON && server)
   {
-    flagPoint->eFlag = true;
+    fP->eFlag = true;
     DEBUG_TASKSLN(F("Ethernet OK"));
 #ifdef DEBUG_ETHERNET
     if (ETHERNET_STATUS == LinkOFF)
@@ -177,7 +199,7 @@ void serverStatus(void)
   }
   else if (ETHERNET_STATUS == LinkOFF || !server)
   {
-    flagPoint->eFlag = false;
+    fP->eFlag = false;
     DEBUG_SCREENLN(F("Ethernet shield error"));
 #ifdef DEBUG_ETHERNET
     if (ETHERNET_STATUS == LinkOFF)
@@ -197,8 +219,12 @@ void serverStatus(void)
 
 void spiSTM(void)
 {
+  /*
+  - Function that handles spi communication between arduino and ST
+  */
+
   PIN_UP;
-  if (saveParameters)
+  if (fP->saveParameters)
   {
     // statusRead();
     DEBUG_SERVERLN(F("sending parameters"));
@@ -207,7 +233,7 @@ void spiSTM(void)
     DEBUG_SERVER(F(" SPI return: "));
     DEBUG_SERVERLN(SPIerrorIndex);
   }
-  if (statusReadFlag == 1 && saveParameters == 0)
+  if (fP->statusReadFlag == true && fP->saveParameters == false)
   {
     int errorCnt = 0;
     uint16_t readTemp = 0;
@@ -231,9 +257,9 @@ void spiSTM(void)
       }
       myEncoder.updateDeviceStatus(readTemp);
     }
-    statusReadFlag = 0;
+    fP->statusReadFlag = 0;
   }
-  saveParameters = 0;
+  fP->saveParameters = false;
   PIN_DOWN;
 }
 #endif
@@ -241,9 +267,14 @@ void spiSTM(void)
 #ifdef SCREEN_ON
 void updateScreen(void)
 {
+  /*
+  - Function that handle oled Display, it changes
+  - between the differents screen according to user decision
+  */
+
   PIN_UP;
   myEncoder.updateScreenNum();
-  switch (secPoint->displayScreenNum)
+  switch (sP->displayScreenNum)
   {
   case 0:
     myEncoder.displayInitial();
@@ -271,12 +302,12 @@ void updateScreen(void)
 
   case 6:
     myEncoder.displaySleep();
-    secPoint->displayScreenNum = 8;
+    sP->displayScreenNum = 8;
     break;
 
   case 7:
     myEncoder.displayWake();
-    secPoint->displayScreenNum = 0;
+    sP->displayScreenNum = 0;
     break;
 
   default:
