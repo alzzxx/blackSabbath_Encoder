@@ -20,8 +20,8 @@ void setup()
   myEncoder.splashScreen();                  // show initial message
   myEncoder.initialCheck();                  // check all systems
   bool tempEEPROM = myEncoder.initParam();   // read parameters from eeprom
-  bool tempSens = myEncoder.sensorStart();   // start secondary sensors
   bool tempShield = myEncoder.shieldStart(); // start ethernet shield
+  bool tempSens = myEncoder.sensorStart();   // start secondary sensors
   fP->sysOK = tempSens && tempShield && tempEEPROM;
 #else
   myEncoder.bootShield();                    // start ethernet shield if screen is off
