@@ -1,6 +1,6 @@
 // * SPI COMMUNICATION
 
-bool BestEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
+bool ServerEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
 {
     bool flag = 1;
 
@@ -19,7 +19,7 @@ bool BestEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
     return flag;
 }
 
-bool BestEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
+bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
 {
     /* this fcn send to address the body. */
     sP->debug1++;
@@ -41,7 +41,7 @@ bool BestEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelec
     digitalWrite(slaveSelect, HIGH); //  restore SS as "slave not communicating"
     SPI.endTransaction();
     delayMicroseconds(4 * shortDelay);
-    if (BestEncoder::checkIflistened(&rx[0], 4) == 0)
+    if (ServerEncoder::checkIflistened(&rx[0], 4) == 0)
         return 0; // first check: if STM sent [24, 24, 24, 24] every frame was received correctly.
 
     // for debug
@@ -63,7 +63,7 @@ bool BestEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelec
     return 1;
 }
 
-bool BestEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
+bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
 {
     /*  this fcn read in address.
     1. Write "hey I want to read this variable
@@ -85,7 +85,7 @@ bool BestEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelec
     rx[3] = SPI.transfer(0); // send  dummy
     delayMicroseconds(shortDelay);
     // delayMicroseconds(100);    // this is because of the loop in the STM takes time
-    if (BestEncoder::checkIflistened(&rx[0], 4) == 0)
+    if (ServerEncoder::checkIflistened(&rx[0], 4) == 0)
         flag = 1;
 
     DEBUG_SPIONE("Read1 : Sent: 0x0F, ");
@@ -135,7 +135,7 @@ bool BestEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelec
     return 1;
 }
 
-int BestEncoder::sendParameters(void)
+int ServerEncoder::sendParameters(void)
 { // 100+i : write; 200+i : read; 300+i comparison
 
     int errorCnt = 0;
@@ -151,7 +151,7 @@ int BestEncoder::sendParameters(void)
     */
         do
         {
-            if (!BestEncoder::writeReg(i, eP->deviceParameters[i], ST_PIN_NSS))
+            if (!ServerEncoder::writeReg(i, eP->deviceParameters[i], ST_PIN_NSS))
                 break;
 
             DEBUG_SPITWO(" written parameter i = ");
@@ -159,7 +159,7 @@ int BestEncoder::sendParameters(void)
             DEBUG_SPITWO(" value: ");
             DEBUG_SPITWOLN(eP->deviceParameters[i]);
 
-            if (!BestEncoder::readReg(i, &readTemp, ST_PIN_NSS))
+            if (!ServerEncoder::readReg(i, &readTemp, ST_PIN_NSS))
             {
                 break;
             }
@@ -187,20 +187,20 @@ int BestEncoder::sendParameters(void)
     return errorCnt; // 0 if everything was OK
 }
 
-void BestEncoder::updateDeviceStatus(uint16_t code16)
+void ServerEncoder::updateDeviceStatus(uint16_t code16)
 {
     deviceStatus = (code16 & 0xFF00) >> 8;
     DEBUG_SERVERLN(deviceStatus);
 }
 
-int BestEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
+int ServerEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
 {
     /* write in register until the writing operation is successful.
    *  but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
-    while (!BestEncoder::spiWriteArd2STM(address, body, slaveSelect))
+    while (!ServerEncoder::spiWriteArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
         if (errorCnt > spiErrorLimit)
@@ -210,14 +210,14 @@ int BestEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
     }
 }
 
-int BestEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
+int ServerEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
 {
     /* read in register until the reading operation is successful.
    *  but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
-    while (!BestEncoder::spiReadArd2STM(address, body, slaveSelect))
+    while (!ServerEncoder::spiReadArd2STM(address, body, slaveSelect))
     {
         errorCnt++;
         if (errorCnt > spiErrorLimit)
@@ -230,7 +230,7 @@ int BestEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
 
 // * I2C COMMUNICATION
 
-bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
+bool SystemEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
 {
     /* 
     Write a byte on EEPROM and the read it back to see if write was correct
@@ -271,7 +271,7 @@ bool BestEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
     return isByteOK; // return true if process was successful, otherwise false
 }
 
-bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
+bool SystemEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
 {
     /* 
     Write a uint16_t on EEPROM and the read it back to see if write was correct
@@ -315,7 +315,7 @@ bool BestEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
     return isWordOK; // return true if process was successful, otherwise false
 }
 
-void BestEncoder::putEncParameters(uint32_t addr)
+void SystemEncoder::putEncParameters(uint32_t addr)
 {
     /*
     Save the entire encSettings structure on the EEPROM
@@ -326,7 +326,7 @@ void BestEncoder::putEncParameters(uint32_t addr)
     DEBUG_I2CLN(F("New parameters saved"));
 }
 
-void BestEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
+void SystemEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
 {
     /*
     Save a single byte on the EEPROm
@@ -339,7 +339,7 @@ void BestEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
 
 // * UDP COMMUNICATION
 
-uint16_t BestEncoder::listenUDP(byte *buffer, uint8_t size)
+uint16_t SystemEncoder::listenUDP(byte *buffer, uint8_t size)
 {
     /*
     Polls for incoming UDP packets. If one is available, the function saves it in the array 
@@ -391,7 +391,7 @@ uint16_t BestEncoder::listenUDP(byte *buffer, uint8_t size)
     return packetSize;
 }
 
-void BestEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort)
+void SystemEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort)
 {
     /*
     Builds a UDP packet containing the elements of the byte array Buffer and sends it to 
@@ -422,7 +422,7 @@ void BestEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, u
 #endif
 }
 
-int16_t BestEncoder::bytesToInt(byte byte1, byte byte2)
+int16_t SystemEncoder::bytesToInt(byte byte1, byte byte2)
 {
     /*
     Accepts as input 2 bytes and returns a signed integer (16bit)

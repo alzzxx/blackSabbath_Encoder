@@ -157,7 +157,10 @@ iP->angY = 0.00;
 #endif
 
 // Objects and instances
-BestEncoder myEncoder;                                  // internal class for screen, extEEPROM, IMU, UDP
+ScreenEncoder myScreen;                                 // Object for screen functions
+ServerEncoder myServer;                                 // Object for server functions
+SensorEncoder mySensor;                                 // Object for sensor functions
+SystemEncoder mySystem;                                 // Object for comunication functions
 Tasker tasker(true);                                    // object for tasking
 QEI myPulse(PIN_SQWA, PIN_SQWB, PIN_ZERO, pulsePerRev); // to read encPulses
 Average<double> mediaPuls(meanPulSamples);              // to calculate mean pulse value

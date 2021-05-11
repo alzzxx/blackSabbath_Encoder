@@ -16,33 +16,33 @@ void setup()
 #ifdef SCREEN_ON
   DEBUG_BOOTLN(F("Starting screen now"));
   delay(500);
-  myEncoder.startScreen();                   // start oled screen
-  myEncoder.splashScreen();                  // show initial message
-  myEncoder.initialCheck();                  // check all systems
-  bool tempEEPROM = myEncoder.initParam();   // read parameters from eeprom
-  bool tempShield = myEncoder.shieldStart(); // start ethernet shield
-  bool tempSens = myEncoder.sensorStart();   // start secondary sensors
+  myScreen.startScreen();                   // start oled screen
+  myScreen.splashScreen();                  // show initial message
+  myScreen.initialCheck();                  // check all systems
+  bool tempEEPROM = myScreen.initParam();   // read parameters from eeprom
+  bool tempShield = myScreen.shieldStart(); // start ethernet shield
+  bool tempSens = myScreen.sensorStart();   // start secondary sensors
   fP->sysOK = tempSens && tempShield && tempEEPROM;
 #else
-  myEncoder.bootShield();                    // start ethernet shield if screen is off
-  int16_t parStatus = myEncoder.readParam(); // read parameters if screen is off
+  mySystem.bootShield();                    // start ethernet shield if screen is off
+  int16_t parStatus = mySystem.readParam(); // read parameters if screen is off
   if (parStatus != 0)
     DEBUG_BOOTLN(F("EEPROM not started, check wiring"));
   else
     DEBUG_BOOTLN(F("Parameters read OK!"));
   DEBUG_BOOTLN(F("Starting IMU"));
 #ifdef ACCELEROMETER_ON
-  bool tempIMU = myEncoder.startIMU(); // start IMU when the screen is off
+  bool tempIMU = mySensor.startIMU(); // start IMU when the screen is off
 #endif
 #if defined(SENSOR_BME280)
-  myEncoder.bmeStart();
+  mySensor.bmeStart();
 #endif
 #endif
 
 // set interrupt function for toggle button
 #ifdef SCREEN_ON
-  myEncoder.finishSetup();
-  myEncoder.buttonSetup();
+  myScreen.finishSetup();
+  myScreen.buttonSetup();
 #endif
 
 // activate debug function measuring

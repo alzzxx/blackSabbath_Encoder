@@ -1,7 +1,7 @@
 
 // * IMU functions
 
-int16_t BestEncoder::roundFunction(int16_t d)
+int16_t SensorEncoder::roundFunction(int16_t d)
 {
     /*
         Function to round values
@@ -9,7 +9,7 @@ int16_t BestEncoder::roundFunction(int16_t d)
     return floor(d + 0.5);
 }
 
-void BestEncoder::slopeCalc(void)
+void SensorEncoder::slopeCalc(void)
 {
     /*
     slope calculation to transform values from the imu into values shown on the digital level
@@ -18,7 +18,7 @@ void BestEncoder::slopeCalc(void)
     iP->slopeY = 1.0 * (outputEndY - outputStartY) / (inputEndY - inputStartY);
 }
 
-bool BestEncoder::startIMU(void)
+bool SensorEncoder::startIMU(void)
 {
     /*
     Function to start the imu, if initialization is ok returns true, otherwise false
@@ -39,7 +39,7 @@ bool BestEncoder::startIMU(void)
             DEBUG_IMULN(F("IMU started"));
             isIMUok = true;
             Accelerometer.begin();
-            BestEncoder::slopeCalc();
+            SensorEncoder::slopeCalc();
             break;
         }
     } while (i < 10);
@@ -47,7 +47,7 @@ bool BestEncoder::startIMU(void)
     return isIMUok;
 }
 
-void BestEncoder::imuRead(void)
+void SensorEncoder::imuRead(void)
 {
     /*
      Read values from IMU and calculate inclination angles to show on the screen/webServer
@@ -82,8 +82,8 @@ void BestEncoder::imuRead(void)
     DEBUG_IMULNFLO(avgZ, 2);
 
     // calculate (x,y) coordinates of the digital level dot shown on the screen/webServer
-    iP->outputX = outputStartX + BestEncoder::roundFunction(iP->slopeX * (avgX - inputStartX));
-    iP->outputY = outputStartY + BestEncoder::roundFunction(iP->slopeY * (avgZ - inputStartY));
+    iP->outputX = outputStartX + SensorEncoder::roundFunction(iP->slopeX * (avgX - inputStartX));
+    iP->outputY = outputStartY + SensorEncoder::roundFunction(iP->slopeY * (avgZ - inputStartY));
 
     //  calculate inclination angle on x and y axis using trigonometry
     iP->angX = atan(avgX / sqrt(pow(avgY, 2) + pow(avgZ, 2))) * (RAD_TO_DEG);
@@ -97,7 +97,7 @@ void BestEncoder::imuRead(void)
 
 // * Encoder read functions
 
-void BestEncoder::readEncoder(void)
+void SystemEncoder::readEncoder(void)
 {
     const uint8_t readInterval = 20;
     uint8_t i = 0;
@@ -132,7 +132,7 @@ void BestEncoder::readEncoder(void)
 
 // * Functions to handle button pressing and also reset encoder
 
-void BestEncoder::buttonSetup(void)
+void ScreenEncoder::buttonSetup(void)
 {
     DEBUG_BOOTLN(F("Setting button functions"));
     button.begin();
@@ -167,7 +167,7 @@ void btnToggleScreen(void)
 // * Functions used during boot time
 
 #ifdef EXTMEMORY_ON
-int16_t BestEncoder::readParam(void)
+int16_t SystemEncoder::readParam(void)
 {
     /*
     All the parameters that can be configured in the web server are stored in the extEEPROM
@@ -179,10 +179,10 @@ int16_t BestEncoder::readParam(void)
     int16_t errCount = 0;
 
 #ifdef EXTMEMORY_ON
-    BestEncoder::startEEPROM();
+    SystemEncoder::startEEPROM();
     if (fP->extMemFlag)
     {
-        BestEncoder::loadEncSettings();
+        SystemEncoder::loadEncSettings();
         eP->remotePort = eP->localPort + eP->deviceIndex;
 #ifdef WEBSERVER_ON
         ip = IPAddress(192, 168, 1, 20 + eP->deviceIndex);
@@ -258,7 +258,7 @@ int16_t BestEncoder::readParam(void)
 #endif
 }
 
-void BestEncoder::startEEPROM(void)
+void SystemEncoder::startEEPROM(void)
 {
     /*
     Try 10 times to start the eeprom, if succeed flag is true, else flag is false and
@@ -291,7 +291,7 @@ void BestEncoder::startEEPROM(void)
     }
 }
 
-void BestEncoder::loadEncSettings(void)
+void SystemEncoder::loadEncSettings(void)
 {
     /*
     Function that load the previously saved parameters on EEPROM, Check if eeprom is blank by reading
@@ -307,7 +307,7 @@ void BestEncoder::loadEncSettings(void)
     // if the first four bytes are zeroes means that memory is empty
     if (myEEPROM.get(eepromStartAddress, testRead) == 0)
     {
-        myEncoder.putEncParameters(eepromStartAddress); // if memory is empty save on EEPROM the default parameters
+        mySystem.putEncParameters(eepromStartAddress); // if memory is empty save on EEPROM the default parameters
         delayMicroseconds(delayI2C);
         DEBUG_BOOTLN(F("Default settings applied"));
     }
@@ -326,7 +326,7 @@ void BestEncoder::loadEncSettings(void)
 #endif
 
 #ifdef SENSOR_BME280
-void BestEncoder::bmeStart(void)
+void SensorEncoder::bmeStart(void)
 {
     /*
     start temperature sensor, returns true is started properly, otherwise false
@@ -355,7 +355,7 @@ void BestEncoder::bmeStart(void)
 #endif
 
 #ifdef SHIELD_ON
-bool BestEncoder::bootShield(void)
+bool SystemEncoder::bootShield(void)
 {
     /*
     - Function that starts the ethernet shield used for webServer and udp communication with plc

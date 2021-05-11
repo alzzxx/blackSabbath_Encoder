@@ -898,7 +898,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->deviceIndex);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationDevIndex, eP->deviceIndex); // save parameters on EEPROM
+            tempFlag = mySystem.writeReadBI2C(locationDevIndex, eP->deviceIndex); // save parameters on EEPROM
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("devIndex not saved"));
@@ -920,7 +920,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[0]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacZero, eP->mac[0]);
+            tempFlag = mySystem.writeReadBI2C(locationMacZero, eP->mac[0]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[0] not saved"));
@@ -942,7 +942,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[1]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacOne, eP->mac[1]);
+            tempFlag = mySystem.writeReadBI2C(locationMacOne, eP->mac[1]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[1] not saved"));
@@ -964,7 +964,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[2]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacTwo, eP->mac[2]);
+            tempFlag = mySystem.writeReadBI2C(locationMacTwo, eP->mac[2]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[2] not saved"));
@@ -986,7 +986,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[3]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacThree, eP->mac[3]);
+            tempFlag = mySystem.writeReadBI2C(locationMacThree, eP->mac[3]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[3] not saved"));
@@ -1008,7 +1008,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[4]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacFour, eP->mac[4]);
+            tempFlag = mySystem.writeReadBI2C(locationMacFour, eP->mac[4]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[4] not saved"));
@@ -1031,7 +1031,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->mac[5]);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadBI2C(locationMacFive, eP->mac[5]);
+            tempFlag = mySystem.writeReadBI2C(locationMacFive, eP->mac[5]);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("mac[5] not saved"));
@@ -1053,7 +1053,7 @@ int parseResponse()
             DEBUG_SERVERLN(eP->localPort);
 #ifdef EXTMEMORY_ON
             bool tempFlag;
-            tempFlag = myEncoder.writeReadWI2C(locationLocalPort, eP->localPort);
+            tempFlag = mySystem.writeReadWI2C(locationLocalPort, eP->localPort);
             delayMicroseconds(delayI2C);
             if (!tempFlag)
                 DEBUG_SERVERLN(F("localPort not saved"));
@@ -1078,7 +1078,7 @@ int parseResponse()
                 DEBUG_SERVERLN(eP->deviceParameters[i]);
 #ifdef EXTMEMORY_ON
                 bool tempFlag;
-                tempFlag = myEncoder.writeReadWI2C(locationDevParam + 2 * i, eP->deviceParameters[i]);
+                tempFlag = mySystem.writeReadWI2C(locationDevParam + 2 * i, eP->deviceParameters[i]);
                 delayMicroseconds(delayI2C);
                 if (!tempFlag)
                 {
@@ -1178,9 +1178,9 @@ void ajaxUpdateDiag(EthernetClient client)
     client.print(sP->hP, DEC);
 #if defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
     if (sP->displayScreenNum != 4)
-        myEncoder.imuRead();
+        mySensor.imuRead();
 #elif !defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
-    myEncoder.imuRead();
+    mySensor.imuRead();
 #endif
     client.print(F("&axisX = "));
     client.print(iP->angX, DEC);

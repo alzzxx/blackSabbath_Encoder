@@ -30,7 +30,7 @@ void stCheck(void)
     sP->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
     delay(10);
-    myEncoder.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
+    mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
     DEBUG_TASKSLN(sP->diagBuffer[0]);
@@ -228,7 +228,7 @@ void spiSTM(void)
   {
     // statusRead();
     DEBUG_SERVERLN(F("sending parameters"));
-    SPIerrorIndex = myEncoder.sendParameters();
+    SPIerrorIndex = myServer.sendParameters();
     // TODO here start the thing for saying to webserver "hey param transmitted OK"
     DEBUG_SERVER(F(" SPI return: "));
     DEBUG_SERVERLN(SPIerrorIndex);
@@ -241,7 +241,7 @@ void spiSTM(void)
     { // do this only if STM is in SPI mode, and not running as encoder
       while (1)
       { //Try 200 times to read the variable
-        if (myEncoder.spiReadArd2STM(spiStatusAddress, &readTemp, ST_PIN_NSS))
+        if (myServer.spiReadArd2STM(spiStatusAddress, &readTemp, ST_PIN_NSS))
         {
           break;
         }
@@ -255,7 +255,7 @@ void spiSTM(void)
           }
         }
       }
-      myEncoder.updateDeviceStatus(readTemp);
+      myServer.updateDeviceStatus(readTemp);
     }
     fP->statusReadFlag = 0;
   }
@@ -273,40 +273,40 @@ void updateScreen(void)
   */
 
   PIN_UP;
-  myEncoder.updateScreenNum();
+  myScreen.updateScreenNum();
   switch (sP->displayScreenNum)
   {
   case 0:
-    myEncoder.displayInitial();
+    myScreen.displayInitial();
     break;
 
   case 1:
-    myEncoder.displayPixVal();
+    myScreen.displayPixVal();
     break;
 
   case 2:
-    myEncoder.displayFreqSpeed();
+    myScreen.displayFreqSpeed();
     break;
 
   case 3:
-    myEncoder.displayIPMAC();
+    myScreen.displayIPMAC();
     break;
 
   case 4:
-    myEncoder.displayDigitalLevel();
+    myScreen.displayDigitalLevel();
     break;
 
   case 5:
-    myEncoder.displayTempHum();
+    myScreen.displayTempHum();
     break;
 
   case 6:
-    myEncoder.displaySleep();
+    myScreen.displaySleep();
     sP->displayScreenNum = 8;
     break;
 
   case 7:
-    myEncoder.displayWake();
+    myScreen.displayWake();
     sP->displayScreenNum = 0;
     break;
 
