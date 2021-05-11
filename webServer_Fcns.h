@@ -1,5 +1,5 @@
 
-void printHeader(EthernetClient client)
+void ServerEncoder::printHeader(EthernetClient client)
 {
     /*
         This function sends to the client a standard html5 response header
@@ -12,7 +12,7 @@ void printHeader(EthernetClient client)
     DEBUG_SERVERLN(F("Header sent!"));
 }
 
-void printPage(EthernetClient client)
+void ServerEncoder::printPage(EthernetClient client)
 {
     /*
         This function contains all the lines of the HTML code that displays the web server page
@@ -823,7 +823,7 @@ void printPage(EthernetClient client)
     client.println(F("</html>"));
 }
 
-unsigned char h2d(unsigned char hex_1, unsigned char hex_2)
+unsigned char ServerEncoder::h2d(unsigned char hex_1, unsigned char hex_2)
 {
     /*
         This function takes two characters and outputs a char that meets the formatting of a byte in HEX
@@ -842,7 +842,7 @@ unsigned char h2d(unsigned char hex_1, unsigned char hex_2)
     return ((temp1 << 4) | temp2);
 }
 
-String findData(int from)
+String ServerEncoder::findData(int from)
 {
     /*
         This function returns a substring of the HTTP request "webGetString" that is contained between a
@@ -874,7 +874,7 @@ String findData(int from)
     }
 }
 
-int parseResponse()
+int ServerEncoder::parseResponse(void)
 {
     /*
         This function extracts from the HTTP request of the client (submit method='GET') all the relevant
@@ -890,7 +890,7 @@ int parseResponse()
     tempIndex = webGetString.indexOf("deviceID");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
+        tempData = ServerEncoder::findData(tempIndex);
         if (tempData.toInt() != eP->deviceIndex)
         {
             eP->deviceIndex = tempData.toInt();
@@ -912,10 +912,10 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B0 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != eP->mac[0])
+        tempData = ServerEncoder::findData(tempIndex);
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[0])
         {
-            eP->mac[0] = h2d(tempData[0], tempData[1]);
+            eP->mac[0] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [0] is: "));
             DEBUG_SERVERLN(eP->mac[0]);
 #ifdef EXTMEMORY_ON
@@ -934,10 +934,10 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B1 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != eP->mac[1])
+        tempData = ServerEncoder::findData(tempIndex);
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[1])
         {
-            eP->mac[1] = h2d(tempData[0], tempData[1]);
+            eP->mac[1] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [1] is: "));
             DEBUG_SERVERLN(eP->mac[1]);
 #ifdef EXTMEMORY_ON
@@ -956,10 +956,10 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B2 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != eP->mac[2])
+        tempData = ServerEncoder::findData(tempIndex);
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[2])
         {
-            eP->mac[2] = h2d(tempData[0], tempData[1]);
+            eP->mac[2] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [2] is: "));
             DEBUG_SERVERLN(eP->mac[2]);
 #ifdef EXTMEMORY_ON
@@ -978,10 +978,10 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B3 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != eP->mac[3])
+        tempData = ServerEncoder::findData(tempIndex);
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[3])
         {
-            eP->mac[3] = h2d(tempData[0], tempData[1]);
+            eP->mac[3] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [3] is: "));
             DEBUG_SERVERLN(eP->mac[3]);
 #ifdef EXTMEMORY_ON
@@ -1000,10 +1000,10 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B4 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
-        if (h2d(tempData[0], tempData[1]) != eP->mac[4])
+        tempData = ServerEncoder::findData(tempIndex);
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[4])
         {
-            eP->mac[4] = h2d(tempData[0], tempData[1]);
+            eP->mac[4] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [4] is: "));
             DEBUG_SERVERLN(eP->mac[4]);
 #ifdef EXTMEMORY_ON
@@ -1022,11 +1022,11 @@ int parseResponse()
     tempIndex = webGetString.indexOf("addressMAC % 5B5 % 5D");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
+        tempData = ServerEncoder::findData(tempIndex);
 
-        if (h2d(tempData[0], tempData[1]) != eP->mac[5])
+        if (ServerEncoder::h2d(tempData[0], tempData[1]) != eP->mac[5])
         {
-            eP->mac[5] = h2d(tempData[0], tempData[1]);
+            eP->mac[5] = ServerEncoder::h2d(tempData[0], tempData[1]);
             DEBUG_SERVER(F("New Mac Address [5] is: "));
             DEBUG_SERVERLN(eP->mac[5]);
 #ifdef EXTMEMORY_ON
@@ -1045,7 +1045,7 @@ int parseResponse()
     tempIndex = webGetString.indexOf("localPort");
     if (tempIndex >= 0)
     {
-        tempData = findData(tempIndex);
+        tempData = ServerEncoder::findData(tempIndex);
         if (tempData.toInt() != eP->localPort)
         {
             eP->localPort = tempData.toInt();
@@ -1068,7 +1068,7 @@ int parseResponse()
         tempIndex = webGetString.indexOf(deviceParamNames[i]);
         if (tempIndex >= 0)
         {
-            tempData = findData(tempIndex);
+            tempData = ServerEncoder::findData(tempIndex);
             if (tempData.toInt() != eP->deviceParameters[i])
             {
                 eP->deviceParameters[i] = tempData.toInt();
@@ -1101,7 +1101,7 @@ int parseResponse()
     return (restartNeeded | (transmissionNeeded << 1));
 }
 
-void ajaxInitialize(EthernetClient client)
+void ServerEncoder::ajaxInitialize(EthernetClient client)
 {
     /*
         This functions is a response from the server (Arduino) to a HTTP request of the clients that contains
@@ -1159,7 +1159,7 @@ void ajaxInitialize(EthernetClient client)
 #endif
 }
 
-void ajaxUpdateDiag(EthernetClient client)
+void ServerEncoder::ajaxUpdateDiag(EthernetClient client)
 {
     /*
         This fcn updates the values showed in the webserver. Is a fcn called every 5 seconds.
@@ -1203,7 +1203,7 @@ void ajaxUpdateDiag(EthernetClient client)
     DEBUG_SERVERFLO(sP->hP, DEC);
 }
 
-bool displayWebServer()
+bool ServerEncoder::displayWebServer()
 {
     /*
         Function that manages the whole web server
@@ -1230,19 +1230,19 @@ bool displayWebServer()
 
                 //Serial.write(c);
                 if (c == '\n' && currentLineIsBlank)
-                {                        // End of a request (HTTP requests end with \n\r)
-                    printHeader(client); // Sends the default response header
+                {                                       // End of a request (HTTP requests end with \n\r)
+                    ServerEncoder::printHeader(client); // Sends the default response header
 
                     if (webGetString.indexOf("ajaxinitialize") >= 0)
                     {                                            // If the request contains 'ajaxinitialize', calls the ajaxInitialize function
                         DEBUG_SERVERLN(F("Sto facendo l'ajax")); // that sends the parameters to the client
-                        ajaxInitialize(client);
+                        ServerEncoder::ajaxInitialize(client);
                         break;
                     }
                     else if (webGetString.indexOf("ajaxupdatediag") >= 0)
                     { // If the request contains 'ajaxupdatediag', calls ajaxUpdateDiag function
                         DEBUG_SERVERLN(F("Sto mandando diagnostica"));
-                        ajaxUpdateDiag(client);
+                        ServerEncoder::ajaxUpdateDiag(client);
                         break;
                     }
 
@@ -1256,13 +1256,13 @@ bool displayWebServer()
                     else
                     { // Otherwise parses the HTTP request to store any saved parameters and shows the page
                         DEBUG_SERVERLN(F("Mostro la pagina"));
-                        tempReturn = parseResponse();
+                        tempReturn = ServerEncoder::parseResponse();
                         DEBUG_SERVERLN(F("======================================="));
                         DEBUG_SERVER(F("parseResponse() return is: "));
                         DEBUG_SERVERLN(tempReturn);
                         restartNeeded = (tempReturn & 0x01) | restartNeeded;
                         transmissionNeeded = tempReturn & 0x02;
-                        printPage(client);
+                        ServerEncoder::printPage(client);
                         break;
                     }
                 }

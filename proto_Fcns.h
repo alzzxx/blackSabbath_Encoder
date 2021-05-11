@@ -37,13 +37,12 @@ void pinConfig(int pin); // Function for measuring function exec time, debug pur
 
 #ifdef WEBSERVER_ON
 // webserver functions
-void printHeader(EthernetClient client);
-void printPage(EthernetClient client);
-void ajaxInitialize(EthernetClient client);
-void ajaxUpdateDiag(EthernetClient client);
-unsigned char h2d(unsigned char hex_1, unsigned char hex_2);
-String findData(int from);
-int parseResponse(void);
-bool displayWebServer(void);
+//void printHeader(EthernetClient client);
+//void printPage(EthernetClient client);
+//unsigned char h2d(unsigned char hex_1, unsigned char hex_2);
+//String findData(int from);
+//int parseResponse(void);
+//void ajaxInitialize(EthernetClient client);
+//void ajaxUpdateDiag(EthernetClient client);
+//bool displayWebServer(void);
 #endif
-

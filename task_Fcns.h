@@ -168,7 +168,7 @@ void webServerArdST()
   */
 
   PIN_UP;
-  fP->saveParameters = displayWebServer() || fP->saveParameters;
+  fP->saveParameters = myServer.displayWebServer() || fP->saveParameters;
   PIN_DOWN;
 }
 

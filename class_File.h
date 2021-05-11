@@ -41,12 +41,19 @@ private:
     inline bool spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
     inline int writeReg(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
     inline int readReg(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
-    //void printHeader(EthernetClient client);
+    inline void printHeader(EthernetClient client) __attribute__((always_inline));
+    inline String findData(int from) __attribute__((always_inline));
+    inline unsigned char h2d(unsigned char hex_1, unsigned char hex_2) __attribute__((always_inline));
+    void printPage(EthernetClient client);
+    int parseResponse(void);
+    void ajaxInitialize(EthernetClient client);
+    void ajaxUpdateDiag(EthernetClient client);
 
 public:
     inline int sendParameters(void) __attribute__((always_inline));
     inline bool spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
     static void updateDeviceStatus(uint16_t code16);
+    bool displayWebServer(void);
 };
 #endif
 
