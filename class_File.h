@@ -42,10 +42,15 @@ private:
     inline int writeReg(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
     inline int readReg(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
     inline void printHeader(EthernetClient client) __attribute__((always_inline));
+    inline void serverHeader(EthernetClient client) __attribute__((always_inline));
+    inline void serverJavaScript(EthernetClient client) __attribute__((always_inline));
+    inline void serverCSS(EthernetClient client) __attribute__((always_inline));
+    inline void serverSVG(EthernetClient client) __attribute__((always_inline));
+    inline void serverBody(EthernetClient client) __attribute__((always_inline));
+    int parseResponse(void);
     inline String findData(int from) __attribute__((always_inline));
     inline unsigned char h2d(unsigned char hex_1, unsigned char hex_2) __attribute__((always_inline));
     void printPage(EthernetClient client);
-    int parseResponse(void);
     void ajaxInitialize(EthernetClient client);
     void ajaxUpdateDiag(EthernetClient client);
 

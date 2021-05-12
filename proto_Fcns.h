@@ -34,15 +34,3 @@ void updateScreen(void); // oled screen functions
 #ifdef DEBUG_FCN_TIME
 void pinConfig(int pin); // Function for measuring function exec time, debug purposes only
 #endif
-
-#ifdef WEBSERVER_ON
-// webserver functions
-//void printHeader(EthernetClient client);
-//void printPage(EthernetClient client);
-//unsigned char h2d(unsigned char hex_1, unsigned char hex_2);
-//String findData(int from);
-//int parseResponse(void);
-//void ajaxInitialize(EthernetClient client);
-//void ajaxUpdateDiag(EthernetClient client);
-//bool displayWebServer(void);
-#endif

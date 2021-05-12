@@ -17,12 +17,24 @@ void ServerEncoder::printPage(EthernetClient client)
     /*
         This function contains all the lines of the HTML code that displays the web server page
     */
+    ServerEncoder::serverHeader(client);
+    ServerEncoder::serverBody(client);
+}
 
+void ServerEncoder::serverHeader(EthernetClient client)
+{
     client.println(F("<!-- Header -->"));
     client.println(F("<!DOCTYPE HTML>"));
     client.println(F("<html lang='en'>"));
     client.println(F("<head>"));
     client.println(F("<title>BESTduino parametrization</title>"));
+    ServerEncoder::serverCSS(client);
+    ServerEncoder::serverJavaScript(client);
+    client.println(F("</head>"));
+}
+
+void ServerEncoder::serverCSS(EthernetClient client)
+{
     client.println(F("<!-- CSS style -->"));
     client.println(F("<style>"));
     client.println(F("body {"));
@@ -241,6 +253,10 @@ void ServerEncoder::printPage(EthernetClient client)
     client.println(F("}"));
     client.println(F("</style>"));
     client.println(F("<link rel='icon' href='data:,'>"));
+}
+
+void ServerEncoder::serverJavaScript(EthernetClient client)
+{
     client.println(F("<!-- Javascript global variables and functions -->"));
     client.println(F("<script>"));
     client.println(F("var deviceID = 1;"));
@@ -464,15 +480,23 @@ void ServerEncoder::printPage(EthernetClient client)
     client.println(F("}"));
     client.println(F("// Header end"));
     client.println(F("</script>"));
-    client.println(F("</head>"));
+}
+
+void ServerEncoder::serverBody(EthernetClient client)
+{
     client.println(F("<!-- Body -->"));
     client.println(F("<body onload='loadPage()'>"));
     client.println(F("<div id='grid-page'>"));
     client.println(F("<header id='header'>"));
     client.println(F("<div class='innertube'>"));
     client.println(F("<a href=''>"));
+
+    //TODO insert svg function --------------------------
+    // ServerEncoder::serverSVG(client);
     client.println(F("<img src='https://www.brevetti-cea.com/templates/yootheme/cache/Brevetti_CEA_Logo-a2f21874.png'"));
     client.println(F("alt='Brevetti CEA Logo' style='width:400;height:151;'>"));
+    //TODO-----------------------------------------------
+
     client.println(F("</a>"));
     client.println(F("<!--<h1>Brevetti CEA</h1> -->"));
     client.println(F("<h1>BESTduino encoder</h1>"));
@@ -513,16 +537,8 @@ void ServerEncoder::printPage(EthernetClient client)
     client.println(F("<div id='pages'>"));
     client.println(F("</div>"));
     client.println(F("</div>"));
-    client.println(F("</main>")); //todo  cancel commented lines---------------------------------------
-    /*
-    client.println(F("<!-- </div> -->"));
-    client.println(F("<!-- Footer -->"));
-    client.println(F("<footer id='footer'>"));
-    client.println(F("<div class='innertube'>"));
+    client.println(F("</main>"));
     client.println(F("</div>"));
-    client.println(F("</footer>"));
-    */
-    client.println(F("</div>")); //todo up to this point ---------------------------------------
     client.println(F("<div id='deviceStatus' style='display: none;'>"));
     client.println(F("<div id='grid_container_statuspage'>"));
     client.println(F("<div id='working_mode'>"));
@@ -811,7 +827,7 @@ void ServerEncoder::printPage(EthernetClient client)
     client.println(F("</div>"));
     client.println(F("</form>"));
     client.println(F("</div>"));
-    client.println(F("<!-- Form for encoder orientation Panel --> //TODO orientaZIONE DA FINIRE"));
+    client.println(F("<!-- Form for encoder orientation Panel -->"));
     client.println(F("<div id='resOrientation' style='display:none'>"));
     client.println(F("<div>    "));
     client.println(F("<h2 style='grid-column:1 / span 2;'>Sensors</h2> "));
