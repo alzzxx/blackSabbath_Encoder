@@ -1,3 +1,8 @@
+
+/*
+* Functions for spi, i2c and udp communication
+*/
+
 // * SPI COMMUNICATION
 
 bool ServerEncoder::checkIflistened(uint8_t *p_rx0, uint8_t BUFFERSIZE)
