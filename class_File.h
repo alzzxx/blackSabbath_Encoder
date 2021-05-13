@@ -14,22 +14,22 @@ private:
     void showText(uint16_t cx1, uint16_t cy1, const char *const bufferText[], uint8_t numB, bool isCentered);
 
 public:
-    inline void updateScreenNum(void) __attribute__((always_inline));
-    inline void startScreen(void) __attribute__((always_inline));
-    void displayInitial(void);
-    void displayTempHum(void);
-    void displayDigitalLevel(void);
-    void displayIPMAC(void);
-    void displayPixVal(void);
-    void displayFreqSpeed(void);
-    void displaySleep(void);
-    void displayWake(void);
+    void startScreen(void);
     void splashScreen(void);
     void initialCheck(void);
     bool initParam(void);
-    bool sensorStart(void);
     bool shieldStart(void);
+    bool sensorStart(void);
     void finishSetup(void);
+    inline void updateScreenNum(void) __attribute__((always_inline));
+    inline void displayInitial(void) __attribute__((always_inline));
+    inline void displayPixVal(void) __attribute__((always_inline));
+    inline void displayFreqSpeed(void) __attribute__((always_inline));
+    inline void displayIPMAC(void) __attribute__((always_inline));
+    inline void displayDigitalLevel(void) __attribute__((always_inline));
+    inline void displayTempHum(void) __attribute__((always_inline));
+    void displaySleep(void);
+    void displayWake(void);
     void buttonSetup(void);
 };
 #endif
@@ -38,26 +38,26 @@ public:
 class ServerEncoder
 {
 private:
-    inline static bool checkIflistened(uint8_t *p_rx0, int BUFFERSIZE) __attribute__((always_inline));
-    inline bool spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
-    inline int writeReg(uint8_t address, uint16_t body, int slaveSelect) __attribute__((always_inline));
-    inline int readReg(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
+    inline static bool checkIflistened(uint8_t *p_rx0, uint8_t BUFFERSIZE) __attribute__((always_inline));
+    inline bool spiWriteArd2STM(uint8_t address, uint16_t body, uint8_t slaveSelect) __attribute__((always_inline));
+    inline uint16_t writeReg(uint8_t address, uint16_t body, uint8_t slaveSelect) __attribute__((always_inline));
+    inline uint16_t readReg(uint8_t address, uint16_t *body, uint8_t slaveSelect) __attribute__((always_inline));
     inline void printHeader(EthernetClient client) __attribute__((always_inline));
     inline void serverHeader(EthernetClient client) __attribute__((always_inline));
     inline void serverJavaScript(EthernetClient client) __attribute__((always_inline));
     inline void serverCSS(EthernetClient client) __attribute__((always_inline));
     inline void serverSVG(EthernetClient client) __attribute__((always_inline));
     inline void serverBody(EthernetClient client) __attribute__((always_inline));
-    int parseResponse(void);
-    inline String findData(int from) __attribute__((always_inline));
+    uint8_t parseResponse(void);
+    inline String findData(int16_t from) __attribute__((always_inline));
     inline unsigned char h2d(unsigned char hex_1, unsigned char hex_2) __attribute__((always_inline));
     void printPage(EthernetClient client);
     void ajaxInitialize(EthernetClient client);
     void ajaxUpdateDiag(EthernetClient client);
 
 public:
-    inline int sendParameters(void) __attribute__((always_inline));
-    inline bool spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect) __attribute__((always_inline));
+    inline uint16_t sendParameters(void) __attribute__((always_inline));
+    inline bool spiReadArd2STM(uint8_t address, uint16_t *body, uint8_t slaveSelect) __attribute__((always_inline));
     static void updateDeviceStatus(uint16_t code16);
     bool displayWebServer(void);
 };

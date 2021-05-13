@@ -1044,7 +1044,7 @@ unsigned char ServerEncoder::h2d(unsigned char hex_1, unsigned char hex_2)
     return ((temp1 << 4) | temp2);
 }
 
-String ServerEncoder::findData(int from)
+String ServerEncoder::findData(int16_t from)
 {
     /*
         This function returns a substring of the HTTP request "webGetString" that is contained between a
@@ -1053,7 +1053,7 @@ String ServerEncoder::findData(int from)
 
     boolean finish = false;
     boolean reading = false;
-    int i = from;
+    int16_t i = from;
     String parsedData;
 
     while (!finish)
@@ -1076,7 +1076,7 @@ String ServerEncoder::findData(int from)
     }
 }
 
-int ServerEncoder::parseResponse(void)
+uint8_t ServerEncoder::parseResponse(void)
 {
     /*
         This function extracts from the HTTP request of the client (submit method='GET') all the relevant
@@ -1086,7 +1086,7 @@ int ServerEncoder::parseResponse(void)
 
     bool restartNeeded = false;
     bool transmissionNeeded = false;
-    int tempIndex;
+    int16_t tempIndex;
     String tempData;
 
     tempIndex = webGetString.indexOf("deviceID");
@@ -1265,7 +1265,7 @@ int ServerEncoder::parseResponse(void)
             restartNeeded = true;
         }
     }
-    for (int i = 0; i < numberParameters; i++)
+    for (uint8_t i = 0; i < numberParameters; i++)
     {
         tempIndex = webGetString.indexOf(deviceParamNames[i]);
         if (tempIndex >= 0)
@@ -1318,14 +1318,14 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
     client.print(eP->localPort);
     client.print(F("&"));
     client.print(F("macAddr ="));
-    for (int i = 0; i < 6; i++)
+    for (uint8_t i = 0; i < 6; i++)
     {
         client.print(eP->mac[i], HEX);
         if (i < 5)
             client.print(F(":"));
     }
     client.print(F("&"));
-    for (int i = 0; i < numberParameters; i++)
+    for (uint8_t i = 0; i < numberParameters; i++)
     {
         client.print(deviceParamNames[i]);
         client.print(F("="));
@@ -1343,14 +1343,14 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
     DEBUG_SERVER(eP->localPort);
     DEBUG_SERVER(F("&"));
     DEBUG_SERVER(F("macAddr = "));
-    for (int i = 0; i < 6; i++)
+    for (uint8_t i = 0; i < 6; i++)
     {
         DEBUG_SERVERFLO(eP->mac[i], HEX);
         if (i < 5)
             DEBUG_SERVER(F(": "));
     }
     DEBUG_SERVER(F("&"));
-    for (int i = 0; i < numberParameters; i++)
+    for (uint8_t i = 0; i < numberParameters; i++)
     {
         DEBUG_SERVER(deviceParamNames[i]);
         DEBUG_SERVER(F(" = "));
@@ -1411,7 +1411,7 @@ bool ServerEncoder::displayWebServer()
         Function that manages the whole web server
     */
 
-    int tempReturn = 0;
+    uint8_t tempReturn = 0;
     bool restartNeeded = false;
     bool transmissionNeeded = false;
 
