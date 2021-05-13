@@ -2,6 +2,7 @@
 /*
 * Main encoder class for encoder functions
 */
+
 #ifdef SCREEN_ON
 class ScreenEncoder
 {

@@ -490,15 +490,9 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<header id='header'>"));
     client.println(F("<div class='innertube'>"));
     client.println(F("<a href=''>"));
-
-    //TODO insert svg function --------------------------
+    // * SVG begin
     ServerEncoder::serverSVG(client);
-    /*
-    client.println(F("<img src='https://www.brevetti-cea.com/templates/yootheme/cache/Brevetti_CEA_Logo-a2f21874.png'"));
-    client.println(F("alt='Brevetti CEA Logo' style='width:400;height:151;'>"));
-    */
-    //TODO-----------------------------------------------
-
+    // * SVG end
     client.println(F("</a>"));
     client.println(F("<!--<h1>Brevetti CEA</h1> -->"));
     client.println(F("<h1>BESTduino encoder</h1>"));
