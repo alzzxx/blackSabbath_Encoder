@@ -1,6 +1,11 @@
+
+/*
+* Functions for spi, i2c and udp communication
+*/
+
 // * SPI COMMUNICATION
 
-bool ServerEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
+bool ServerEncoder::checkIflistened(uint8_t *p_rx0, uint8_t BUFFERSIZE)
 {
     bool flag = 1;
 
@@ -19,7 +24,7 @@ bool ServerEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
     return flag;
 }
 
-bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
+bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, uint8_t slaveSelect)
 {
     /* 
     - this fcn send to address the body. 
@@ -66,13 +71,13 @@ bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSel
     return 1;
 }
 
-bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
+bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, uint8_t slaveSelect)
 {
     /*  this fcn read in address.
      1. Write "hey I want to read this variable
      2. Then immediately redo another communication, and read back the values.
     */
-    int flag = 0;
+    uint8_t flag = 0;
     uint8_t rx[4] = {0, 0, 0, 0};
     delayMicroseconds(4 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
@@ -138,17 +143,17 @@ bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSel
     return 1;
 }
 
-int ServerEncoder::sendParameters(void)
+uint16_t ServerEncoder::sendParameters(void)
 {
     /*
     - 100+i : write; 200+i : read; 300+i comparison
     */
 
-    int errorCnt = 0;
+    uint16_t errorCnt = 0;
     uint16_t readTemp = 0;
     uint8_t i = 0;
 
-    for (int i = 0; i < numberParameters; i++)
+    for (uint8_t i = 0; i < numberParameters; i++)
     {
         /* for every parameter do the following:
         1. write until success
@@ -199,13 +204,13 @@ void ServerEncoder::updateDeviceStatus(uint16_t code16)
     DEBUG_SERVERLN(deviceStatus);
 }
 
-int ServerEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
+uint16_t ServerEncoder::writeReg(uint8_t address, uint16_t body, uint8_t slaveSelect)
 {
     /* 
      - Write in register until the writing operation is successful.
      - but retry the action only for a limited amount of errors.
    */
-    int errorCnt = 0;
+    uint16_t errorCnt = 0;
 
     while (!ServerEncoder::spiWriteArd2STM(address, body, slaveSelect))
     {
@@ -217,13 +222,13 @@ int ServerEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
     }
 }
 
-int ServerEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
+uint16_t ServerEncoder::readReg(uint8_t address, uint16_t *body, uint8_t slaveSelect)
 {
     /* 
      - Read in register until the reading operation is successful.
      - but retry the action only for a limited amount of errors.
    */
-    int errorCnt = 0;
+    uint16_t errorCnt = 0;
 
     while (!ServerEncoder::spiReadArd2STM(address, body, slaveSelect))
     {
