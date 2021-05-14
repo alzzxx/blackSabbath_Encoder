@@ -21,7 +21,10 @@ bool ServerEncoder::checkIflistened(uint8_t *p_rx0, int BUFFERSIZE)
 
 bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSelect)
 {
-    /* this fcn send to address the body. */
+    /* 
+    - this fcn send to address the body. 
+    */
+
     sP->debug1++;
     uint8_t rx[4] = {0, 0, 0, 0};
     delayMicroseconds(4 * shortDelay);
@@ -66,9 +69,9 @@ bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, int slaveSel
 bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSelect)
 {
     /*  this fcn read in address.
-    1. Write "hey I want to read this variable
-    2. Then immediately redo another communication, and read back the values.
-  */
+     1. Write "hey I want to read this variable
+     2. Then immediately redo another communication, and read back the values.
+    */
     int flag = 0;
     uint8_t rx[4] = {0, 0, 0, 0};
     delayMicroseconds(4 * shortDelay);
@@ -136,7 +139,10 @@ bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, int slaveSel
 }
 
 int ServerEncoder::sendParameters(void)
-{ // 100+i : write; 200+i : read; 300+i comparison
+{
+    /*
+    - 100+i : write; 200+i : read; 300+i comparison
+    */
 
     int errorCnt = 0;
     uint16_t readTemp = 0;
@@ -148,7 +154,7 @@ int ServerEncoder::sendParameters(void)
         1. write until success
         2. read back until success
         3. compare: if read == write then :) otherwise  start again from 1. But restart from 1 only a limited amount of times
-    */
+        */
         do
         {
             if (!ServerEncoder::writeReg(i, eP->deviceParameters[i], ST_PIN_NSS))
@@ -195,8 +201,9 @@ void ServerEncoder::updateDeviceStatus(uint16_t code16)
 
 int ServerEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
 {
-    /* write in register until the writing operation is successful.
-   *  but retry the action only for a limited amount of errors.
+    /* 
+     - Write in register until the writing operation is successful.
+     - but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
@@ -212,8 +219,9 @@ int ServerEncoder::writeReg(uint8_t address, uint16_t body, int slaveSelect)
 
 int ServerEncoder::readReg(uint8_t address, uint16_t *body, int slaveSelect)
 {
-    /* read in register until the reading operation is successful.
-   *  but retry the action only for a limited amount of errors.
+    /* 
+     - Read in register until the reading operation is successful.
+     - but retry the action only for a limited amount of errors.
    */
     int errorCnt = 0;
 
