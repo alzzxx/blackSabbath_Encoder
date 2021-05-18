@@ -43,11 +43,12 @@ private:
     inline uint16_t writeReg(uint8_t address, uint16_t body, uint8_t slaveSelect) __attribute__((always_inline));
     inline uint16_t readReg(uint8_t address, uint16_t *body, uint8_t slaveSelect) __attribute__((always_inline));
     inline void printHeader(EthernetClient client) __attribute__((always_inline));
-    inline void serverHeader(EthernetClient client) __attribute__((always_inline));
+    inline void serverHead(EthernetClient client) __attribute__((always_inline));
     inline void serverJavaScript(EthernetClient client) __attribute__((always_inline));
     inline void serverCSS(EthernetClient client) __attribute__((always_inline));
     inline void serverSVG(EthernetClient client) __attribute__((always_inline));
     inline void serverBody(EthernetClient client) __attribute__((always_inline));
+    inline void serverHeader(EthernetClient client) __attribute__((always_inline));
     uint8_t parseResponse(void);
     inline String findData(int16_t from) __attribute__((always_inline));
     inline unsigned char h2d(unsigned char hex_1, unsigned char hex_2) __attribute__((always_inline));
