@@ -201,7 +201,7 @@ uint16_t ServerEncoder::sendParameters(void)
 void ServerEncoder::updateDeviceStatus(uint16_t code16)
 {
     deviceStatus = (code16 & 0xFF00) >> 8;
-    DEBUG_SERVERLN(deviceStatus);
+    //DEBUG_SERVERLN(deviceStatus);
 }
 
 uint16_t ServerEncoder::writeReg(uint8_t address, uint16_t body, uint8_t slaveSelect)

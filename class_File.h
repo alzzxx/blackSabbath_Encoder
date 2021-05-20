@@ -55,6 +55,7 @@ private:
     void printPage(EthernetClient client);
     void ajaxInitialize(EthernetClient client);
     void ajaxUpdateDiag(EthernetClient client);
+    void ajaxIMUvalues(EthernetClient client);
 
 public:
     inline uint16_t sendParameters(void) __attribute__((always_inline));

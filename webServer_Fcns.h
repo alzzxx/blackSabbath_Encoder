@@ -104,6 +104,7 @@ void ServerEncoder::serverCSS(EthernetClient client)
     client.println(F("border-style: none;"));
     client.println(F("}"));
     client.println(F("/* Class style declarations */"));
+    client.println(F(""));
     client.println(F(".codecol {"));
     client.println(F("width: 5rem;"));
     client.println(F("}"));
@@ -207,6 +208,35 @@ void ServerEncoder::serverCSS(EthernetClient client)
     client.println(F("justify-content: center;"));
     client.println(F("}"));
     client.println(F("/* ID style declaration */"));
+    client.println(F(".sensText {"));
+    client.println(F("font-weight: bold;"));
+    client.println(F("color: #5e7085;"));
+    client.println(F("font-size: 15px;"));
+    client.println(F("}"));
+    client.println(F(".senNum {"));
+    client.println(F("font-size: 20px;"));
+    client.println(F("color: #2849a3e7;"));
+    client.println(F("font-family: Fira Code, Helvetica, sans-serif;"));
+    client.println(F("}"));
+    client.println(F("#tempVal {"));
+    client.println(F("font-size: 20px;"));
+    client.println(F("color: #2849a3e7;"));
+    client.println(F("font-family: Fira Code, Helvetica, sans-serif;"));
+    client.println(F("}"));
+    client.println(F("#humVal {"));
+    client.println(F("font-size: 20px;"));
+    client.println(F("color: #2849a3e7;"));
+    client.println(F("font-family: Fira Code, Helvetica, sans-serif;"));
+    client.println(F("}"));
+    client.println(F("#preVal {"));
+    client.println(F("font-size: 20px;"));
+    client.println(F("color: #2849a3e7;"));
+    client.println(F("font-family: Fira Code, Helvetica, sans-serif;"));
+    client.println(F("}"));
+    client.println(F("#encOrTitle {"));
+    client.println(F("display: grid;"));
+    client.println(F("justify-content: center;"));
+    client.println(F("}"));
     client.println(F("#grid-page {"));
     client.println(F("display: grid;"));
     client.println(F("grid-template-columns: 255px auto;"));
@@ -257,7 +287,7 @@ void ServerEncoder::serverCSS(EthernetClient client)
     client.println(F("display: grid;"));
     client.println(F("grid-template-columns: auto;"));
     client.println(F("grid-template-rows: repeat(4, auto);"));
-    client.println(F("row-gap: 90px;"));
+    client.println(F("row-gap: 70px;"));
     client.println(F("}"));
     client.println(F("#grid_container_statuspage h2 {"));
     client.println(F("text-align: center;"));
@@ -488,13 +518,17 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("\".\" +"));
     client.println(F("addressIP[3]"));
     client.println(F(");"));
-    client.println(F("}, 6000);"));
+    client.println(F("}, 8000);"));
     client.println(F("}"));
+    client.println(F(""));
     client.println(F("// function that is called every 5s to get from the arduino the diagnostic of the device"));
+    client.println(F("const updateInterval = 5000;"));
     client.println(F("window.setInterval(function () {"));
     client.println(F("nocache = \"&nocache=\" + Math.random() * 10;"));
     client.println(F("var request = new XMLHttpRequest();"));
     client.println(F("var status, errors, SPIsendParametersStatus;"));
+    client.println(F("var tempC, humH, preB;"));
+    client.println(F("var numT, numH, numP;"));
     client.println(F("request.onreadystatechange = function () {"));
     client.println(F("if ("));
     client.println(F("this.readyState == 4 &&"));
@@ -527,16 +561,6 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("(errors >> 1) & 0x01"));
     client.println(F("? (document.getElementById(\"stmsLED\").className = \"dot_green\")"));
     client.println(F(": (document.getElementById(\"stmsLED\").className = \"dot_red\");"));
-    client.println(F("document.getElementById(\"tempValue\").innerHTML ="));
-    client.println(F("\"Internal temperature: \" + statusArray[3].split(\"=\")[1];"));
-    client.println(F("document.getElementById(\"humValue\").innerHTML ="));
-    client.println(F("\"Relative humidity: \" + statusArray[4].split(\"=\")[1];"));
-    client.println(F("document.getElementById(\"axisX\").innerHTML ="));
-    client.println(F("\"X-Axis: \" + statusArray[5].split(\"=\")[1];"));
-    client.println(F("document.getElementById(\"axisY\").innerHTML ="));
-    client.println(F("\"Y-Axis: \" + statusArray[6].split(\"=\")[1];"));
-    client.println(F("document.getElementById(\"barPressure\").innerHTML ="));
-    client.println(F("\"Barometric pressure: \" + statusArray[7].split(\"=\")[1];"));
     client.println(F("SPIsendParametersStatus = parseInt(statusArray[2].split(\"=\")[1]);"));
     client.println(F("if (SPIsendParametersStatus == 0 && flagAlert == 1) {"));
     client.println(F("alert(\"Parameters updated succesfully\");"));
@@ -547,11 +571,53 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F(");"));
     client.println(F("flagAlert = 0;"));
     client.println(F("}"));
+    client.println(F("tempC = parseFloat(statusArray[3].split(\"=\")[1]);"));
+    client.println(F("numT = tempC.toFixed(2);"));
+    client.println(F("document.getElementById(\"tempVal\").innerHTML = numT;"));
+    client.println(F("humH = parseFloat(statusArray[4].split(\"=\")[1]);"));
+    client.println(F("numH = humH.toFixed(2);"));
+    client.println(F("document.getElementById(\"humVal\").innerHTML = numH;"));
+    client.println(F("preB = parseFloat(statusArray[5].split(\"=\")[1]);"));
+    client.println(F("numP = preB.toFixed(2);"));
+    client.println(F("document.getElementById(\"preVal\").innerHTML = numP;"));
     client.println(F("}"));
     client.println(F("};"));
-    client.println(F("request.open(\"GET\", \"ajaxupdatediag\" + nocache, true);"));
+    client.println(F("request.open(\"GET\", ajaxFunction() + nocache, true);"));
     client.println(F("request.send(null);"));
-    client.println(F("}, 400);"));
+    client.println(F("}, updateInterval);"));
+    client.println(F(""));
+    client.println(F("function ajaxFunction() {"));
+    client.println(F("return \"ajaxupdatediag\";"));
+    client.println(F("}"));
+    client.println(F(""));
+    client.println(F("window.setInterval(function () {"));
+    client.println(F("getIMUval();"));
+    client.println(F("}, 600);"));
+    client.println(F(""));
+    client.println(F("function getIMUval() {"));
+    client.println(F("nocache = \"&nocache=\" + Math.random() * 10;"));
+    client.println(F("var responseArray;"));
+    client.println(F("var xhttp = new XMLHttpRequest();"));
+    client.println(F("var xValue, yValue, zValue;"));
+    client.println(F("var angX, angZ;"));
+    client.println(F("xhttp.onreadystatechange = function () {"));
+    client.println(F("if (this.readyState == 4 && this.status == 200) {"));
+    client.println(F("responseArray = this.responseText.split(\"&\");"));
+    client.println(F("xValue = parseFloat(responseArray[0].split(\"=\")[1]);"));
+    client.println(F("angX = xValue.toFixed(2);"));
+    client.println(F("document.getElementById(\"xAngle\").innerHTML = angX;"));
+    client.println(F("zValue = parseFloat(responseArray[1].split(\"=\")[1]);"));
+    client.println(F("angZ = zValue.toFixed(2);"));
+    client.println(F("document.getElementById(\"zAngle\").innerHTML = angZ;"));
+    client.println(F("}"));
+    client.println(F("};"));
+    client.println(F("xhttp.open(\"GET\", imuAjaxFunction() + nocache, true);"));
+    client.println(F("xhttp.send(null);"));
+    client.println(F("}"));
+    client.println(F(""));
+    client.println(F("function imuAjaxFunction() {"));
+    client.println(F("return \"ajaxIMUvalues\";"));
+    client.println(F("}"));
     client.println(F(""));
     client.println(F("// function that manages the shifting between pages. It needs to request variables' values from arduino."));
     client.println(F("function updateForm(whichOne) {"));
@@ -642,7 +708,7 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<li><a id='OrientationLink' title='Click to show orientation page' href='#'"));
     client.println(F("onclick='updateForm(\"encOrientation\");'>Encoder positioning</a>"));
     client.println(F("</li>"));
-    client.println(F("<br>"));
+    client.println(F("<br>             "));
     client.println(F("</ul>"));
     client.println(F("</div>"));
     client.println(F("</nav>"));
@@ -662,9 +728,21 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("</div>"));
     client.println(F("<div id='grid_container_sensors'>"));
     client.println(F("<h2 style='grid-column:1 / span 3;'>Ambient sensor</h2>"));
-    client.println(F("<p id='tempValue'>Internal temperature</p>"));
-    client.println(F("<p id='humValue'>Relative humidity</p>"));
-    client.println(F("<p id='barPressure'>Barometric pressure</p>"));
+    client.println(F("<p>"));
+    client.println(F("<span class='sensText'>Internal temperature: </span>"));
+    client.println(F("<span id='tempVal'>0.00</span>"));
+    client.println(F("<span class='senNum'>&#8451;</span>"));
+    client.println(F("</p>"));
+    client.println(F("<p id='humValue'>"));
+    client.println(F("<span class='sensText'>Relative humidity: </span>"));
+    client.println(F("<span id='humVal'>0.00</span>"));
+    client.println(F("<span class='senNum'>%rH</span>"));
+    client.println(F("</p>"));
+    client.println(F("<p id='barPressure'>"));
+    client.println(F("<span class='sensText'>Barometric pressure</span>"));
+    client.println(F("<span id='preVal'>0.00</span>"));
+    client.println(F("<span class='senNum'>hPA</span>"));
+    client.println(F("</p>"));
     client.println(F("</div>"));
     client.println(F("<div id='grid_container_status'>"));
     client.println(F("<h2 style='grid-column:1 / span 6;'>Encoder status</h2>"));
@@ -719,7 +797,7 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<td>RW</td>"));
     client.println(F("<td>1</td>"));
     client.println(F("<td>235</td>"));
-    client.println(F("<td class='description'>Progressive index of the device. Make sure that each device in a net has a univoque ID. This parameter directly sets the IP Address of the device and the remote port to which it sends UDP data </td>"));
+    client.println(F("<td class='description'>Progressive index of the device. Make sure that each device in a net has a univoque ID. This parameter directly sets the IP Address of the device and the remote port to which it sends UDP data</td>"));
     client.println(F("</tr>"));
     client.println(F("<tr>"));
     client.println(F("<th scope='row'>p02[0]</th>"));
@@ -934,17 +1012,29 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("</div>"));
     client.println(F("<!-- Form for encoder orientation Panel -->"));
     client.println(F("<div id='encOrientation' style='display:none'>"));
+    client.println(F("<div id='encOrTitle'>"));
+    client.println(F("<h2>Encoder orientation</h2>"));
+    client.println(F("</div>"));
     client.println(F("<div>"));
-    client.println(F("<h2 style='grid-column:1 / span 2;'>Sensors</h2>"));
-    client.println(F("<p id='axisX'> Axis X</p>"));
-    client.println(F("<p id='axisY'>Axis Y</p>"));
+    client.println(F("<p id='axisOr'>"));
+    client.println(F("<span>X axis angle: </span>"));
+    client.println(F("<span id='xAngle'></span>"));
+    client.println(F("<span></span>"));
+    client.println(F("</p>"));
+    client.println(F("<p id='axisOr'>"));
+    client.println(F("<span>Z axis angle: </span>"));
+    client.println(F("<span id='zAngle'></span>"));
+    client.println(F("<span></span>"));
+    client.println(F("</p>"));
     client.println(F("</div>"));
     client.println(F("</div>"));
-    client.println(F("<!-- Form for encoder orientation Panel -->"));
+    client.println(F("<!-- Form for encoder frequency Panel -->"));
     client.println(F("<div id='freqEncoder' style='display:none'>"));
+    client.println(F("<div id='encOrTitle'>"));
+    client.println(F("<h2>Encoder frequency calculation</h2>"));
+    client.println(F("</div>"));
     client.println(F("<div>"));
-    client.println(F("<h2 style='grid-column:1 / span 2;'>Encoder frequency calculation</h2>"));
-    client.println(F("<p id='fEncHz'> Encoder frequency:</p>"));
+    client.println(F("<p id='fEncHz'>Encoder frequency:</p>"));
     client.println(F("</div>"));
     client.println(F("</div>"));
     client.println(F("</body>"));
@@ -1383,13 +1473,13 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
         the parameters. The correct format is Name1=Value1&Name2=Value2&...
     */
 
-    client.print(F("ID ="));
+    client.print(F("ID="));
     client.print(eP->deviceIndex);
     client.print(F("&"));
-    client.print(F("lPort ="));
+    client.print(F("lPort="));
     client.print(eP->localPort);
     client.print(F("&"));
-    client.print(F("macAddr ="));
+    client.print(F("macAddr="));
     for (uint8_t i = 0; i < 6; i++)
     {
         client.print(eP->mac[i], HEX);
@@ -1439,42 +1529,62 @@ void ServerEncoder::ajaxUpdateDiag(EthernetClient client)
         This fcn updates the values showed in the webserver. Is a fcn called every 5 seconds.
     */
     sP->cntDebug++;
-    client.print(F("working_mode = "));
+    client.print(F("working_mode="));
     client.print(PLC_STATUS, DEC);
     client.print(F("&"));
-    client.print(F("status = "));
+    client.print(F("status="));
     client.print(deviceStatus, DEC);
-    client.print(F("&SPIerrorIndex = "));
+    client.print(F("&SPIerrorIndex="));
     client.print(SPIerrorIndex, DEC);
-    client.print(F("&tC = "));
+    client.print(F("&tC="));
     client.print(sP->tC, DEC);
-    client.print(F("&hP = "));
+    client.print(F("&hP="));
     client.print(sP->hP, DEC);
+    client.print(F("&bPre="));
+    client.print(sP->bPre, DEC);
+    DEBUG_SERVER(F("working_mode="));
+    DEBUG_SERVERFLO(PLC_STATUS, DEC);
+    DEBUG_SERVER(F("&"));
+    DEBUG_SERVER(F("status="));
+    DEBUG_SERVERFLO(deviceStatus, DEC);
+    DEBUG_SERVER(F("&SPIerrorIndex="));
+    DEBUG_SERVERFLO(SPIerrorIndex, DEC);
+    DEBUG_SERVER(F("&"));
+    DEBUG_SERVER(F("tC ="));
+    DEBUG_SERVERFLO(sP->tC, DEC);
+    DEBUG_SERVER(F("&hP="));
+    DEBUG_SERVERFLO(sP->hP, DEC);
+    DEBUG_SERVER(F("&bPre="));
+    DEBUG_SERVERLNFLO(sP->bPre, DEC);
+}
+
+void ServerEncoder::ajaxIMUvalues(EthernetClient client)
+{
+
+    /*
+    This function update imuValues shown on webServer
+    */
+
 #if defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
     if (sP->displayScreenNum != 4)
         mySensor.imuRead();
 #elif !defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
     mySensor.imuRead();
 #endif
-    client.print(F("&axisX = "));
+    client.print(F("xAngleVal="));
     client.print(iP->angX, DEC);
     client.print(F("&"));
-    client.print(F("axisY = "));
+    client.print(F("zAngleVal="));
+    client.print(iP->angZ, DEC);
+    client.print(F("yAngleVal="));
     client.print(iP->angY, DEC);
-    client.print(F("&bPre = "));
-    client.print(sP->bPre, DEC);
-    DEBUG_SERVER(F("working_mode = "));
-    DEBUG_SERVERFLO(PLC_STATUS, DEC);
-    DEBUG_SERVER(F("&"));
-    DEBUG_SERVER(F("status = "));
-    DEBUG_SERVERFLO(deviceStatus, DEC);
-    DEBUG_SERVER(F("&SPIerrorIndex = "));
-    DEBUG_SERVERFLO(SPIerrorIndex, DEC);
-    DEBUG_SERVER(F("&"));
-    DEBUG_SERVER(F("tC = "));
-    DEBUG_SERVERFLO(sP->tC, DEC);
-    DEBUG_SERVER(F("&hP = "));
-    DEBUG_SERVERFLO(sP->hP, DEC);
+    client.print(F("&"));
+    DEBUG_SERVER(F("xAngleVal="));
+    DEBUG_SERVERFLO(iP->angX, DEC);
+    DEBUG_SERVER(F("yAngleVal="));
+    DEBUG_SERVERFLO(iP->angY, DEC);
+    DEBUG_SERVER(F("zAngleVal="));
+    DEBUG_SERVERLNFLO(iP->angZ, DEC);
 }
 
 bool ServerEncoder::displayWebServer()
@@ -1517,6 +1627,13 @@ bool ServerEncoder::displayWebServer()
                     { // If the request contains 'ajaxupdatediag', calls ajaxUpdateDiag function
                         DEBUG_SERVERLN(F("Sto mandando diagnostica"));
                         ServerEncoder::ajaxUpdateDiag(client);
+                        break;
+                    }
+
+                    else if (webGetString.indexOf("ajaxIMUvalues") >= 0)
+                    { // if the request contains 'ajaxIMUvalues', calls ajaxIMUvalues function
+                        DEBUG_SERVERLN(F("Update IMU values"));
+                        ServerEncoder::ajaxIMUvalues(client);
                         break;
                     }
 
