@@ -227,10 +227,10 @@ void spiSTM(void)
   if (fP->saveParameters)
   {
     // statusRead();
-    DEBUG_SERVERLN(F("sending parameters"));
+    DEBUG_SERVERLN(F("Sending parameters"));
     SPIerrorIndex = myServer.sendParameters();
     // TODO here start the thing for saying to webserver "hey param transmitted OK"
-    DEBUG_SERVER(F(" SPI return: "));
+    DEBUG_SERVER(F("SPI return: "));
     DEBUG_SERVERLN(SPIerrorIndex);
   }
   if (fP->statusReadFlag == true && fP->saveParameters == false)

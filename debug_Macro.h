@@ -4,7 +4,7 @@
 */
 
 //#define DEBUG_OLED_SCREEN
-//#define DEBUG_WEBSERVER
+#define DEBUG_WEBSERVER
 //#define DEBUG_ETHERNET
 //#define DEBUG_IMU_SENSOR
 //#define DEBUG_SPI_ONE
