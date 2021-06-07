@@ -47,16 +47,17 @@
 
 //  GPIO PINS macro
 #if defined(ARDUINO_NANO)
-#define PLCEN_PIN_STATUS 2  // enable bit from PLC
-#define ST_PIN_STATUS 3     // bit allarme ST
-#define PIN_SQWA P1_15      // PIN 4, for SQW_A
-#define TOGGLE_BUTTON 5     // toggle screen button
-#define PIN_SQWB P1_14      // PIN 6, for SQW_B
-#define SENSOR_PIN_STATUS 7 // input pin from STM, means "PIXART OK"
-#define SD_PIN_NSS 8        // slave select for sd card from ethernet shield
-#define ST_PIN_NSS 9        // slave select for F031K6
-#define ET_PIN_NSS 10       // slave select for ethernet shield
-#define ST_RESET A0         // reset signal to F031K6
+#define PLCEN_PIN_STATUS 2      // enable bit from PLC
+#define ST_PIN_STATUS 3         // bit allarme ST
+#define PIN_SQWA P1_15          // PIN 4, for SQW_A
+#define TOGGLE_BUTTON 5         // toggle screen button
+#define PIN_SQWB P1_14          // PIN 6, for SQW_B
+#define SENSOR_PIN_STATUS 7     // input pin from STM, means "PIXART OK"
+#define SD_PIN_NSS 8            // slave select for sd card from ethernet shield
+#define ST_PIN_NSS 9            // slave select for F031K6
+#define ET_PIN_NSS 10           // slave select for ethernet shield
+#define ST_RESET A0             // reset signal to F031K6
+#define EN_ENCODER_ARD_TO_ST A1 // enable signal from arduino to plc
 #define PIN_ZERO NC
 #endif
 
@@ -72,6 +73,8 @@
 #define ET_NSS_HI digitalWrite(ET_PIN_NSS, HIGH)
 #define ST_RESET_LO digitalWrite(ST_RESET, LOW)
 #define ST_RESET_HI digitalWrite(ST_RESET, HIGH)
+#define ENABLE_ENCODER_HI digitalWrite(EN_ENCODER_ARD_TO_ST, HIGH)
+#define DISABLE_ENCODER_LO digitalWrite(EN_ENCODER_ARD_TO_ST.LOW)
 
 // Sensors operations macro
 #if defined(SENSOR_BME280)

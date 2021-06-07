@@ -30,6 +30,8 @@ typedef struct flagSystems
     bool prevTogScr;            // to control screen change
     bool saveParameters;        // keep initial value = 1
     bool statusReadFlag;
+    bool enableServer; // enable encoder from webServer
+    bool enablePLC;    // enable from PLC
 };
 
 // default values for flag variables
@@ -46,6 +48,8 @@ flagSystems flagEnc = {
     .prevTogScr = false,
     .saveParameters = true,
     .statusReadFlag = false,
+    .enableServer = false,
+    .enablePLC = false,
 };
 
 flagSystems *fP = &flagEnc;
@@ -70,9 +74,9 @@ typedef struct secSystems
     double encFreq;           // calculated pulse frequency
     byte diagBuffer[1];       // buffer to send to PLC
     uint8_t displayScreenNum; // current display
-    uint32_t mTimerCounter;   // to hold on screen time
     uint16_t debug1;
     uint16_t cntDebug;
+    uint32_t mTimerCounter; // to hold on screen time
 };
 
 secSystems secVar = {

@@ -10,6 +10,7 @@ void setup()
   pinMode(TOGGLE_BUTTON, INPUT_PULLUP);
   pinMode(ST_RESET, OUTPUT);
   pinMode(SENSOR_PIN_STATUS, INPUT_PULLUP);
+  pinMode(PLCEN_PIN_STATUS, INPUT);
   ST_RESET_HI;
 
 // start screen functions
@@ -60,7 +61,7 @@ void setup()
   tasker.setInterval(statusRead, 2000UL, 2);      // to check if spi coms between arduino and ST is OK
   tasker.setInterval(serverStatus, 3600000UL, 3); // to check if webServer is OK
 #endif
-  //TODO test it  tasker.setInterval(stCheck, 2000UL, 2);
+  tasker.setInterval(stCheck, 3000UL, 2);
 #ifdef SCREEN_ON
   tasker.setInterval(updateScreen, 100, 1); // update page to shown on oled screen *50
   tasker.setInterval(updateButton, 50, 1);  // update button reading
@@ -70,11 +71,12 @@ void setup()
 #endif
   tasker.setInterval(checkSystems, 60000UL, 3); /// general check of all systems
 #ifdef EXTMEMORY_ON
-  tasker.setInterval(extEEPROMupdate, 5000UL, 3); // check if extEEPROm is ok  3600000UL
+  tasker.setInterval(extEEPROMupdate, 3600000UL, 3); // check if extEEPROm is ok
 #endif
 #ifdef ACCELEROMETER_ON
   tasker.setInterval(imuUpdate, 3600000UL, 3); // check if IMU is ok
 #endif
+  attachInterrupt(digitalPinToInterrupt(PLCEN_PIN_STATUS), enableFlagEncoder, CHANGE);
 
 // finish the setup
 #ifdef SCREEN_ON
