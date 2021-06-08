@@ -4,11 +4,11 @@
 */
 
 //#define DEBUG_OLED_SCREEN
-#define DEBUG_WEBSERVER
+//#define DEBUG_WEBSERVER
 //#define DEBUG_ETHERNET
 //#define DEBUG_IMU_SENSOR
-//#define DEBUG_SPI_ONE
-//#define DEBUG_SPI_TWO
+#define DEBUG_SPI_ONE
+#define DEBUG_SPI_TWO
 //#define DEBUG_I2C_COM
 //#define DEBUG_BOOT_FCN
 //#define DEBUG_UDP_COM

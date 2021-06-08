@@ -798,7 +798,7 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<p>"));
     client.println(F("<span class='sensText'>Internal temperature: </span>"));
     client.println(F("<span id='tempVal'>0.00</span>"));
-    client.println(F("<span class='senNum'>°C</span>"));
+    client.println(F("<span class='senNum'>&#8451</span>"));
     client.println(F("</p>"));
     client.println(F("<p id='humValue'>"));
     client.println(F("<span class='sensText'>Relative humidity: </span>"));
@@ -1095,14 +1095,14 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<p id='axisOr'>"));
     client.println(F("<span>X axis angle: </span>"));
     client.println(F("<span id='xAngle'></span>"));
-    client.println(F("<span>0.00</span>"));
-    client.println(F("<span class='senNum'>°</span>"));
+    client.println(F("<span></span>"));
+    client.println(F("<span class='senNum'>&#176</span>"));
     client.println(F("</p>"));
     client.println(F("<p id='axisOr'>"));
     client.println(F("<span>Z axis angle: </span>"));
     client.println(F("<span id='zAngle'></span>"));
-    client.println(F("<span>0.00</span>"));
-    client.println(F("<span class='senNum'>°</span>"));
+    client.println(F("<span></span>"));
+    client.println(F("<span class='senNum'>&#176</span>"));
     client.println(F("</p>"));
     client.println(F("</div>"));
     client.println(F("</div>"));
