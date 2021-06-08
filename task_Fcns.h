@@ -225,11 +225,11 @@ void spiSTM(void)
 
   PIN_UP;
 
-  if (fP->enablePLC || fP->enableServer)
+  if (ENCODER_ENABLE)
   {
     ENABLE_ENCODER_HI;
   }
-  else if (!fp->enablePLC && !fp->enableServer)
+  else if (ENCODER_DISABLE)
   {
     DISABLE_ENCODER_LO;
   }

@@ -352,6 +352,7 @@ void SystemEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
 
 // * UDP COMMUNICATION
 
+#ifdef UDP_ON
 uint16_t SystemEncoder::listenUDP(byte *buffer, uint8_t size)
 {
     /*
@@ -447,3 +448,5 @@ int16_t SystemEncoder::bytesToInt(byte byte1, byte byte2)
     result = int((byte1 << 8) + byte2);
     return result;
 }
+
+#endif

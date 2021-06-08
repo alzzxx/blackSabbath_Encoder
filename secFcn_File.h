@@ -498,10 +498,10 @@ void pinConfig(int pin)
 }
 #endif
 
-// * Iinterrupt to handle PLC enable
+// * Interrupt to handle PLC enable
 void enableFlagEncoder(void)
 {
-    const uint32_t debTimeEnc = 100;
+    const uint32_t debTimeEnc = 20;
     static uint32_t elapsedTimeEnc;
     if (millis() > (elapsedTimeEnc + debTimeEnc))
     {

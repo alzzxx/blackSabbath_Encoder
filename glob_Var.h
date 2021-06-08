@@ -7,7 +7,7 @@
 #ifdef WEBSERVER_ON
 String webGetString; // Will be used for storing the HTTP requests from the client
 String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inFilter", "outFilter", "tSample",
-                                             "patCurr"}; // to be shown on debug and webServer
+                                             "patCurr", "encSim"}; // to be shown on debug and webServer
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
@@ -120,6 +120,7 @@ struct_encoderSettings encSettings = {
     encSettings.deviceParameters[4] = 10,
     encSettings.deviceParameters[5] = 400,
     encSettings.deviceParameters[6] = 6,
+    encSettings.deviceParameters[7] = 0,
     encSettings.remotePort = 3000,
 };
 

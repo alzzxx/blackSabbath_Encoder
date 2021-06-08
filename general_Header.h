@@ -11,7 +11,7 @@
 #define WEBSERVER_ON
 #define EXTMEMORY_ON
 #define ACCELEROMETER_ON
-#define UDP_ON
+//#define UDP_ON
 //#define SD_ON
 //#define ERASE_EEPROM
 
@@ -63,6 +63,8 @@
 
 //  PIN operations macro
 #define PLC_STATUS digitalRead(PLCEN_PIN_STATUS)
+#define ENCODER_ENABLE fP->enablePLC || fP->enableServer
+#define ENCODER_DISABLE !fP->enablePLC && !fP->enableServer
 #define SENSOR_STATUS digitalRead(SENSOR_PIN_STATUS)
 #define ST_STATUS digitalRead(ST_PIN_STATUS)
 #define ST_NSS_LO digitalWrite(ST_PIN_NSS, LOW)
@@ -74,7 +76,7 @@
 #define ST_RESET_LO digitalWrite(ST_RESET, LOW)
 #define ST_RESET_HI digitalWrite(ST_RESET, HIGH)
 #define ENABLE_ENCODER_HI digitalWrite(EN_ENCODER_ARD_TO_ST, HIGH)
-#define DISABLE_ENCODER_LO digitalWrite(EN_ENCODER_ARD_TO_ST.LOW)
+#define DISABLE_ENCODER_LO digitalWrite(EN_ENCODER_ARD_TO_ST, LOW)
 
 // Sensors operations macro
 #if defined(SENSOR_BME280)
