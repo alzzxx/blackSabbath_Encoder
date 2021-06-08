@@ -10,7 +10,7 @@ const double encodingType = 4.00;
 const uint8_t bmeAddress = 0x76; // i2c address of BME280
 #endif
 const uint8_t serverPort = 80;      // port for UDP communication
-const uint8_t numberParameters = 7; // number of parameters exchanged with ST
+const uint8_t numberParameters = 8; // number of parameters exchanged with ST
 const uint8_t shortDelay = 20;      // short delay for spi communication
 const uint8_t delayI2C = 5;         // short delay for i2c communication
 const uint8_t spiErrorLimit = 150;  // max amount of SPI erros allowed

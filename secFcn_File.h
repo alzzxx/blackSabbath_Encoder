@@ -497,3 +497,15 @@ void pinConfig(int pin)
                              (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
 }
 #endif
+
+// * Interrupt to handle PLC enable
+void enableFlagEncoder(void)
+{
+    const uint32_t debTimeEnc = 20;
+    static uint32_t elapsedTimeEnc;
+    if (millis() > (elapsedTimeEnc + debTimeEnc))
+    {
+        elapsedTimeEnc = millis();
+        fP->enablePLC = !fP->enablePLC;
+    }
+}

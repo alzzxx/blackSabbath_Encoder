@@ -224,8 +224,18 @@ void spiSTM(void)
   */
 
   PIN_UP;
+
+  if (ENCODER_ENABLE)
+  {
+    ENABLE_ENCODER_HI;
+  }
+  else if (ENCODER_DISABLE)
+  {
+    DISABLE_ENCODER_LO;
+  }
   if (fP->saveParameters)
   {
+
     // statusRead();
     DEBUG_SERVERLN(F("Sending parameters"));
     SPIerrorIndex = myServer.sendParameters();
