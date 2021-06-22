@@ -11,7 +11,7 @@
 #define WEBSERVER_ON
 #define EXTMEMORY_ON
 #define ACCELEROMETER_ON
-//#define UDP_ON
+#define UDP_ON
 //#define SD_ON
 //#define ERASE_EEPROM
 
@@ -31,7 +31,7 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
 #endif
-#ifdef WEBSERVER_ON
+#if defined(WEBSERVER_ON) || defined(UDP_ON)
 #include <EthernetCustom.h>
 #endif
 #ifdef SD_ON

@@ -162,8 +162,10 @@ iP->angY = 0.00;
 #endif
 
 // Objects and instances
-ScreenEncoder myScreen;                                 // Object for screen functions
-ServerEncoder myServer;                                 // Object for server functions
+ScreenEncoder myScreen; // Object for screen functions
+#ifdef WEBSERVER_ON
+ServerEncoder myServer; // Object for server functions
+#endif
 SensorEncoder mySensor;                                 // Object for sensor functions
 SystemEncoder mySystem;                                 // Object for comunication functions
 Tasker tasker(true);                                    // object for tasking
@@ -175,7 +177,7 @@ EasyButton button(TOGGLE_BUTTON);                       // to toggle screen and 
 Adafruit_BME280 bme; // object for temperature sensor
 #endif
 
-#ifdef WEBSERVER_ON
+#if defined(WEBSERVER_ON) || defined(UDP_ON)
 IPAddress ip(192, 168, 1, 20);     // Local IP address
 IPAddress remote(192, 168, 1, 10); // remote IP address
 EthernetServer server(serverPort); // Server is configured in default port 80

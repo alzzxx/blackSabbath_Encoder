@@ -25,10 +25,11 @@ void stCheck(void)
   }
   else
   {
-    DEBUG_TASKS(F("ST error"));
+    DEBUG_TASKSLN(F("ST error"));
     fP->stFlag = true;
     sP->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
+    DEBUG_TASKSLN(F("Calling to writeUDP"));
     delay(10);
     mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
 #endif

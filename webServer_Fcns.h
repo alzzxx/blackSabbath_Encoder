@@ -1631,7 +1631,7 @@ void ServerEncoder::ajaxUpdateDiag(EthernetClient client)
     DEBUG_SERVER(F("&SPIerrorIndex="));
     DEBUG_SERVERFLO(SPIerrorIndex, DEC);
     DEBUG_SERVER(F("&"));
-    DEBUG_SERVER(F("tC ="));
+    DEBUG_SERVER(F("tC="));
     DEBUG_SERVERFLO(sP->tC, DEC);
     DEBUG_SERVER(F("&hP="));
     DEBUG_SERVERFLO(sP->hP, DEC);

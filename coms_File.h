@@ -4,7 +4,7 @@
 */
 
 // * SPI COMMUNICATION
-
+#ifdef WEBSERVER_ON
 bool ServerEncoder::checkIflistened(uint8_t *p_rx0, uint8_t BUFFERSIZE)
 {
     bool flag = 1;
@@ -240,7 +240,7 @@ uint16_t ServerEncoder::readReg(uint8_t address, uint16_t *body, uint8_t slaveSe
         }
     }
 }
-
+#endif
 // * I2C COMMUNICATION
 
 bool SystemEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
@@ -419,7 +419,7 @@ void SystemEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP,
     Udp.endPacket();
     DEBUG_UDPLN(F("DONE udp"));
 
-#ifdef DEBUG // Print some info on the monitor
+#ifdef DEBUG_UDP_COM // Print some info on the monitor
     DEBUG_UDP(F("Sent packet of size: "));
     DEBUG_UDPLN(size);
     DEBUG_UDP(F("To "));

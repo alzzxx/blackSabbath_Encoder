@@ -11,6 +11,7 @@ void setup()
   pinMode(ST_RESET, OUTPUT);
   pinMode(SENSOR_PIN_STATUS, INPUT_PULLUP);
   pinMode(PLCEN_PIN_STATUS, INPUT);
+  pinMode(ST_PIN_STATUS, INPUT);
   ST_RESET_HI;
 
 // start screen functions

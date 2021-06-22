@@ -322,7 +322,7 @@ void ScreenEncoder::displayFreqSpeed(void)
     display.clearDisplay();
     ScreenEncoder::displayIndicator(sP->displayScreenNum);
     ScreenEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 43, false);
-    if (PLC_STATUS == HIGH)
+    if (ENCODER_ENABLE)
     {
         display.drawBitmap(3, 20, oledIcon_6, 23, 21, WHITE);
         display.setTextSize(2);
