@@ -1,3 +1,4 @@
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\secFcn_File.h"
 
 // * IMU functions
 
@@ -501,6 +502,9 @@ void pinConfig(int pin)
 // * Interrupt to handle PLC enable
 void enableFlagEncoder(void)
 {
+    fP->enablePLC = !fP->enablePLC;
+    // TODO: decide wich one
+    /*
     const uint32_t debTimeEnc = 20;
     static uint32_t elapsedTimeEnc;
     if (millis() > (elapsedTimeEnc + debTimeEnc))
@@ -508,4 +512,5 @@ void enableFlagEncoder(void)
         elapsedTimeEnc = millis();
         fP->enablePLC = !fP->enablePLC;
     }
+    */
 }

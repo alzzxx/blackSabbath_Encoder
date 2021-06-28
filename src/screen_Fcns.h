@@ -53,7 +53,7 @@ void ScreenEncoder::initialCheck(void)
     ScreenEncoder::showText(17, 36, oledMessage_table, 3, true);
     display.display();
     delay(delayScreen);
-    while (!(SENSOR_STATUS == LOW && ST_STATUS == LOW))
+    while (!(SENSOR_STATUS == LOW && ST_STATUS == HIGH))
     {
         DEBUG_BOOTLN(F("Pixart sensor error"));
         display.clearDisplay();
@@ -268,7 +268,7 @@ void ScreenEncoder::displayPixVal(void)
     display.clearDisplay();
     ScreenEncoder::displayIndicator(sP->displayScreenNum);
     ScreenEncoder::frameHeader(25, 5, 1, false, oledMessage_table, 11, false);
-    if (ST_STATUS == LOW && SENSOR_STATUS == LOW)
+    if (ST_STATUS == HIGH && SENSOR_STATUS == LOW)
     {
         ScreenEncoder::showText(3, 19, oledMessage_table, 30, false);
         display.setCursor(45, 19);
@@ -368,7 +368,7 @@ void ScreenEncoder::displayIPMAC(void)
                        ":" + String(eP->mac[3], HEX) + ":" + String(eP->mac[4], HEX) + ":" + String(eP->mac[5], HEX);
         display.print(myMac);
         DEBUG_SCREEN(F("MAC Address: "));
-        DEBUG_SCREEN(myMac)
+        DEBUG_SCREEN(myMac);
         DEBUG_SCREENLN(F(""));
     }
     else

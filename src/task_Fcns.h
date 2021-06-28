@@ -20,13 +20,8 @@ void stCheck(void)
   }
   if (ST_STATUS == LOW)
   {
-    fP->stFlag = false;
-    DEBUG_TASKSLN(F("ST ok"));
-  }
-  else
-  {
-    DEBUG_TASKSLN(F("ST error"));
     fP->stFlag = true;
+    DEBUG_TASKSLN(F("ST error"));
     sP->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
     DEBUG_TASKSLN(F("Calling to writeUDP"));
@@ -35,6 +30,11 @@ void stCheck(void)
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
     DEBUG_TASKSLN(sP->diagBuffer[0]);
+  }
+  else
+  {
+    fP->stFlag = false;
+    DEBUG_TASKSLN(F("ST ok"));
   }
   PIN_DOWN;
 }

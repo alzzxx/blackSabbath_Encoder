@@ -11,7 +11,7 @@
 #define WEBSERVER_ON
 #define EXTMEMORY_ON
 #define ACCELEROMETER_ON
-#define UDP_ON
+//#define UDP_ON
 //#define SD_ON
 //#define ERASE_EEPROM
 

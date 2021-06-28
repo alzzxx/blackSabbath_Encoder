@@ -1,3 +1,4 @@
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\constants_File.h"
 
 /*
 * Constants definition
@@ -11,7 +12,7 @@ const uint8_t bmeAddress = 0x76; // i2c address of BME280
 #endif
 const uint8_t serverPort = 80;      // port for UDP communication
 const uint8_t numberParameters = 8; // number of parameters exchanged with ST
-const uint8_t shortDelay = 20;      // short delay for spi communication
+const uint8_t shortDelay = 20;      // short delay for spi communication [us]
 const uint8_t delayI2C = 5;         // short delay for i2c communication
 const uint8_t spiErrorLimit = 150;  // max amount of SPI erros allowed
 const uint8_t i2cErrorLimit = 50;   // max amount of i2c communication errors allowed
@@ -60,7 +61,7 @@ const float outputEndY = 22.00;
 // const for messages and icons shown on oled display
 #ifdef SCREEN_ON
 static const char oledMessage_0[] PROGMEM = "BESTduino";
-static const char oledMessage_1[] PROGMEM = "V 1.8.0";
+static const char oledMessage_1[] PROGMEM = "V 1.0.0";
 static const char oledMessage_2[] PROGMEM = "Shield not present";
 static const char oledMessage_3[] PROGMEM = "Checking encoder";
 static const char oledMessage_4[] PROGMEM = "Encoder error";

@@ -756,10 +756,6 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("onclick='updateForm(\"deviceStatus\");'>Encoder status</a>"));
     client.println(F("</li>"));
     client.println(F("<br>"));
-    client.println(F("<li><a id='FreqCalcLink' title='Click to show encoder frequency page' href='#'"));
-    client.println(F("onclick='updateForm(\"freqEncoder\");'>Encoder frequency</a>"));
-    client.println(F("</li>"));
-    client.println(F("<br>"));
     client.println(F("<li><a id='netParamLink' title='Click to show network parameters' href='#'"));
     client.println(F("onclick='updateForm(\"networkParams\");'>Network parameters</a>"));
     client.println(F("</li>"));
@@ -1104,15 +1100,6 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<span></span>"));
     client.println(F("<span class='senNum'>&#176</span>"));
     client.println(F("</p>"));
-    client.println(F("</div>"));
-    client.println(F("</div>"));
-    client.println(F("<!-- Form for encoder frequency Panel -->"));
-    client.println(F("<div id='freqEncoder' style='display:none'>"));
-    client.println(F("<div id='encOrTitle'>"));
-    client.println(F("<h2>Encoder frequency calculation</h2>"));
-    client.println(F("</div>"));
-    client.println(F("<div>"));
-    client.println(F("<p id='fEncHz'>Encoder frequency:</p>"));
     client.println(F("</div>"));
     client.println(F("</div>"));
     client.println(F("</body>"));

@@ -1,3 +1,4 @@
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\coms_File.h"
 
 /*
 * Functions for spi, i2c and udp communication
@@ -32,7 +33,7 @@ bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, uint8_t slav
 
     sP->debug1++;
     uint8_t rx[4] = {0, 0, 0, 0};
-    delayMicroseconds(4 * shortDelay);
+    delayMicroseconds(16 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
     digitalWrite(slaveSelect, LOW); // Starts communication with Slave connected to master. SS lowered
     delayMicroseconds(shortDelay);
@@ -48,7 +49,7 @@ bool ServerEncoder::spiWriteArd2STM(uint8_t address, uint16_t body, uint8_t slav
 
     digitalWrite(slaveSelect, HIGH); //  restore SS as "slave not communicating"
     SPI.endTransaction();
-    delayMicroseconds(4 * shortDelay);
+    delayMicroseconds(16 * shortDelay);
     if (ServerEncoder::checkIflistened(&rx[0], 4) == 0)
         return 0; // first check: if STM sent [24, 24, 24, 24] every frame was received correctly.
 
@@ -79,7 +80,7 @@ bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, uint8_t slav
     */
     uint8_t flag = 0;
     uint8_t rx[4] = {0, 0, 0, 0};
-    delayMicroseconds(4 * shortDelay);
+    delayMicroseconds(16 * shortDelay);
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
     digitalWrite(slaveSelect, LOW); // Starts communication with Slave connected to master. SS, or NCSS lowered
     delayMicroseconds(shortDelay);
@@ -108,7 +109,7 @@ bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, uint8_t slav
     DEBUG_SPIONE(" , ");
     DEBUG_SPIONELN(rx[3]);
 
-    delayMicroseconds(4 * shortDelay);
+    delayMicroseconds(16 * shortDelay);
     rx[0] = SPI.transfer(24); //Send 0x18 aka "I'm listening"
     delayMicroseconds(shortDelay);
     rx[1] = SPI.transfer(25); //Send 0x18 aka "I'm listening"
@@ -120,7 +121,7 @@ bool ServerEncoder::spiReadArd2STM(uint8_t address, uint16_t *body, uint8_t slav
 
     digitalWrite(slaveSelect, HIGH); // Starts communication with Slave connected to master. SS, or NCSS lowered
     SPI.endTransaction();
-    delayMicroseconds(4 * shortDelay);
+    delayMicroseconds(16 * shortDelay);
 
     DEBUG_SPIONELN("Read2 : Sent: 24, 25, 26, 27");
     DEBUG_SPIONE("        rec :  ");
