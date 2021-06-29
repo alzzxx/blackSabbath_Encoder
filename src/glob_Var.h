@@ -11,9 +11,10 @@ String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inF
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
-int SPIerrorIndex = -1;   // do not delete this
-byte plcEnable = 0x00;    // byte to indicate if the device is in SPI mode or encoder mode
-byte deviceStatus = 0xFF; // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
+int SPIerrorIndex = -1;           // do not delete this
+byte plcEnable = 0x00;            // byte to indicate if the device is in SPI mode or encoder mode
+byte deviceStatus = 0xFF;         // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
+unsigned int portaRemota = 60257; // UDP port of remote PC // TODO cancel
 
 // globVar secondary systems
 typedef struct flagSystems
@@ -178,9 +179,10 @@ Adafruit_BME280 bme; // object for temperature sensor
 #endif
 
 #if defined(WEBSERVER_ON) || defined(UDP_ON)
-IPAddress ip(192, 168, 1, 20);     // Local IP address
-IPAddress remote(192, 168, 1, 10); // remote IP address
-EthernetServer server(serverPort); // Server is configured in default port 80
+IPAddress ip(192, 168, 1, 20);        // Local IP address
+IPAddress remote(192, 168, 1, 10);    // remote IP address
+EthernetServer server(serverPort);    // Server is configured in default port 80
+IPAddress ipRemota(192, 168, 1, 100); // ip address of PC // TODO cancel
 #endif
 
 #if defined(ARDUINO_NANO) && defined(SCREEN_ON)
