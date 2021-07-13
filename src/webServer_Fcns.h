@@ -333,8 +333,8 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("var serverMode;"));
     client.println(F("var localPort = 3000;"));
     client.println(F("var remotePort = 3000 + deviceID;"));
-    client.println(F("var addressIP = [192, 168, 1, 20 + deviceID];"));
-    client.println(F("var addressMAC = [\"DE\", \"AD\", \"BE\", \"EF\", \"FE\", \"ED\"];"));
+    client.println(F("var addressIP = [192, 168, 0, 20 + deviceID];"));
+    client.println(F("var addressMAC = [\"FD\", \"1F\", \"4D\", \"1A\", \"FC\", \"DA\"];"));
     client.println(F("var cameraRes;"));
     client.println(F("var flagAlert = 0;"));
     client.println(F("const updateInterval = 5000;"));
@@ -352,7 +352,7 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("parsedString = this.responseText.split(\"&\");"));
     client.println(F("deviceID = parseInt(parsedString[0].split(\"=\")[1]);"));
     client.println(F("remotePort = 3000 + deviceID;"));
-    client.println(F("addressIP = [192, 168, 1, 20 + deviceID];"));
+    client.println(F("addressIP = [192, 168, 0, 20 + deviceID];"));
     client.println(F("localPort = parseInt(parsedString[1].split(\"=\")[1]);"));
     client.println(F("for (var i = 0; i < 6; i++) {"));
     client.println(F("addressMAC[i] = parsedString[2].split(\"=\")[1].split(\":\")[i];"));

@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\coms_File.h"
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\BlackSabbath\\src\\coms_File.h"
 
 /*
 * Functions for spi, i2c and udp communication

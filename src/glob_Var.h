@@ -11,10 +11,9 @@ String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inF
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
-int SPIerrorIndex = -1;           // do not delete this
-byte plcEnable = 0x00;            // byte to indicate if the device is in SPI mode or encoder mode
-byte deviceStatus = 0xFF;         // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
-unsigned int portaRemota = 60257; // UDP port of remote PC // TODO cancel
+int SPIerrorIndex = -1;   // do not delete this
+byte plcEnable = 0x00;    // byte to indicate if the device is in SPI mode or encoder mode
+byte deviceStatus = 0xFF; // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
 
 // globVar secondary systems
 typedef struct flagSystems
@@ -106,7 +105,7 @@ typedef struct struct_encoderSettings
 
 // default encoder parameters
 struct_encoderSettings encSettings = {
-    encSettings.deviceIndex = 0,
+    encSettings.deviceIndex = 1,
     encSettings.mac[0] = 0xFD,
     encSettings.mac[1] = 0x1F,
     encSettings.mac[2] = 0x4D,
@@ -122,7 +121,7 @@ struct_encoderSettings encSettings = {
     encSettings.deviceParameters[5] = 400,
     encSettings.deviceParameters[6] = 6,
     encSettings.deviceParameters[7] = 0,
-    encSettings.remotePort = 3000,
+    encSettings.remotePort = 3001,
 };
 
 struct_encoderSettings *eP = &encSettings; // pointer to struct to navigate the encoder parameters
@@ -179,10 +178,9 @@ Adafruit_BME280 bme; // object for temperature sensor
 #endif
 
 #if defined(WEBSERVER_ON) || defined(UDP_ON)
-IPAddress ip(192, 168, 1, 20);        // Local IP address
-IPAddress remote(192, 168, 1, 10);    // remote IP address
-EthernetServer server(serverPort);    // Server is configured in default port 80
-IPAddress ipRemota(192, 168, 1, 100); // ip address of PC // TODO cancel
+IPAddress ip(192, 168, 0, 20);     // Local IP address
+IPAddress remote(192, 168, 0, 1);  // remote IP address
+EthernetServer server(serverPort); // Server is configured in default port 80
 #endif
 
 #if defined(ARDUINO_NANO) && defined(SCREEN_ON)

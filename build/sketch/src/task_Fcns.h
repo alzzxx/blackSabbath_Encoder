@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\task_Fcns.h"
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\BlackSabbath\\src\\task_Fcns.h"
 
 void stCheck(void)
 {
@@ -27,6 +27,7 @@ void stCheck(void)
 #ifdef UDP_ON
     DEBUG_TASKSLN(F("Calling to writeUDP"));
     delay(10);
+    //eP->remotePort = 60919;
     mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));

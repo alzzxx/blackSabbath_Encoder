@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\general_Header.h"
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\BlackSabbath\\src\\general_Header.h"
 
 /*
 * General header file
@@ -12,7 +12,7 @@
 #define WEBSERVER_ON
 #define EXTMEMORY_ON
 #define ACCELEROMETER_ON
-//#define UDP_ON
+#define UDP_ON
 //#define SD_ON
 //#define ERASE_EEPROM
 

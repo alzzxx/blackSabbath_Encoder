@@ -6,7 +6,6 @@ void stCheck(void)
   - start UDP and send packet with deviceStatus byte to plc for diagnose
 
   */
-  byte varTest[1] = {0xFF}; // TODO cancel
   PIN_UP;
   DEBUG_TASKSLN(F("Checking pixart and ST"));
   if (SENSOR_STATUS == HIGH)
@@ -27,8 +26,8 @@ void stCheck(void)
 #ifdef UDP_ON
     DEBUG_TASKSLN(F("Calling to writeUDP"));
     delay(10);
-    //mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
-    mySystem.writeUDP(varTest, sizeof(varTest), ipRemota, portaRemota); // TODO cancel
+    //eP->remotePort = 60919;
+    mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
     DEBUG_TASKSLN(sP->diagBuffer[0]);

@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\glob_Var.h"
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\BlackSabbath\\src\\glob_Var.h"
 
 /*
 * Global variables 
@@ -106,7 +106,7 @@ typedef struct struct_encoderSettings
 
 // default encoder parameters
 struct_encoderSettings encSettings = {
-    encSettings.deviceIndex = 0,
+    encSettings.deviceIndex = 1,
     encSettings.mac[0] = 0xFD,
     encSettings.mac[1] = 0x1F,
     encSettings.mac[2] = 0x4D,
@@ -122,7 +122,7 @@ struct_encoderSettings encSettings = {
     encSettings.deviceParameters[5] = 400,
     encSettings.deviceParameters[6] = 6,
     encSettings.deviceParameters[7] = 0,
-    encSettings.remotePort = 3000,
+    encSettings.remotePort = 3001,
 };
 
 struct_encoderSettings *eP = &encSettings; // pointer to struct to navigate the encoder parameters
@@ -179,8 +179,8 @@ Adafruit_BME280 bme; // object for temperature sensor
 #endif
 
 #if defined(WEBSERVER_ON) || defined(UDP_ON)
-IPAddress ip(192, 168, 1, 20);     // Local IP address
-IPAddress remote(192, 168, 1, 10); // remote IP address
+IPAddress ip(192, 168, 0, 20);     // Local IP address
+IPAddress remote(192, 168, 0, 1);  // remote IP address
 EthernetServer server(serverPort); // Server is configured in default port 80
 #endif
 

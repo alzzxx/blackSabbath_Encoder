@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\blackSabbath_Encoder\\src\\screen_Fcns.h"
+#line 1 "c:\\Users\\a.rondon\\Documents\\GitHub\\BlackSabbath\\src\\screen_Fcns.h"
 
 void ScreenEncoder::startScreen(void)
 {
@@ -359,7 +359,7 @@ void ScreenEncoder::displayIPMAC(void)
         display.print(eP->deviceIndex);
         ScreenEncoder::showText(5, 30, oledMessage_table, 24, false);
         display.setCursor(50, 30);
-        String myIP = "192.168.1." + String(20 + eP->deviceIndex);
+        String myIP = "192.168.0." + String(20 + eP->deviceIndex);
         display.print(myIP);
         DEBUG_SCREEN(F("Local IP: "));
         DEBUG_SCREENLN(ip);

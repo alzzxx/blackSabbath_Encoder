@@ -185,7 +185,7 @@ int16_t SystemEncoder::readParam(void)
         SystemEncoder::loadEncSettings();
         eP->remotePort = eP->localPort + eP->deviceIndex;
 #ifdef WEBSERVER_ON
-        ip = IPAddress(192, 168, 1, 20 + eP->deviceIndex);
+        ip = IPAddress(192, 168, 0, 20 + eP->deviceIndex);
 #endif
         errCount = 0;
 #ifdef DEBUG_BOOT
@@ -249,7 +249,7 @@ int16_t SystemEncoder::readParam(void)
     eP->deviceParameters[6] = 6;
     eP->remotePort = eP->localPort + eP->deviceIndex;
 #ifdef WEBSERVER_ON
-    ip = IPAddress(192, 168, 1, 20 + eP->deviceIndex);
+    ip = IPAddress(192, 168, 0, 20 + eP->deviceIndex);
 #else
     ip[3] = 20 + eP->deviceIndex;
 #endif

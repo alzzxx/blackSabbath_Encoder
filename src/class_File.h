@@ -101,7 +101,7 @@ public:
 #endif
 #ifdef UDP_ON
     uint16_t listenUDP(byte *buffer, uint8_t size);
-    inline void writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort) __attribute__((always_inline));
+    inline void writeUDP(uint16_t *buffer, uint16_t size, IPAddress targetIP, uint16_t targetPort) __attribute__((always_inline));
 #endif
 #ifdef EXTMEMORY_ON
     int16_t readParam(void);
