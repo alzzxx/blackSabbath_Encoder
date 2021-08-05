@@ -19,7 +19,7 @@ void ScreenEncoder::startScreen(void)
     DEBUG_BOOTLN(F("Screen started"));
     DEBUG_DELAY(1000);
     display.clearDisplay();
-    display.invertDisplay(true);
+    display.setRotation(2);
     display.display();
 }
 
