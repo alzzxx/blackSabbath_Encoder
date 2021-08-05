@@ -1,10 +1,18 @@
 
+/*
+* Functions for seconday or auxiliary utilities
+- Reading IMU, calculating values for electronic bubble level
+- Starting and reading eeprom, temp sensor, ecc
+*/
+
 // * IMU functions
 
 int16_t SensorEncoder::roundFunction(int16_t d)
 {
     /*
-        Function to round values
+     Round input number
+     Parameter description:
+     - d: number to be rounded
     */
     return floor(d + 0.5);
 }
@@ -14,6 +22,7 @@ void SensorEncoder::slopeCalc(void)
     /*
     slope calculation to transform values from the imu into values shown on the digital level
     */
+
     iP->slopeX = 1.0 * (outputEndX - outputStartX) / (inputEndX - inputStartX);
     iP->slopeY = 1.0 * (outputEndY - outputStartY) / (inputEndY - inputStartY);
 }
@@ -50,7 +59,7 @@ bool SensorEncoder::startIMU(void)
 void SensorEncoder::imuRead(void)
 {
     /*
-     Read values from IMU and calculate inclination angles to show on the screen/webServer
+     Read values from IMU and calculate inclination angles to be shown on the screen/webServer
     */
 
     for (uint8_t i = 0; i < meanSampleNumber; i++)
@@ -58,14 +67,14 @@ void SensorEncoder::imuRead(void)
         // store reading from accelerometer on a buffer to calculate mean value
         DEBUG_IMU("i is: ");
         DEBUG_IMULN(i);
-        Accelerometer.pop(accelerometerData);
-        mediaAccX.push(accelerometerData.x);
+        Accelerometer.pop(accelerometerData); // get values from accelerometer
+        mediaAccX.push(accelerometerData.x);  // save actual value on a buffer inside mean calculation library
         DEBUG_IMU(F("accX[i] is: "));
         DEBUG_IMULNFLO(mediaAccX.get(i), 2);
-        mediaAccY.push(accelerometerData.y);
+        mediaAccY.push(accelerometerData.y); // save actual value on a buffer inside mean calculation library
         DEBUG_IMU(F("accY[i] is: "));
         DEBUG_IMULNFLO(mediaAccY.get(i), 2);
-        mediaAccZ.push(accelerometerData.z);
+        mediaAccZ.push(accelerometerData.z); // save actual value on a buffer inside mean calculation library
         DEBUG_IMU(F("accZ[i] is: "));
         DEBUG_IMULNFLO(mediaAccZ.get(i), 2);
     }
@@ -95,24 +104,42 @@ void SensorEncoder::imuRead(void)
     DEBUG_IMULNFLO(iP->angY, 1);
 }
 
-// * Encoder read functions
+// * Encoder frequency calculation functions
 
 void SystemEncoder::readEncoder(void)
 {
-    const uint8_t readInterval = 20;
+    /*
+     Read signals A and B coming from ST board using interrupts, then use the QEI library 
+     to calculate actual encoder frequency: distance (in Hz) between pulse A and pulse B
+     - How QEI library works? In globVar is created an object of that library called myPulse
+     and pins where encoder signal arrives are given to it. The library automatically uses
+     interrupts to read arriving pulses, each time there is a rising edge on each og the pins
+     the pulses counter get increased.
+
+     - Then, readEncoder signal is called every 50 ms, within screen functions. only when
+     user goes to Encoder frequency page
+
+     - readEncoder get the mean value of pulses using meanPulsamples as number of samples,
+     when inside the function, the cycle is repeated each 20 ms, so a new pulses values is
+     read every 20ms
+
+    */
+
+    const uint8_t readInterval = 20; // in ms, reading interval, each 20 ms take 20 samples for freq calc
     uint8_t i = 0;
     static uint32_t lastPulses, justBefore, rightNow, actualPulses;
     static uint32_t deltaPulses[meanPulSamples];
 
     do
     {
+        // Check if 20ms have passed before start new reading of pulses
         rightNow = millis();
         if (rightNow - justBefore >= readInterval)
         {
             justBefore = millis();
             actualPulses = myPulse.getPulses();
-            deltaPulses[i] = actualPulses - lastPulses;
-            mediaPuls.push(deltaPulses[i]);
+            deltaPulses[i] = actualPulses - lastPulses; // get current pulses
+            mediaPuls.push(deltaPulses[i]);             // save current pulses on buffer for mean calculation
             lastPulses = actualPulses;
             DEBUG_FREQ(F("deltaPuls["));
             DEBUG_FREQ(i);
@@ -122,10 +149,10 @@ void SystemEncoder::readEncoder(void)
         }
     } while (i < meanPulSamples);
     DEBUG_FREQ(F("Exit the loop, now mean calculation"));
-    sP->mPul = mediaPuls.mean();
+    sP->mPul = mediaPuls.mean(); // get pulses mean value
     DEBUG_FREQ(F("Mean pulse is: "));
     DEBUG_FREQLN(sP->mPul);
-    sP->encFreq = sP->mPul / readInterval / encodingType;
+    sP->encFreq = sP->mPul / readInterval / encodingType; // get frequency value
     DEBUG_FREQ(F("Frequency is: "));
     DEBUG_FREQLN(sP->encFreq);
 }
@@ -134,17 +161,23 @@ void SystemEncoder::readEncoder(void)
 
 void ScreenEncoder::buttonSetup(void)
 {
+    /*
+     Set button using easyButton library, this allow to have two different behaviour with a single button:
+     when single-pressed screen page is changed, when long-pressed for 5 seconds, the encoder is reset.
+    */
+
     DEBUG_BOOTLN(F("Setting button functions"));
     button.begin();
-    button.onPressed(btnToggleScreen);
-    button.onPressedFor(encResetTime, resetFunc);
+    button.onPressed(btnToggleScreen);            // single pressed, call btnToggleScreen function
+    button.onPressedFor(encResetTime, resetFunc); // long pressed for 5 seconds, call reset function
     DEBUG_BOOTLN("Button function set");
 }
 
 void resetFunc(void)
 {
     /*
-    Function for software reset using nano_33_BLE
+    Function for software reset using nano_33_BLE, first reset ST and ethernet shield for 500 us,
+    then call nordic semiconductors hal function NVIC reset.
     */
     DEBUG_BOOTLN("I'm reseting");
     ST_RESET_LO;
@@ -179,9 +212,11 @@ int16_t SystemEncoder::readParam(void)
     int16_t errCount = 0;
 
 #ifdef EXTMEMORY_ON
+    // start EEPROm
     SystemEncoder::startEEPROM();
     if (fP->extMemFlag)
     {
+        // if EEPROM started, read stored values and save them on globVar
         SystemEncoder::loadEncSettings();
         eP->remotePort = eP->localPort + eP->deviceIndex;
 #ifdef WEBSERVER_ON
@@ -295,8 +330,11 @@ void SystemEncoder::loadEncSettings(void)
 {
     /*
     Function that load the previously saved parameters on EEPROM, Check if eeprom is blank by reading
-    the first four places, if those are zeroes it can be assumed that memory is empty
+    the first four places, if those are zeroes it can be assumed that memory is empty, if so, then save
+    the default parameters. If memory is not empty, read the saved values and save them on encSettings structure
+    to be used during runtime
     */
+
 #ifdef ERASE_EEPROM
     DEBUG_BOOTLN(F("Erasing EEPROM"));
     myEEPROM.erase();
@@ -358,20 +396,20 @@ void SensorEncoder::bmeStart(void)
 bool SystemEncoder::bootShield(void)
 {
     /*
-    - Function that starts the ethernet shield used for webServer and udp communication with plc
+     Function that starts the ethernet shield used for webServer and udp communication with plc
     */
+    DEBUG_BOOTLN(F("Starting boot shield function"));
     bool isShieldOK, isHardOK, isLinkOK, isUdpOK, isServerOK;
 
     // disable all SPI peripherals by keeping high ther SS pins
-    pinMode(ST_PIN_NSS, OUTPUT);
+    DEBUG_BOOTLN(F("Setting all slave select high"));
     ST_NSS_HI;
-    pinMode(SD_PIN_NSS, OUTPUT);
     SD_NSS_HI;
-    pinMode(ET_PIN_NSS, OUTPUT);
     ET_NSS_HI;
     delay(200);
 
     // ETHERNET COMMUNICATION
+    DEBUG_BOOTLN(F("Starting ethernet init"));
     Ethernet.init(ET_PIN_NSS);
     Ethernet.begin(eP->mac, ip);
     ET_NSS_HI; // Bring the SS pin high again (bug of Ethernet library causes it to turn Low after Ethernet.begin())
@@ -415,8 +453,8 @@ bool SystemEncoder::bootShield(void)
         }
     }
 
-#ifdef UPD_ON
     // Start Udp server
+#ifdef UPD_ON
     i = 0;
     while (i < 10)
     {
@@ -449,6 +487,7 @@ bool SystemEncoder::bootShield(void)
 #else
     isUdpOK = true;
 #endif
+
     // Start webServer
     i = 0;
     while (i < 10)
@@ -501,15 +540,9 @@ void pinConfig(int pin)
 // * Interrupt to handle PLC enable
 void enableFlagEncoder(void)
 {
-    fP->enablePLC = !fP->enablePLC;
-    // TODO: decide wich one
     /*
-    const uint32_t debTimeEnc = 20;
-    static uint32_t elapsedTimeEnc;
-    if (millis() > (elapsedTimeEnc + debTimeEnc))
-    {
-        elapsedTimeEnc = millis();
-        fP->enablePLC = !fP->enablePLC;
-    }
+     Interrupt to read when there is change of plc enable pin
     */
+
+    fP->enablePLC = !fP->enablePLC;
 }

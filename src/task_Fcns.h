@@ -1,16 +1,23 @@
 
+/*
+ * Tasks functions: those are the only functions that get called inside the main loop, all the other functions
+ * are called within task functions. The intervals are fixed for each functions, with the more important ones 
+ * called at a higher frequency. In the constanst_File each interval can be modified, on the setup the priority
+ * of the function can also be modified, with 0 being the highest and 3 the lowest.
+*/
+
 void stCheck(void)
 {
   /*
-  - Function to control st and pixart status, if the encoder if in error mode
-  - start UDP and send packet with deviceStatus byte to plc for diagnose
+   Function to control st and pixart status, if the encoder if in error mode
+   start UDP and send packet with deviceStatus byte to plc for diagnose
 
   */
   PIN_UP;
   DEBUG_TASKSLN(F("Checking pixart and ST"));
   if (SENSOR_STATUS == HIGH)
   {
-    fP->patFlag = true;
+    fP->patFlag = true; // flag to control pat9130 sensor
     DEBUG_TASKS(F("Pixart error"));
   }
   else
@@ -20,14 +27,13 @@ void stCheck(void)
   }
   if (ST_STATUS == LOW)
   {
-    fP->stFlag = true;
+    fP->stFlag = true; // flag to control st board
     DEBUG_TASKSLN(F("ST error"));
     sP->diagBuffer[0] = deviceStatus;
 #ifdef UDP_ON
     DEBUG_TASKSLN(F("Calling to writeUDP"));
     delay(10);
-    //eP->remotePort = 60919;
-    mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort);
+    mySystem.writeUDP(sP->diagBuffer, sizeof(sP->diagBuffer), remote, eP->remotePort); // call upd function, and send to plc diagnostic byte
 #endif
     DEBUG_TASKS(F("deviceStatus is: "));
     DEBUG_TASKSLN(sP->diagBuffer[0]);
@@ -43,8 +49,8 @@ void stCheck(void)
 void checkSystems(void)
 {
   /*
-  - Function to check secondary systems, check all flags
-  - and set o clear sysOK flag
+   Function to check secondary systems, check all flags
+   and set o clear sysOK flag
   */
 
   PIN_UP;
@@ -77,8 +83,9 @@ void checkSystems(void)
 void updateButton(void)
 {
   /*
-    Function that updates button reading
-    */
+    Function that updates button reading,  it's called at fixed
+    intervals to check wether the button has been pressed or not
+  */
 
   button.read();
 }
@@ -166,7 +173,7 @@ void statusRead(void)
 void webServerArdST()
 {
   /*
-  - Function that shows the webServer
+  - Function that shows the webserver
   */
 
   PIN_UP;
@@ -177,8 +184,7 @@ void webServerArdST()
 void serverStatus(void)
 {
   /*
-  - Function to check is server if alive, if it not
-  - try to restart it
+  - Function to check is server if alive, if it not try to restart it
   */
 
   PIN_UP;
@@ -222,22 +228,13 @@ void serverStatus(void)
 void spiSTM(void)
 {
   /*
-  - Function that handles spi communication between arduino and ST
+   Function that handles spi communication between arduino and ST
   */
 
   PIN_UP;
 
-  if (ENCODER_ENABLE)
-  {
-    ENABLE_ENCODER_HI;
-  }
-  else if (ENCODER_DISABLE)
-  {
-    DISABLE_ENCODER_LO;
-  }
   if (fP->saveParameters)
   {
-
     // statusRead();
     DEBUG_SERVERLN(F("Sending parameters"));
     SPIerrorIndex = myServer.sendParameters();
@@ -245,11 +242,12 @@ void spiSTM(void)
     DEBUG_SERVER(F("SPI return: "));
     DEBUG_SERVERLN(SPIerrorIndex);
   }
+
   if (fP->statusReadFlag == true && fP->saveParameters == false)
   {
     int errorCnt = 0;
     uint16_t readTemp = 0;
-    if (!(PLC_STATUS))
+    if (!(ENCODER_ENABLE))
     { // do this only if STM is in SPI mode, and not running as encoder
       while (1)
       { //Try 200 times to read the variable
@@ -271,7 +269,18 @@ void spiSTM(void)
     }
     fP->statusReadFlag = 0;
   }
+
   fP->saveParameters = false;
+
+  if (ENCODER_ENABLE)
+  {
+    ENABLE_ENCODER_HI;
+  }
+  else if (ENCODER_DISABLE)
+  {
+    DISABLE_ENCODER_LO;
+  }
+
   PIN_DOWN;
 }
 #endif
@@ -280,12 +289,14 @@ void spiSTM(void)
 void updateScreen(void)
 {
   /*
-  - Function that handle oled Display, it changes
-  - between the differents screen according to user decision
+   Function that handle oled Display, it changes between the 
+   differents pages according to user decision
   */
 
   PIN_UP;
-  myScreen.updateScreenNum();
+  myScreen.updateScreenNum(); // update page to be shown
+
+  // switch case to decide wich page is shown on the display
   switch (sP->displayScreenNum)
   {
   case 0:

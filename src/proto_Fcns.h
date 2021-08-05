@@ -1,10 +1,11 @@
 
 // * Prototype functions
+
 /*
  - These are the functions called at regular intervals, controlled by the tasker library
  - All the other functions are called within these functions, can't be declared inside main 
- - encoder class because tasker library doesn't allow passing a method as an argument, that 
- - why they are declared here on the prototype functions file
+ encoder classes because tasker library doesn't allow passing a method as an argument, that's
+ why they are declared here on the prototype functions file
  - Also there are present some functions that are passed as arguments
 */
 

@@ -241,13 +241,18 @@ uint16_t ServerEncoder::readReg(uint8_t address, uint16_t *body, uint8_t slaveSe
     }
 }
 #endif
+
 // * I2C COMMUNICATION
 
 bool SystemEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
 {
     /* 
-    Write a byte on EEPROM and the read it back to see if write was correct
-    tries a number of times, if suceed returns true, otherwise false
+    Write a byte on EEPROM and then read it back to see if it was written
+    properly, if it not, repeat for a number fiex of times, then exits,
+    if succeed returns true, otherwise false
+    Parameters description:
+    - addr: address to be written 
+    - body: message to be written
     */
 
     bool isByteOK = false;
@@ -287,8 +292,12 @@ bool SystemEncoder::writeReadBI2C(uint32_t addr, uint8_t body)
 bool SystemEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
 {
     /* 
-    Write a uint16_t on EEPROM and the read it back to see if write was correct
-    tries a number of times, if suceed returns true, otherwise false
+    Write a uint16_t on EEPROM and then read it back to see if it was written
+    properly, if it not, repeat for a number fiex of times, then exits,
+    if succeed returns true, otherwise false
+    Parameters description:
+    - addr: address to be written 
+    - body: message to be written
     */
 
     bool isWordOK = false;
@@ -332,6 +341,8 @@ void SystemEncoder::putEncParameters(uint32_t addr)
 {
     /*
     Save the entire encSettings structure on the EEPROM
+    Parameters description:
+    - addr: address to be written
     */
 
     myEEPROM.put(addr, encSettings);
@@ -343,6 +354,10 @@ void SystemEncoder::writeEncParameter(uint32_t addr, uint8_t byteToSave)
 {
     /*
     Save a single byte on the EEPROm
+    Parameters description:
+    - addr: address to be written 
+    - byteToSave: byte to be written
+
     */
 
     myEEPROM.write(addr, byteToSave);
@@ -359,6 +374,9 @@ uint16_t SystemEncoder::listenUDP(byte *buffer, uint8_t size)
     Polls for incoming UDP packets. If one is available, the function saves it in the array 
     of bytes of length "Size", named "Buffer". The function then returns the size in bytes of 
     the incoming packet (0 if none is available)
+    Parameters decription:
+    - buffer: pointer to the arrray where the received message will be saved
+    - size: size of the received message
     */
 
     uint8_t i;
@@ -410,7 +428,13 @@ void SystemEncoder::writeUDP(uint8_t *buffer, uint16_t size, IPAddress targetIP,
     /*
     Builds a UDP packet containing the elements of the byte array Buffer and sends it to 
     the device identified by targetIP and targetPort input parameters
+    Parameters description:
+    - buffer: pointer to the message to be sent
+    - size: size of the message to be sent
+    - targetIP: remote IP where the message will be sent
+    - targetPort: remote UDP port address where the message will be sent
     */
+
     DEBUG_UDPLN(F("Preparing UDP packet"));
     Udp.beginPacket(targetIP, targetPort);
     DEBUG_UDPLN(F("Sending packet"));
@@ -441,6 +465,9 @@ int16_t SystemEncoder::bytesToInt(byte byte1, byte byte2)
     /*
     Accepts as input 2 bytes and returns a signed integer (16bit)
     The first element of the input array is treated as the MSB
+    Parameters description:
+    - byte1, byte2: bytes that will be merge together into one 16 bits
+    long integer
     */
 
     int16_t result;

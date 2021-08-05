@@ -2,7 +2,7 @@
 void ServerEncoder::printHeader(EthernetClient client)
 {
     /*
-        This function sends to the client a standard html5 response header
+     This function sends to the client a standard html5 response header
     */
 
     client.println(F("HTTP/1.1 200 OK"));
@@ -15,7 +15,7 @@ void ServerEncoder::printHeader(EthernetClient client)
 void ServerEncoder::printPage(EthernetClient client)
 {
     /*
-        This function contains all the lines of the HTML code that displays the web server page
+     This function contains all the lines of the HTML code that displays the web server page
     */
     client.println(F("<!DOCTYPE HTML>"));
     client.println(F("<html lang='en'>"));
@@ -26,6 +26,10 @@ void ServerEncoder::printPage(EthernetClient client)
 
 void ServerEncoder::serverHead(EthernetClient client)
 {
+    /*
+     Head part of the html code
+    */
+
     client.println(F("<!-- Header -->"));
     client.println(F("<head>"));
     client.println(F("<title>BESTduino parametrization</title>"));
@@ -37,6 +41,10 @@ void ServerEncoder::serverHead(EthernetClient client)
 
 void ServerEncoder::serverCSS(EthernetClient client)
 {
+    /* 
+     CSS styling code of the webServer
+    */
+
     client.println(F("<!-- CSS style -->"));
     client.println(F("<style>"));
     client.println(F("/* Main tag style declarations */"));
@@ -325,6 +333,10 @@ void ServerEncoder::serverCSS(EthernetClient client)
 
 void ServerEncoder::serverJavaScript(EthernetClient client)
 {
+    /*
+     JavaScript functions used within webServer
+    */
+
     client.println(F("<!-- Javascript global variables and functions -->"));
     client.println(F("<script>"));
     client.println(F("var deviceID = 1;"));
@@ -728,6 +740,9 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
 
 void ServerEncoder::serverHeader(EthernetClient client)
 {
+    /*
+     Header part of the html code
+    */
     client.println(F("<header id='header'>"));
     client.println(F("<div class='innertube'>"));
     client.println(F("<a href=''>"));
@@ -741,6 +756,9 @@ void ServerEncoder::serverHeader(EthernetClient client)
 
 void ServerEncoder::serverBody(EthernetClient client)
 {
+    /* 
+     Body part of the HTML code
+    */
     client.println(F("<!-- Body -->"));
     client.println(F("<body onload='loadPage()'>"));
     client.println(F("<div id='grid-page'>"));
@@ -1107,6 +1125,11 @@ void ServerEncoder::serverBody(EthernetClient client)
 
 void ServerEncoder::serverSVG(EthernetClient client)
 {
+    /* 
+     Brevetti logo in formato svg, it's called within the head part of the html code,
+     in this way the encoder does not need internet to show the image
+    */
+
     client.println(F("<svg"));
     client.println(F("version='1.1'"));
     client.println(F("viewBox='0 0 106 40.451'"));
@@ -1255,7 +1278,7 @@ void ServerEncoder::serverSVG(EthernetClient client)
 unsigned char ServerEncoder::h2d(unsigned char hex_1, unsigned char hex_2)
 {
     /*
-        This function takes two characters and outputs a char that meets the formatting of a byte in HEX
+     This function takes two characters and outputs a char that meets the formatting of a byte in HEX
     */
 
     unsigned char temp1, temp2;
@@ -1274,8 +1297,11 @@ unsigned char ServerEncoder::h2d(unsigned char hex_1, unsigned char hex_2)
 String ServerEncoder::findData(int16_t from)
 {
     /*
-        This function returns a substring of the HTTP request "webGetString" that is contained between a
-        '&' and a '=', starting from the index "from"
+     This function returns a substring of the HTTP request "webGetString" that is contained between a
+     '&' and a '=', starting from the index "from".
+     - UPDATE: added OR with blank space (|| (webGetString[i] == ' ')) to avoid infinite loop with the 
+     last parameter, because on the last value inside the string created by the ajaxUpdateDiag function
+     there is no '&' symbol, so the program got blocked in an infinite loop looking for that character
     */
 
     boolean finish = false;
@@ -1306,9 +1332,12 @@ String ServerEncoder::findData(int16_t from)
 uint8_t ServerEncoder::parseResponse(void)
 {
     /*
-        This function extracts from the HTTP request of the client (submit method='GET') all the relevant
-        parameters and stores them in the EEPROM. If some network parameters have been changed, the function
-        returns 'true', otherwise it returns 'false'
+     This function extracts from the HTTP request of the client (submit method='GET') all the relevant
+     parameters and stores them in the EEPROM. If some network parameters have been changed, the function
+     returns 'true', otherwise it returns 'false'
+
+     - indexOf returns a value >= 0 when it finds the string requested, so it's useful to read the parameters
+     on the webServer withour refreshing the page.
     */
 
     bool restartNeeded = false;
@@ -1320,9 +1349,9 @@ uint8_t ServerEncoder::parseResponse(void)
     if (tempIndex >= 0)
     {
         tempData = ServerEncoder::findData(tempIndex);
-        if (tempData.toInt() != eP->deviceIndex)
+        if (tempData.toInt() != eP->deviceIndex) // if value have been modified
         {
-            eP->deviceIndex = tempData.toInt();
+            eP->deviceIndex = tempData.toInt(); // save the new value on the globVar
             DEBUG_SERVER(F("New Device ID is: "));
             DEBUG_SERVERLN(eP->deviceIndex);
 #ifdef EXTMEMORY_ON
@@ -1492,6 +1521,8 @@ uint8_t ServerEncoder::parseResponse(void)
             restartNeeded = true;
         }
     }
+
+    // The same procedure is repeated here for all sensor parameters
     for (uint8_t i = 0; i < numberParameters; i++)
     {
         tempIndex = webGetString.indexOf(deviceParamNames[i]);
@@ -1533,9 +1564,9 @@ uint8_t ServerEncoder::parseResponse(void)
 void ServerEncoder::ajaxInitialize(EthernetClient client)
 {
     /*
-        This functions is a response from the server (Arduino) to a HTTP request of the clients that contains
-        the 'ajaxinitialize' string.The server sends to the client a string that contains names and values of
-        the parameters. The correct format is Name1=Value1&Name2=Value2&...
+     This functions is a response from the server (Arduino) to a HTTP request of the clients that contains
+     the 'ajaxinitialize' string.The server sends to the client a string that contains names and values of
+     the parameters. The correct format is Name1=Value1&Name2=Value2&...
     */
 
     client.print(F("ID="));
@@ -1591,7 +1622,8 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
 void ServerEncoder::ajaxUpdateDiag(EthernetClient client)
 {
     /*
-        This fcn updates the values showed in the webserver. Is a fcn called every 5 seconds.
+     This fcn updates the values showed in the webserver. Is a fcn called every 5 seconds.
+     Updates: Enable from PLC/webServer, deviceStatus, temperature and humidity values.
     */
 
     sP->cntDebug++;
@@ -1632,7 +1664,9 @@ void ServerEncoder::ajaxIMUvalues(EthernetClient client)
 {
 
     /*
-    This function update imuValues shown on webServer
+     This function update imuValues shown on webServer, get called
+     at fixed intervals and updadates x and z inclination angles of
+     the encoder
     */
 
 #if defined(SCREEN_ON) && defined(ACCELEROMETER_ON)
@@ -1677,11 +1711,9 @@ bool ServerEncoder::displayWebServer()
         { // While the client is connected and available
             if (client.available())
             {
-
                 char c = client.read();
                 if (webGetString.length() < 300)
                     webGetString += c;
-
                 //Serial.write(c);
                 if (c == '\n' && currentLineIsBlank)
                 {                                       // End of a request (HTTP requests end with \n\r)
@@ -1716,6 +1748,7 @@ bool ServerEncoder::displayWebServer()
                     }
                     else if (webGetString.indexOf("ajaxChangeFlag") >= 0)
                     {
+                        // if request contains 'ajaxChangeFlag', toggles the enableServer flag to enable encoder from webServer
                         DEBUG_SERVERLN(F("Enable/disable encoder from webServer"));
                         client.print(F("Ok"));
                         fP->enableServer = !fP->enableServer;

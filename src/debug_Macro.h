@@ -11,8 +11,8 @@
 //#define DEBUG_SPI_TWO
 //#define DEBUG_I2C_COM
 //#define DEBUG_BOOT_FCN
-#define DEBUG_UDP_COM
-#define DEBUG_TASKS_FCN
+//#define DEBUG_UDP_COM
+//#define DEBUG_TASKS_FCN
 //#define DEBUG_FREQ_FCN
 //#define DEBUG_FCN_TIME
 

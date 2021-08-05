@@ -1,18 +1,23 @@
 
 void setup()
 {
-
   DEBUG_SERIALBEGIN(115200);
 
   // set pins
   DEBUG_BOOTLN(F("Starting pins"));
   delay(500);
+  pinMode(PLCEN_PIN_STATUS, INPUT);
+  pinMode(ST_PIN_STATUS, INPUT);
   pinMode(TOGGLE_BUTTON, INPUT_PULLUP);
-  pinMode(ST_RESET, OUTPUT);
   pinMode(SENSOR_PIN_STATUS, INPUT);
   pinMode(ST_PIN_STATUS, INPUT);
-  pinMode(PLCEN_PIN_STATUS, INPUT);
+  pinMode(SD_PIN_NSS, OUTPUT);
+  pinMode(ST_PIN_NSS, OUTPUT);
+  pinMode(ET_PIN_NSS, OUTPUT);
+  pinMode(ST_RESET, OUTPUT);
+  pinMode(EN_ENCODER_ARD_TO_ST, OUTPUT);
   ST_RESET_HI;
+  DISABLE_ENCODER_LO;
 
 // start screen functions
 #ifdef SCREEN_ON
@@ -57,25 +62,25 @@ void setup()
 
   delay(500);
 #ifdef WEBSERVER_ON
-  tasker.setInterval(spiSTM, 20, 0);              // SPI between ST and arduino *10
-  tasker.setInterval(webServerArdST, 100, 1);     // handling of webServer functions *20
-  tasker.setInterval(statusRead, 2000UL, 2);      // to check if spi coms between arduino and ST is OK
-  tasker.setInterval(serverStatus, 3600000UL, 3); // to check if webServer is OK
+  tasker.setInterval(spiSTM, tSPIardST, highPriority);              // SPI between ST and arduino *10
+  tasker.setInterval(webServerArdST, tSERVERardST, mediumPriority); // handling of webServer functions *20
+  tasker.setInterval(statusRead, tStatusSPI, lowPriority);          // to check if spi coms between arduino and ST is OK
+  tasker.setInterval(serverStatus, tServerStatus, lowestPriority);  // to check if webServer is OK
 #endif
-  tasker.setInterval(stCheck, 3000UL, 2);
+  tasker.setInterval(stCheck, tSTcheck, lowPriority);
 #ifdef SCREEN_ON
-  tasker.setInterval(updateScreen, 100, 1); // update page to shown on oled screen *50
-  tasker.setInterval(updateButton, 50, 1);  // update button reading
+  tasker.setInterval(updateScreen, tScreenUpdate, mediumPriority); // update page to shown on oled screen *50
+  tasker.setInterval(updateButton, tButtonUpdate, mediumPriority); // update button reading
 #endif
 #ifdef SENSOR_BME280
-  tasker.setInterval(tempUpdate, 5000UL, 3); // check if tempSensor is OK
+  tasker.setInterval(tempUpdate, tBMEupdate, lowestPriority); // check if tempSensor is OK
 #endif
-  tasker.setInterval(checkSystems, 60000UL, 3); /// general check of all systems
+  tasker.setInterval(checkSystems, tSystemCheck, lowestPriority); /// general check of all systems
 #ifdef EXTMEMORY_ON
-  tasker.setInterval(extEEPROMupdate, 3600000UL, 3); // check if extEEPROm is ok
+  tasker.setInterval(extEEPROMupdate, tUpdateMemory, lowestPriority); // check if extEEPROm is ok
 #endif
 #ifdef ACCELEROMETER_ON
-  tasker.setInterval(imuUpdate, 3600000UL, 3); // check if IMU is ok
+  tasker.setInterval(imuUpdate, tUpdateACC, lowestPriority); // check if IMU is ok
 #endif
   attachInterrupt(digitalPinToInterrupt(PLCEN_PIN_STATUS), enableFlagEncoder, CHANGE);
 

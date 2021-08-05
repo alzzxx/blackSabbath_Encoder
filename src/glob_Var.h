@@ -3,30 +3,28 @@
 * Global variables 
 */
 
-// globVar for webServer
 #ifdef WEBSERVER_ON
-String webGetString; // Will be used for storing the HTTP requests from the client
+String webGetString; // To store the HTTP requests from the client
 String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inFilter", "outFilter", "tSample",
                                              "patCurr", "encSim"}; // to be shown on debug and webServer
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
 int SPIerrorIndex = -1;   // do not delete this
-byte plcEnable = 0x00;    // byte to indicate if the device is in SPI mode or encoder mode
-byte deviceStatus = 0xFF; // byte to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
+byte plcEnable = 0x00;    // to indicate if the device is in SPI mode or encoder mode
+byte deviceStatus = 0xFF; // to indicate encoder status, if everything is ok should be always dec 255 or 0xFF or 0B11111111
 
-// globVar secondary systems
 typedef struct flagSystems
 {
-    bool tFlag;                 // flag for temperature sensor control
-    bool eFlag;                 // flag for ethernet control
-    bool sysOK;                 // flag for systems check
-    bool extMemFlag;            // flag for EEPROM check
-    bool imuFlag;               // flag for imu check
-    bool patFlag;               // flag for pixart sensor
-    bool stFlag;                // flag for st mcu
+    bool tFlag;                 // for temperature sensor control
+    bool eFlag;                 // for ethernet control
+    bool sysOK;                 // for systems check
+    bool extMemFlag;            // for EEPROM check
+    bool imuFlag;               // for imu check
+    bool patFlag;               // for pixart sensor
+    bool stFlag;                // for st mcu check
     bool onScreen;              // to control autoOFF wakeON of oled screen
-    volatile bool toggleScreen; // flag to change screen
+    volatile bool toggleScreen; // to change screen
     bool prevTogScr;            // to control screen change
     bool saveParameters;        // keep initial value = 1
     bool statusReadFlag;
@@ -34,7 +32,6 @@ typedef struct flagSystems
     bool enablePLC;    // enable from PLC
 };
 
-// default values for flag variables
 flagSystems flagEnc = {
     .tFlag = false,
     .eFlag = false,
@@ -52,6 +49,7 @@ flagSystems flagEnc = {
     .enablePLC = false,
 };
 
+// to navigate flagEnc struct
 flagSystems *fP = &flagEnc;
 
 #ifndef EXTMEMORY_ON
@@ -64,7 +62,6 @@ fP->imuFlag = true;
 fP->tFlag = true;
 #endif
 
-// for tempSensor and encoder reading
 typedef struct secSystems
 {
     float tC;                 // temperature value
@@ -92,8 +89,9 @@ secSystems secVar = {
     secVar.cntDebug = 0,
 };
 
-secSystems *sP = &secVar; // pointer to struct to navigate the secVar variables
-// for encoder parameters
+// to navigate secVar struct
+secSystems *sP = &secVar;
+
 typedef struct struct_encoderSettings
 {
     uint8_t deviceIndex; // Index of the device. This will affect its IP address and the port used for UDP transmission
@@ -124,9 +122,9 @@ struct_encoderSettings encSettings = {
     encSettings.remotePort = 3001,
 };
 
-struct_encoderSettings *eP = &encSettings; // pointer to struct to navigate the encoder parameters
+// to navigate encSettings struct
+struct_encoderSettings *eP = &encSettings;
 
-// for all acc/gyro values
 typedef struct struct_accgyroValues
 {
     int16_t slopeX;
@@ -154,32 +152,36 @@ struct_accgyroValues imuValues = {
     imuValues.gyroZ,
 };
 
-struct_accgyroValues *iP = &imuValues; // pointer to navigate imuValues struct
+// to navigate imuValues struct
+struct_accgyroValues *iP = &imuValues;
 
 #if !defined(ACCELEROMETER_ON)
 iP->angX = 0.00;
 iP->angY = 0.00;
 #endif
 
-// Objects and instances
-ScreenEncoder myScreen; // Object for screen functions
+/*
+* Objects and instances
+*/
+
+ScreenEncoder myScreen; // for screen functions
 #ifdef WEBSERVER_ON
-ServerEncoder myServer; // Object for server functions
+ServerEncoder myServer; // for server functions
 #endif
-SensorEncoder mySensor;                                 // Object for sensor functions
-SystemEncoder mySystem;                                 // Object for comunication functions
-Tasker tasker(true);                                    // object for tasking
+SensorEncoder mySensor;                                 // for sensor functions
+SystemEncoder mySystem;                                 // for comunication functions
+Tasker tasker(true);                                    // for tasking
 QEI myPulse(PIN_SQWA, PIN_SQWB, PIN_ZERO, pulsePerRev); // to read encPulses
 Average<double> mediaPuls(meanPulSamples);              // to calculate mean pulse value
 EasyButton button(TOGGLE_BUTTON);                       // to toggle screen and reset encoder
 
 #ifdef SENSOR_BME280
-Adafruit_BME280 bme; // object for temperature sensor
+Adafruit_BME280 bme; // for temperature sensor
 #endif
 
 #if defined(WEBSERVER_ON) || defined(UDP_ON)
-IPAddress ip(192, 168, 0, 20);     // Local IP address
-IPAddress remote(192, 168, 0, 1);  // remote IP address
+IPAddress ip(192, 168, 0, 21);
+IPAddress remote(192, 168, 0, 1);
 EthernetServer server(serverPort); // Server is configured in default port 80
 #endif
 
@@ -188,11 +190,11 @@ Adafruit_SSD1306 display(screenW, screenH, &Wire, ST_RESET, i2cDurClk, i2cAftClk
 #endif
 
 #ifdef UDP_ON
-EthernetUDP Udp; // An EthernetUDP instance to let us send and receive packets over UDP
+EthernetUDP Udp;
 #endif
 
 #ifdef EXTMEMORY_ON
-ExternalEEPROM myEEPROM; // eeprom object that allow us to write and read from extEEPROM
+ExternalEEPROM myEEPROM;
 #endif
 
 #ifdef ACCELEROMETER_ON

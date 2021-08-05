@@ -57,7 +57,27 @@ const float outputStartY = 50.00;
 const float outputEndY = 22.00;
 #endif
 
-// const for messages and icons shown on oled display
+// All time constans are ms
+const uint8_t lowestPriority = 3;
+const uint8_t lowPriority = 2;
+const uint8_t mediumPriority = 1;
+const uint8_t highPriority = 0;
+const uint32_t tSPIardST = 20;
+const uint32_t tSERVERardST = 100;
+const uint32_t tStatusSPI = 2000;
+const uint32_t tServerStatus = 3600000;
+const uint32_t tSTcheck = 2000;
+const uint32_t tScreenUpdate = 100;
+const uint32_t tButtonUpdate = 50;
+const uint32_t tBMEupdate = 5000;
+const uint32_t tSystemCheck = 60000;
+const uint32_t tUpdateMemory = 3600000;
+const uint32_t tUpdateACC = 3600000;
+
+/*
+* Const for messages and icons shown on oled display
+*/
+
 #ifdef SCREEN_ON
 static const char oledMessage_0[] PROGMEM = "BESTduino";
 static const char oledMessage_1[] PROGMEM = "V 1.0.0";
