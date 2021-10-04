@@ -48,5 +48,67 @@ by Alex Rondon, Riccardo Salviati, Federico Santacatterina
 
 void loop()
 {
-  tasker.loop();
+  //tasker.loop();
+  spiSTM();
+  delay(tSPIardST);
+}
+
+void loop2()
+{
+  webServerArdST();
+  delay(tSERVERardST);
+}
+
+void loop3()
+{
+  statusRead();
+  delay(tStatusSPI);
+}
+
+void loop4()
+{
+  stCheck();
+  delay(tSTcheck);
+}
+
+void loop5()
+{
+  updateScreen();
+  yield();
+}
+
+void loop6()
+{
+  tempUpdate();
+  delay(tBMEupdate);
+}
+
+void loop7()
+{
+  checkSystems();
+  delay(tSystemCheck);
+}
+
+void loop8()
+{
+  serverStatus();
+  delay(tServerStatus);
+}
+
+void loop9()
+{
+  updateButton();
+  delay(tButtonUpdate);
+}
+
+void loop10()
+{
+  extEEPROMupdate();
+  delay(tUpdateMemory)
+}
+
+void loop11()
+{
+  imuUpdate();
+  delay(tUpdateACC);
 }

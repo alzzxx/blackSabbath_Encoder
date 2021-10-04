@@ -3,7 +3,7 @@ void setup()
 {
   DEBUG_SERIALBEGIN(115200);
 
-  // set pins
+  /* #region  PIN_SET */
   DEBUG_BOOTLN(F("Starting pins"));
   delay(500);
   pinMode(PLCEN_PIN_STATUS, INPUT);
@@ -18,8 +18,9 @@ void setup()
   pinMode(EN_ENCODER_ARD_TO_ST, OUTPUT);
   ST_RESET_HI;
   DISABLE_ENCODER_LO;
+  /* #endregion */
 
-// start screen functions
+  /* #region  START_SCREEN */
 #ifdef SCREEN_ON
   DEBUG_BOOTLN(F("Starting screen now"));
   delay(500);
@@ -45,22 +46,36 @@ void setup()
   mySensor.bmeStart();
 #endif
 #endif
+  /* #endregion */
 
-// set interrupt function for toggle button
+  /* #region  START_BUTTON */
 #ifdef SCREEN_ON
   myScreen.finishSetup();
   myScreen.buttonSetup();
 #endif
+  /* #endregion */
 
-// activate debug function measuring
+/* #region  START_DEBUG_TIME_FUNCTION */
 #ifdef DEBUG_FCN_TIME
   pinConfig(DEBUG_PIN);
 #endif
+  /* #endregion */
 
-  // set intervals for repeating functions
   DEBUG_BOOTLN(F("Setting tasker intervals"));
 
+  /* #region  START_TASKER_FUNCTIONS */
   delay(500);
+  Scheduler.startLoop(loop2);
+  Scheduler.startLoop(loop3);
+  Scheduler.startLoop(loop4);
+  Scheduler.startLoop(loop5);
+  Scheduler.startLoop(loop6);
+  Scheduler.startLoop(loop7);
+  Scheduler.startLoop(loop8);
+  Scheduler.startLoop(loop9);
+  Scheduler.startLoop(loop10);
+  Scheduler.startLoop(loop11);
+  /*
 #ifdef WEBSERVER_ON
   tasker.setInterval(spiSTM, tSPIardST, highPriority);              // SPI between ST and arduino *10
   tasker.setInterval(webServerArdST, tSERVERardST, mediumPriority); // handling of webServer functions *20
@@ -82,13 +97,17 @@ void setup()
 #ifdef ACCELEROMETER_ON
   tasker.setInterval(imuUpdate, tUpdateACC, lowestPriority); // check if IMU is ok
 #endif
+*/
   attachInterrupt(digitalPinToInterrupt(PLCEN_PIN_STATUS), enableFlagEncoder, CHANGE);
 
-// finish the setup
+/* #endregion */
+
+/* #region  SETUP_FINISH */
 #ifdef SCREEN_ON
   display.clearDisplay();
   display.display();
   sP->mTimerCounter = millis();
 #endif
   DEBUG_BOOTLN(F("Setup finished"));
+  /* #endregion */
 }
