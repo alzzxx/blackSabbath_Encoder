@@ -272,6 +272,8 @@ void spiSTM(void)
 
   fP->saveParameters = false;
 
+  mySystem.enableFlagEncoder();
+
   if (ENCODER_ENABLE)
   {
     ENABLE_ENCODER_HI;

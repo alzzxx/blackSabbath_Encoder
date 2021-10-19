@@ -17,7 +17,7 @@ const uint8_t spiErrorLimit = 150;  // max amount of SPI erros allowed
 const uint8_t i2cErrorLimit = 50;   // max amount of i2c communication errors allowed
 const uint8_t spiStatusAddress = 11;
 const uint8_t spiError = 223;      //  B11011111
-const uint16_t delayScreen = 1500; // delay between change of different splash screens
+const uint16_t delayScreen = 500;  // delay between change of different splash screens
 const uint32_t i2cDurClk = 400000; // i2c clock frequency during ssd1306 function calls
 #ifdef EXTMEMORY_ON
 const uint8_t eepromAddress = 0x50;   // extEEPROM address

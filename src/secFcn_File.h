@@ -525,6 +525,15 @@ bool SystemEncoder::bootShield(void)
 }
 #endif
 
+// * Function that handles PLC enable
+void SystemEncoder::enableFlagEncoder(void)
+{
+    if (PLC_STATUS)
+        fP->enablePLC = true;
+    else
+        fP->enablePLC = false;
+}
+
 // * For debug functions execution time
 #ifdef DEBUG_FCN_TIME
 void pinConfig(int pin)
@@ -536,13 +545,3 @@ void pinConfig(int pin)
                              (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
 }
 #endif
-
-// * Interrupt to handle PLC enable
-void enableFlagEncoder(void)
-{
-    /*
-     Interrupt to read when there is change of plc enable pin
-    */
-
-    fP->enablePLC = !fP->enablePLC;
-}

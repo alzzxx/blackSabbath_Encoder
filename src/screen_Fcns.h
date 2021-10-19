@@ -17,7 +17,6 @@ void ScreenEncoder::startScreen(void)
     // if the screen starts show debug info and move on
     fP->onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
-    DEBUG_DELAY(1000);
     display.clearDisplay();
     display.setRotation(2);
     display.display();

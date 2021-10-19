@@ -96,6 +96,7 @@ private:
 
 public:
     inline void readEncoder(void) __attribute__((always_inline));
+    inline void enableFlagEncoder(void) __attribute__((always_inline));
 #ifdef SHIELD_ON
     bool bootShield(void);
 #endif

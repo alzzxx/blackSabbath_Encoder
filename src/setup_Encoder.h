@@ -1,11 +1,12 @@
 
 void setup()
 {
-  DEBUG_SERIALBEGIN(115200);
 
-  // set pins
+  /* #region  PIN_SETUP */
   DEBUG_BOOTLN(F("Starting pins"));
-  delay(500);
+  DEBUG_SERIALBEGIN(115200);
+  pinMode(ST_RESET, OUTPUT);
+  ST_RESET_HI;
   pinMode(PLCEN_PIN_STATUS, INPUT);
   pinMode(ST_PIN_STATUS, INPUT);
   pinMode(TOGGLE_BUTTON, INPUT_PULLUP);
@@ -14,15 +15,13 @@ void setup()
   pinMode(SD_PIN_NSS, OUTPUT);
   pinMode(ST_PIN_NSS, OUTPUT);
   pinMode(ET_PIN_NSS, OUTPUT);
-  pinMode(ST_RESET, OUTPUT);
   pinMode(EN_ENCODER_ARD_TO_ST, OUTPUT);
-  ST_RESET_HI;
   DISABLE_ENCODER_LO;
+/* #endregion */
 
 // start screen functions
 #ifdef SCREEN_ON
   DEBUG_BOOTLN(F("Starting screen now"));
-  delay(500);
   myScreen.startScreen();                   // start oled screen
   myScreen.splashScreen();                  // show initial message
   myScreen.initialCheck();                  // check all systems
@@ -60,7 +59,6 @@ void setup()
   // set intervals for repeating functions
   DEBUG_BOOTLN(F("Setting tasker intervals"));
 
-  delay(500);
 #ifdef WEBSERVER_ON
   tasker.setInterval(spiSTM, tSPIardST, highPriority);              // SPI between ST and arduino *10
   tasker.setInterval(webServerArdST, tSERVERardST, mediumPriority); // handling of webServer functions *20
@@ -82,7 +80,6 @@ void setup()
 #ifdef ACCELEROMETER_ON
   tasker.setInterval(imuUpdate, tUpdateACC, lowestPriority); // check if IMU is ok
 #endif
-  attachInterrupt(digitalPinToInterrupt(PLCEN_PIN_STATUS), enableFlagEncoder, CHANGE);
 
 // finish the setup
 #ifdef SCREEN_ON
