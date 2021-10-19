@@ -42,8 +42,9 @@ const uint32_t i2cAftClk = 100000; // i2c clock frequency after ssd1306 function
 const uint8_t oledAddress = 0x3D; // oled screen I2C address
 const uint8_t screenW = 128;
 const uint8_t screenH = 64;
-const uint16_t mDebTime = 300;      // debounce time for toggle screen button
-const uint16_t encResetTime = 5000; // time to reset encoder
+const uint8_t screenOrientation = 2; // 0 = 0°, 1 = 90°, 2 = 180°, 3 = 270°
+const uint16_t mDebTime = 300;       // debounce time for toggle screen button
+const uint16_t encResetTime = 5000;  // time to reset encoder
 #endif
 #ifdef ACCELEROMETER_ON
 const uint8_t meanSampleNumber = 40; // number of sample read from imu sensor before averaging

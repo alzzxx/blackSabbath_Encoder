@@ -18,7 +18,7 @@ void ScreenEncoder::startScreen(void)
     fP->onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
     display.clearDisplay();
-    display.setRotation(2);
+    display.setRotation(screenOrientation);
     display.display();
 }
 
