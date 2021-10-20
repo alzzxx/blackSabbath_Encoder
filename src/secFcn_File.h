@@ -359,6 +359,8 @@ void SystemEncoder::loadEncSettings(void)
         myEEPROM.get(eepromStartAddress, encSettings);
         delayMicroseconds(delayI2C);
         DEBUG_BOOTLN(F("Loaded saved encoder settings"));
+        DEBUG_BOOT(F("scrRotation is: "));
+        DEBUG_BOOTLN(eP->arduinoParameters[0]);
     }
 }
 #endif

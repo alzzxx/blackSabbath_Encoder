@@ -293,7 +293,7 @@ bool SystemEncoder::writeReadWI2C(uint32_t addr, uint16_t body)
 {
     /* 
     Write a uint16_t on EEPROM and then read it back to see if it was written
-    properly, if it not, repeat for a number fiex of times, then exits,
+    properly, if it not, repeat for a fixed number of times, then exits,
     if succeed returns true, otherwise false
     Parameters description:
     - addr: address to be written 

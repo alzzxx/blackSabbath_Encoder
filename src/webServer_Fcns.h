@@ -461,6 +461,19 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("} else e.preventDefault();"));
     client.println(F("}"));
     client.println(F(""));
+    client.println(F("function scrClicked(f) {"));
+    client.println(F("var stuff;"));
+    client.println(F("stuff = document.getElementById(\"rotDeg\");"));
+    client.println(F("if (stuff.value != stuff.defaultValue) {"));
+    client.println(F("if ("));
+    client.println(F("!confirm("));
+    client.println(F("\"Attention: screen orientation changed, the device will be restarted, do you confirm?\""));
+    client.println(F(")"));
+    client.println(F(")"));
+    client.println(F("f.preventDefault();"));
+    client.println(F("} else f.preventDefault();"));
+    client.println(F("}"));
+    client.println(F(""));
     client.println(F("// function that refresh the page after 6 seconds."));
     client.println(F("function refreshPage() {"));
     client.println(F("setTimeout(function () {"));
@@ -681,6 +694,13 @@ void ServerEncoder::serverJavaScript(EthernetClient client)
     client.println(F("data.append(\"patCurr\", document.getElementById(\"patCurr\").value);"));
     client.println(F("if (document.getElementById(\"encSim\").value)"));
     client.println(F("data.append(\"encSim\", document.getElementById(\"encSim\").value);"));
+    client.println(F("break;"));
+    client.println(F("case \"screen\":"));
+    client.println(F("console.log(\"screen rotation requested\");"));
+    client.println(F("if (document.getElementById(\"rotDeg\").value)"));
+    client.println(F("data.append(\"rotDeg\", document.getElementById(\"rotDeg\").value);"));
+    client.println(F("console.log(document.getElementById(\"rotDeg\").value);"));
+    client.println(F("break;"));
     client.println(F("}"));
     client.println(F("var xhr = new XMLHttpRequest();"));
     client.println(F("alert("));
@@ -839,6 +859,25 @@ void ServerEncoder::serverBody(EthernetClient client)
     client.println(F("<div><span id='pwrLED' class='dot_red'></span></div>"));
     client.println(F("<div><span id='tempLED' class='dot_red'></span></div>"));
     client.println(F("<div><span id='stmsLED' class='dot_red'></span></div>"));
+    client.println(F("</div>"));
+    client.println(F("<div>"));
+    client.println(F("<h2>Screen rotation</h2>"));
+    client.println(F("<div class='flex-parent jc-center'>"));
+    client.println(F("<form method='get' onsubmit='return ajaxGet(\"screen\")'>"));
+    client.println(F("<div>"));
+    client.println(F("<select class='input' name='rotDeg' id='rotDeg'>"));
+    client.println(F("<option value='0'>0 (0&#176 rotation)</option>"));
+    client.println(F("<option value='1'>1 (90&#176 rotation)</option>"));
+    client.println(F("<option value='2'>2 (180&#176 rotation)</option>"));
+    client.println(F("<option value='3'>3 (270&#176 rotation)</option>"));
+    client.println(F("</select>"));
+    client.println(F("</div>"));
+    client.println(F("<div class='flex-parent jc-center'>"));
+    client.println(F("<button class='button' type='submit'onclick='scrClicked(event)'"));
+    client.println(F("name='submitScreenRotation'>Flip screen</button>"));
+    client.println(F("</div>"));
+    client.println(F("</form>"));
+    client.println(F("</div>"));
     client.println(F("</div>"));
     client.println(F("<div class='flex-parent jc-center'>"));
     client.println(F("<button class='button' onclick='ajaxSendReset()'>Restart device</button>"));
@@ -1319,6 +1358,9 @@ String ServerEncoder::findData(int16_t from)
         if (reading)
         {
             parsedData += webGetString[i];
+            DEBUG_SERVER(F("parseData["));
+            DEBUG_SERVER(i);
+            DEBUG_SERVER(F("] is : "));
             DEBUG_SERVERLN(parsedData);
         }
         if (webGetString[i] == '=')
@@ -1555,6 +1597,28 @@ uint8_t ServerEncoder::parseResponse(void)
             transmissionNeeded = true;
         }
     }
+
+    tempIndex = webGetString.indexOf("rotDeg");
+    if (tempIndex >= 0)
+    {
+        tempData = ServerEncoder::findData(tempIndex);
+        if (tempData.toInt() != eP->arduinoParameters[0])
+        {
+            eP->arduinoParameters[0] = tempData.toInt();
+            DEBUG_SERVER(F("New orientation angle is: "));
+            DEBUG_SERVERLN(eP->arduinoParameters[0]);
+#ifdef EXTMEMORY_ON
+            bool tempFlag;
+            tempFlag = mySystem.writeReadWI2C(locationScrRotParam, eP->arduinoParameters[0]);
+            delayMicroseconds(delayI2C);
+            if (!tempFlag)
+                DEBUG_SERVERLN(F("scrRotation not saved"));
+            else
+                DEBUG_SERVERLN(F("scrRotation saved on EEPROM"));
+#endif
+            restartNeeded = true;
+        }
+    }
     // Return 1 if only restartNeeded, 2 if only transmissionNeeded, 3 if both
     DEBUG_SERVER(F("parseResponse is returning: "));
     DEBUG_SERVERLN(restartNeeded | (transmissionNeeded << 1));
@@ -1588,7 +1652,15 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
         client.print(deviceParamNames[i]);
         client.print(F("="));
         client.print(eP->deviceParameters[i]);
-        if (i < numberParameters - 1)
+        client.print(F("&"));
+    }
+
+    for (uint8_t i = 0; i < ardParameters; i++)
+    {
+        client.print(arduinoParamNames[i]);
+        client.print(F("="));
+        client.print(eP->arduinoParameters[i]);
+        if (i < ardParameters - 1)
             client.print(F("&"));
     }
 
@@ -1613,9 +1685,18 @@ void ServerEncoder::ajaxInitialize(EthernetClient client)
         DEBUG_SERVER(deviceParamNames[i]);
         DEBUG_SERVER(F(" = "));
         DEBUG_SERVER(eP->deviceParameters[i]);
-        if (i < numberParameters - 1)
+        DEBUG_SERVER(F("&"));
+    }
+
+    for (uint8_t i = 0; i < ardParameters; i++)
+    {
+        DEBUG_SERVER(arduinoParamNames[i]);
+        DEBUG_SERVER(F("="));
+        DEBUG_SERVER(eP->deviceParameters[]);
+        if (i < ardParameters - 1)
             DEBUG_SERVER(F("&"));
     }
+
 #endif
 }
 

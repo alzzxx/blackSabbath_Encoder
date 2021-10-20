@@ -5,7 +5,7 @@ void setup()
 
   /* #region  PIN_SETUP */
   DEBUG_BOOTLN(F("Starting pins"));
-  DEBUG_SERIALBEGIN(115200);
+  DEBUG_SERIALBEGIN(debugbaudRate);
   pinMode(ST_RESET, OUTPUT);
   ST_RESET_HI;
   pinMode(PLCEN_PIN_STATUS, INPUT);

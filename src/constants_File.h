@@ -3,14 +3,16 @@
 * Constants definition
 */
 
-const uint8_t meanPulSamples = 20;  // samples ammount for frequency average calculation
-const uint16_t pulsePerRev = 32000; // encoder pulse per revolution
+const uint8_t meanPulSamples = 20;     // samples ammount for frequency average calculation
+const uint16_t pulsePerRev = 32000;    // encoder pulse per revolution
+const uint32_t debugbaudRate = 115200; // baud rate for
 const double encodingType = 4.00;
 #ifdef SENSOR_BME280
 const uint8_t bmeAddress = 0x76; // i2c address of BME280
 #endif
 const uint8_t serverPort = 80;      // port for UDP communication
 const uint8_t numberParameters = 8; // number of parameters exchanged with ST
+const uint8_t ardParameters = 1;    // arduino internal parameters
 const uint8_t shortDelay = 20;      // short delay for spi communication [us]
 const uint8_t delayI2C = 5;         // short delay for i2c communication
 const uint8_t spiErrorLimit = 150;  // max amount of SPI erros allowed
@@ -29,12 +31,13 @@ const uint8_t locationMacTwo = 3;
 const uint8_t locationMacThree = 4;
 const uint8_t locationMacFour = 5;
 const uint8_t locationMacFive = 6;
-const uint8_t locationLocalPort = 8;   // memory location for localPort
-const uint8_t locationDevParam = 10;   // memory location por deviceParameters
-const uint8_t eepromPageSize = 120;    // EEPROM page write buffer
-const uint8_t eepromPageWriteTime = 3; // EEPROM page write time
-const uint32_t eepromMemSize = 128000; // mem size of EEPROM
-const uint32_t i2cAftClk = 400000;     // i2c clock frequency after function calls when extEEPROM is present
+const uint8_t locationLocalPort = 8;    // memory location for localPort
+const uint8_t locationDevParam = 10;    // memory location por deviceParameters
+const uint8_t locationScrRotParam = 26; // memory location for screen rotation parameters
+const uint8_t eepromPageSize = 120;     // EEPROM page write buffer
+const uint8_t eepromPageWriteTime = 3;  // EEPROM page write time
+const uint32_t eepromMemSize = 128000;  // mem size of EEPROM
+const uint32_t i2cAftClk = 400000;      // i2c clock frequency after function calls when extEEPROM is present
 #else
 const uint32_t i2cAftClk = 100000; // i2c clock frequency after ssd1306 function calls when extEEPROM is not present
 #endif
@@ -42,9 +45,8 @@ const uint32_t i2cAftClk = 100000; // i2c clock frequency after ssd1306 function
 const uint8_t oledAddress = 0x3D; // oled screen I2C address
 const uint8_t screenW = 128;
 const uint8_t screenH = 64;
-const uint8_t screenOrientation = 2; // 0 = 0°, 1 = 90°, 2 = 180°, 3 = 270°
-const uint16_t mDebTime = 300;       // debounce time for toggle screen button
-const uint16_t encResetTime = 5000;  // time to reset encoder
+const uint16_t mDebTime = 300;      // debounce time for toggle screen button
+const uint16_t encResetTime = 5000; // time to reset encoder
 #endif
 #ifdef ACCELEROMETER_ON
 const uint8_t meanSampleNumber = 40; // number of sample read from imu sensor before averaging

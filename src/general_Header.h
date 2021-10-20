@@ -17,7 +17,6 @@
 
 // Libraries
 #define TASKER_MAX_TASKS 12
-#include <Scheduler.h>
 #include <Tasker.h>
 #include <SPI.h>
 #include <Wire.h>

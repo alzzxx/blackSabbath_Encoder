@@ -7,6 +7,7 @@
 String webGetString; // To store the HTTP requests from the client
 String deviceParamNames[numberParameters] = {"encDist", "camRes", "patRes", "inFilter", "outFilter", "tSample",
                                              "patCurr", "encSim"}; // to be shown on debug and webServer
+String arduinoParamNames[ardParameters] = {"rotDeg"};              // arduino internal parameters
 #else
 uint8_t ip[4] = {192, 168, 1, 25}; // fixed ip address to show on screen, only if webserver is not active
 #endif
@@ -98,7 +99,8 @@ typedef struct struct_encoderSettings
     uint8_t mac[6];      // Mac address of device
     uint16_t localPort;  // local port to listen on
     uint16_t deviceParameters[numberParameters];
-    uint16_t remotePort; // remote port to transmit on
+    uint16_t arduinoParameters[ardParameters]; // parameters for screen orientation
+    uint16_t remotePort;                       // remote port to transmit on
 };
 
 // default encoder parameters
@@ -119,6 +121,7 @@ struct_encoderSettings encSettings = {
     encSettings.deviceParameters[5] = 400,
     encSettings.deviceParameters[6] = 6,
     encSettings.deviceParameters[7] = 0,
+    encSettings.arduinoParameters[0] = 0,
     encSettings.remotePort = 3001,
 };
 

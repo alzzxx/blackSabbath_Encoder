@@ -18,7 +18,6 @@ void ScreenEncoder::startScreen(void)
     fP->onScreen = true;
     DEBUG_BOOTLN(F("Screen started"));
     display.clearDisplay();
-    display.setRotation(screenOrientation);
     display.display();
 }
 
@@ -119,6 +118,7 @@ bool ScreenEncoder::initParam(void)
 #endif
     display.display();
     delay(delayScreen);
+    display.setRotation(eP->arduinoParameters[0]);
     display.clearDisplay();
     display.display();
     return eepromOK;
